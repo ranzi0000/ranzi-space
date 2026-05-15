@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>ranzi.space</title>
+<meta name="description" content="ranzi 的个人项目入口。工具、实验、研究。">
+<meta name="color-scheme" content="light dark">
+<script>
+  (function() {
+    try {
+      var t = localStorage.getItem('ranzi-space-theme');
+      if (t === 'light' || t === 'dark') {
+        document.documentElement.setAttribute('data-theme', t);
+      }
+    } catch (e) {}
+  })();
+</script>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%2318181b'/%3E%3Ctext x='16' y='21' font-family='ui-monospace,monospace' font-size='14' font-weight='600' text-anchor='middle' fill='%23fafaf8'%3Er%3C/text%3E%3C/svg%3E">
+<style>
+:root {
+  --bg: #fafaf8;
+  --fg: #18181b;
+  --fg-soft: #3f3f46;
+  --muted: #71717a;
+  --faint: #a8a29e;
+  --border: #ebe9e4;
+  --hover: #f2f0eb;
+  --accent: oklch(54% 0.13 38);
+  --accent-soft: oklch(54% 0.13 38 / 0.08);
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", system-ui, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+}
+
+:root[data-theme="dark"] {
+  --bg: #0c0c0c;
+  --fg: #ededec;
+  --fg-soft: #c4c4c0;
+  --muted: #8a8a87;
+  --faint: #5a5a57;
+  --border: #1c1c1a;
+  --hover: #161614;
+  --accent: oklch(72% 0.12 38);
+  --accent-soft: oklch(72% 0.12 38 / 0.10);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0c0c0c;
+    --fg: #ededec;
+    --fg-soft: #c4c4c0;
+    --muted: #8a8a87;
+    --faint: #5a5a57;
+    --border: #1c1c1a;
+    --hover: #161614;
+    --accent: oklch(72% 0.12 38);
+    --accent-soft: oklch(72% 0.12 38 / 0.10);
+  }
+}
+
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.65;
+  color: var(--fg);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+main {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 96px 32px 64px;
+}
+
+@media (max-width: 640px) {
+  main { padding: 56px 24px 48px; }
+}
+
+/* ─── Header ───────────────────────────────── */
+header {
+  margin-bottom: 64px;
+}
+h1 {
+  font-family: var(--font-mono);
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  margin: 0 0 14px;
+  color: var(--fg);
+}
+header p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 15px;
+  line-height: 1.6;
+  max-width: 32em;
+}
+
+/* ─── Section ───────────────────────────────── */
+section { margin-bottom: 56px; }
+section:last-of-type { margin-bottom: 0; }
+
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--faint);
+  margin: 0 0 20px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+/* ─── Project list ───────────────────────────────── */
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.row {
+  display: grid;
+  grid-template-columns: 36px 110px 1fr auto;
+  gap: 20px;
+  align-items: baseline;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--border);
+  position: relative;
+}
+.row:last-child { border-bottom: none; }
+.row .num {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--faint);
+  letter-spacing: 0.02em;
+}
+.row .name {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--fg);
+  letter-spacing: -0.005em;
+}
+.row .name a {
+  color: inherit;
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  padding-bottom: 1px;
+  transition: border-color 0.15s ease, color 0.15s ease;
+}
+.row .name a:hover {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+.row .desc {
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--fg-soft);
+}
+.row .tag {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.03em;
+  color: var(--faint);
+  white-space: nowrap;
+}
+.row .tag.protected {
+  color: var(--muted);
+}
+.row .tag.wip {
+  color: var(--accent);
+  opacity: 0.85;
+}
+
+.row.disabled .name a {
+  color: var(--muted);
+  pointer-events: none;
+}
+
+@media (max-width: 640px) {
+  .row {
+    grid-template-columns: 28px 1fr auto;
+    grid-template-areas:
+      "num name tag"
+      ".   desc desc";
+    gap: 6px 16px;
+    padding: 18px 0;
+  }
+  .row .num { grid-area: num; }
+  .row .name { grid-area: name; }
+  .row .desc { grid-area: desc; margin-top: 4px; }
+  .row .tag { grid-area: tag; }
+}
+
+/* ─── Elsewhere list ───────────────────────────────── */
+.links {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.links li {
+  padding: 10px 0;
+  display: flex;
+  gap: 24px;
+  align-items: baseline;
+  border-bottom: 1px solid var(--border);
+}
+.links li:last-child { border-bottom: none; }
+.links .label {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--faint);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  width: 70px;
+  flex-shrink: 0;
+}
+.links a {
+  color: var(--fg-soft);
+  text-decoration: none;
+  font-size: 14px;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 1px;
+  transition: color 0.15s ease, border-color 0.15s ease;
+}
+.links a:hover {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+
+/* ─── Footer ───────────────────────────────── */
+footer {
+  margin-top: 80px;
+  padding-top: 24px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  color: var(--faint);
+}
+footer .meta { text-transform: uppercase; }
+
+/* ─── Theme toggle ───────────────────────────────── */
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  color: var(--faint);
+}
+.theme-toggle .seg {
+  background: none;
+  border: none;
+  padding: 4px 8px;
+  margin: 0;
+  font: inherit;
+  color: inherit;
+  letter-spacing: inherit;
+  cursor: pointer;
+  border-radius: 3px;
+  text-transform: uppercase;
+  transition: color 0.15s ease, background-color 0.15s ease;
+}
+.theme-toggle .seg:hover { color: var(--muted); }
+.theme-toggle .seg:focus-visible {
+  outline: 1px solid var(--accent);
+  outline-offset: 1px;
+}
+.theme-toggle .seg[aria-pressed="true"] {
+  color: var(--fg);
+  background: var(--hover);
+}
+.theme-toggle .sep {
+  display: inline-block;
+  width: 2px;
+  height: 2px;
+  background: currentColor;
+  border-radius: 50%;
+  opacity: 0.5;
+  margin: 0 2px;
+}
+
+@media (max-width: 480px) {
+  footer { flex-direction: column; align-items: flex-start; gap: 16px; }
+}
+
+::selection { background: var(--accent-soft); }
+</style>
+</head>
+<body>
+<main>
+
+  <header>
+    <h1>ranzi.space</h1>
+    <p>个人项目入口。做点工具，写点代码，看点市场。</p>
+  </header>
+
+  <section>
+    <p class="eyebrow">projects</p>
+    <ul class="list">
+
+      <li class="row">
+        <span class="num">01</span>
+        <span class="name"><a href="https://lab.ranzi.space">lab</a></span>
+        <span class="desc">Claude 协作的 HTML 实验场，教程、研究与原型按主题归档</span>
+        <span class="tag protected">private</span>
+      </li>
+
+      <li class="row">
+        <span class="num">02</span>
+        <span class="name"><a href="https://baodan.ranzi.space">baodan</a></span>
+        <span class="desc">道场客户报单中心，法事申请的内部登记系统</span>
+        <span class="tag protected">auth</span>
+      </li>
+
+      <li class="row">
+        <span class="num">03</span>
+        <span class="name"><a href="https://invest.ranzi.space">invest</a></span>
+        <span class="desc">美股与 A 股每日扫描，把行情压成晨报推到 iPhone</span>
+        <span class="tag"></span>
+      </li>
+
+      <li class="row">
+        <span class="num">04</span>
+        <span class="name"><a href="https://crypto.ranzi.space">crypto</a></span>
+        <span class="desc">跨交易所套利雷达，订单簿深度过滤 + Telegram 推送</span>
+        <span class="tag protected">auth</span>
+      </li>
+
+      <li class="row">
+        <span class="num">05</span>
+        <span class="name"><a href="https://cdn.ranzi.space">cdn</a></span>
+        <span class="desc">Cloudflare Worker 边缘代理，AI 项目的统一出口</span>
+        <span class="tag"></span>
+      </li>
+
+      <li class="row disabled">
+        <span class="num">06</span>
+        <span class="name"><a href="#">xuanyi</a></span>
+        <span class="desc">国学命理推演工具，本地 LLM + RAG 知识库</span>
+        <span class="tag wip">soon</span>
+      </li>
+
+    </ul>
+  </section>
+
+  <section>
+    <p class="eyebrow">elsewhere</p>
+    <ul class="links">
+      <li>
+        <span class="label">github</span>
+        <a href="https://github.com/ranzi0000">github.com/ranzi0000</a>
+      </li>
+      <li>
+        <span class="label">email</span>
+        <a href="mailto:ranzi19961218@gmail.com">ranzi19961218@gmail.com</a>
+      </li>
+    </ul>
+  </section>
+
+  <footer>
+    <span class="meta">ranzi · since 2024</span>
+    <span class="theme-toggle" role="group" aria-label="theme">
+      <button class="seg" data-theme="auto" aria-pressed="true">auto</button>
+      <span class="sep" aria-hidden="true"></span>
+      <button class="seg" data-theme="light" aria-pressed="false">light</button>
+      <span class="sep" aria-hidden="true"></span>
+      <button class="seg" data-theme="dark" aria-pressed="false">dark</button>
+    </span>
+  </footer>
+
+</main>
+
+<script>
+(function() {
+  var STORAGE_KEY = 'ranzi-space-theme';
+  var root = document.documentElement;
+  var btns = document.querySelectorAll('.theme-toggle .seg');
+
+  function getMode() {
+    try {
+      var t = localStorage.getItem(STORAGE_KEY);
+      if (t === 'light' || t === 'dark') return t;
+    } catch (e) {}
+    return 'auto';
+  }
+
+  function applyMode(mode) {
+    if (mode === 'auto') {
+      root.removeAttribute('data-theme');
+      try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
+    } else {
+      root.setAttribute('data-theme', mode);
+      try { localStorage.setItem(STORAGE_KEY, mode); } catch (e) {}
+    }
+    btns.forEach(function(b) {
+      b.setAttribute('aria-pressed', b.dataset.theme === mode ? 'true' : 'false');
+    });
+  }
+
+  applyMode(getMode());
+
+  btns.forEach(function(b) {
+    b.addEventListener('click', function() {
+      applyMode(b.dataset.theme);
+    });
+  });
+})();
+</script>
+</body>
+</html>
