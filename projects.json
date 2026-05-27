@@ -238,26 +238,26 @@
     {
       "slug": "alpha-explorer",
       "title": "alpha-explorer",
-      "tagline": "交易策略探索（无 GitHub 备份）",
-      "status": "dormant",
+      "tagline": "散户可执行正期望策略组合的文献综述+实证回测（2026-05-17 中断于 Phase 2）",
+      "status": "archived",
       "tier": 3,
-      "github": null,
-      "tags": ["投资"],
+      "github": "https://github.com/ranzi0000/alpha-explorer",
+      "tags": ["投资", "研究"],
       "show_on_site": false,
       "show_on_dashboard": false,
-      "needs_github": true
+      "local_path": "~/Projects/_archive/alpha-explorer"
     },
     {
       "slug": "saki-backtest",
       "title": "saki_backtest",
-      "tagline": "Saki 低位二板策略证伪研究",
-      "status": "dormant",
+      "tagline": "Saki 低位二板策略证伪研究（已完成）",
+      "status": "archived",
       "tier": 3,
-      "github": null,
+      "github": "https://github.com/ranzi0000/saki-backtest",
       "tags": ["投资", "回测"],
       "show_on_site": false,
       "show_on_dashboard": false,
-      "needs_github": true
+      "local_path": "~/Projects/_archive/saki_backtest"
     },
     {
       "slug": "openclaw-workspace",
