@@ -18,7 +18,6 @@
 <link rel="icon" href="/icons/favicon.svg" type="image/svg+xml">
 
 <script>
-  // 应用保存的主题（防 FOUC）
   (function() {
     try {
       var t = localStorage.getItem('ranzi-space-theme');
@@ -88,7 +87,6 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   transition: background-color 0.15s ease, color 0.15s ease;
-  /* iOS safe area */
   padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
 }
 
@@ -97,7 +95,6 @@ main {
   margin: 0 auto;
   padding: 48px 24px 64px;
 }
-
 @media (max-width: 640px) {
   main { padding: 32px 16px 48px; }
 }
@@ -116,7 +113,6 @@ h1 {
   font-weight: 600;
   letter-spacing: 0.02em;
   margin: 0;
-  color: var(--fg);
 }
 .refresh-meta {
   font-family: var(--font-mono);
@@ -154,13 +150,8 @@ h1 {
   transform: scale(0.985);
   background: var(--hover);
 }
-.card:hover {
-  border-color: var(--muted);
-}
-.card.disabled {
-  opacity: 0.5;
-  pointer-events: none;
-}
+.card:hover { border-color: var(--muted); }
+.card.wide { grid-column: 1 / -1; }
 
 .card-head {
   display: flex;
@@ -188,9 +179,9 @@ h1 {
 .status-dot.bad { background: var(--status-bad); }
 
 .card-main {
-  font-size: 24px;
+  font-size: 22px;
   font-weight: 600;
-  line-height: 1.15;
+  line-height: 1.2;
   color: var(--fg);
   letter-spacing: -0.01em;
   margin-bottom: 4px;
@@ -203,7 +194,50 @@ h1 {
   line-height: 1.4;
 }
 
-/* ─── Section divider ─── */
+/* ─── Item list（rec 用） ──────── */
+.card-items {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.card-items li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  line-height: 1.4;
+}
+.card-items .dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--faint);
+  flex-shrink: 0;
+}
+.card-items .dot.ok { background: var(--status-ok); }
+.card-items .dot.warn { background: var(--status-warn); }
+.card-items .dot.bad { background: var(--status-bad); }
+.card-items .title {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--fg-soft);
+}
+.card-items .time {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--faint);
+  flex-shrink: 0;
+}
+
+/* ─── Section ───────────────────────────────── */
+section { margin-bottom: 40px; }
+section:last-of-type { margin-bottom: 0; }
+
 .eyebrow {
   font-family: var(--font-mono);
   font-size: 11px;
@@ -216,9 +250,65 @@ h1 {
   border-bottom: 1px solid var(--border);
 }
 
-/* ─── Elsewhere list (preserved) ───────────────────────────────── */
-section { margin-bottom: 40px; }
-section:last-of-type { margin-bottom: 0; }
+/* ─── Project links (底部全项目) ─── */
+.proj-links {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.proj-links li {
+  display: grid;
+  grid-template-columns: 110px 1fr auto;
+  gap: 16px;
+  align-items: baseline;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border);
+}
+.proj-links li:last-child { border-bottom: none; }
+.proj-links .pname {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 600;
+}
+.proj-links .pname a {
+  color: var(--fg);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  padding-bottom: 1px;
+}
+.proj-links .pname a:hover {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+.proj-links .pdesc {
+  font-size: 13px;
+  color: var(--fg-soft);
+  line-height: 1.5;
+}
+.proj-links .ptag {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.05em;
+  color: var(--faint);
+  text-transform: uppercase;
+}
+.proj-links li.disabled .pname a { color: var(--muted); pointer-events: none; }
+.proj-links li.disabled .ptag { color: var(--accent); opacity: 0.85; }
+
+@media (max-width: 480px) {
+  .proj-links li {
+    grid-template-columns: 1fr auto;
+    grid-template-areas:
+      "name tag"
+      "desc desc";
+    gap: 4px 12px;
+  }
+  .proj-links .pname { grid-area: name; }
+  .proj-links .pdesc { grid-area: desc; margin-top: 2px; font-size: 12px; }
+  .proj-links .ptag { grid-area: tag; }
+}
+
+/* ─── Elsewhere ───────────────────────────────── */
 .links {
   list-style: none;
   margin: 0;
@@ -247,7 +337,6 @@ section:last-of-type { margin-bottom: 0; }
   font-size: 14px;
   border-bottom: 1px solid var(--border);
   padding-bottom: 1px;
-  transition: color 0.15s ease, border-color 0.15s ease;
 }
 .links a:hover {
   color: var(--accent);
@@ -270,44 +359,24 @@ footer {
 }
 footer .meta { text-transform: uppercase; }
 
-/* ─── Theme toggle ───────────────────────────────── */
-.theme-toggle {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-}
+.theme-toggle { display: inline-flex; align-items: center; gap: 4px; }
 .theme-toggle .seg {
-  background: none;
-  border: none;
-  padding: 4px 8px;
-  margin: 0;
-  font: inherit;
-  font-family: var(--font-mono);
-  font-size: 11px;
-  letter-spacing: 0.04em;
-  color: var(--faint);
-  cursor: pointer;
-  border-radius: 3px;
-  text-transform: uppercase;
+  background: none; border: none; padding: 4px 8px; margin: 0;
+  font: inherit; font-family: var(--font-mono); font-size: 11px;
+  letter-spacing: 0.04em; color: var(--faint); cursor: pointer;
+  border-radius: 3px; text-transform: uppercase;
   transition: color 0.15s ease, background-color 0.15s ease;
 }
 .theme-toggle .seg:hover { color: var(--muted); }
 .theme-toggle .seg:focus-visible {
-  outline: 1px solid var(--accent);
-  outline-offset: 1px;
+  outline: 1px solid var(--accent); outline-offset: 1px;
 }
 .theme-toggle .seg[aria-pressed="true"] {
-  color: var(--fg);
-  background: var(--hover);
+  color: var(--fg); background: var(--hover);
 }
 .theme-toggle .sep {
-  display: inline-block;
-  width: 2px;
-  height: 2px;
-  background: currentColor;
-  border-radius: 50%;
-  opacity: 0.5;
-  margin: 0 2px;
+  display: inline-block; width: 2px; height: 2px;
+  background: currentColor; border-radius: 50%; opacity: 0.5; margin: 0 2px;
 }
 
 @media (max-width: 480px) {
@@ -326,40 +395,85 @@ footer .meta { text-transform: uppercase; }
   </header>
 
   <section>
-    <p class="eyebrow">projects</p>
+    <p class="eyebrow">dashboard</p>
     <div class="grid" id="grid">
-      <!-- 卡片由 JS 渲染。下方为 SSR-like 骨架（首屏占位，避免空白） -->
-      <a class="card" href="https://invest.ranzi.space" data-project="invest">
-        <div class="card-head"><span class="card-name">invest</span><span class="status-dot"></span></div>
+      <!-- 4 张小卡：wht / baodan / crypto / invest -->
+      <a class="card" href="https://wanhuatong.com" data-project="wht">
+        <div class="card-head"><span class="card-name">wanhuatong</span><span class="status-dot"></span></div>
         <div class="card-main placeholder">—</div>
-        <div class="card-sub">美股 / A 股扫描</div>
+        <div class="card-sub">渲染消耗 / 充值</div>
       </a>
       <a class="card" href="https://baodan.ranzi.space" data-project="baodan">
         <div class="card-head"><span class="card-name">baodan</span><span class="status-dot"></span></div>
         <div class="card-main placeholder">—</div>
         <div class="card-sub">报单中心</div>
       </a>
-      <a class="card" href="https://lab.ranzi.space" data-project="lab">
-        <div class="card-head"><span class="card-name">lab</span><span class="status-dot"></span></div>
-        <div class="card-main placeholder">—</div>
-        <div class="card-sub">HTML 实验场</div>
-      </a>
-      <a class="card" href="https://rec.ranzi.space" data-project="rec">
-        <div class="card-head"><span class="card-name">rec</span><span class="status-dot"></span></div>
-        <div class="card-main placeholder">—</div>
-        <div class="card-sub">直播 / 视频录制</div>
-      </a>
       <a class="card" href="https://crypto.ranzi.space" data-project="crypto">
         <div class="card-head"><span class="card-name">crypto</span><span class="status-dot"></span></div>
         <div class="card-main placeholder">—</div>
         <div class="card-sub">套利雷达</div>
       </a>
-      <a class="card" href="https://baodan.ranzi.space/admin/downloads" data-project="downloader">
-        <div class="card-head"><span class="card-name">downloader</span><span class="status-dot"></span></div>
+      <a class="card" href="https://invest.ranzi.space" data-project="invest">
+        <div class="card-head"><span class="card-name">invest</span><span class="status-dot"></span></div>
         <div class="card-main placeholder">—</div>
-        <div class="card-sub">道观下载客户端</div>
+        <div class="card-sub">美股 / A 股扫描</div>
+      </a>
+
+      <!-- rec 宽卡：列表展示最新 2 条 -->
+      <a class="card wide" href="https://rec.ranzi.space" data-project="rec">
+        <div class="card-head"><span class="card-name">rec · 最新</span><span class="status-dot"></span></div>
+        <ul class="card-items" id="rec-items">
+          <li><span class="dot"></span><span class="title">—</span><span class="time"></span></li>
+          <li><span class="dot"></span><span class="title">—</span><span class="time"></span></li>
+        </ul>
       </a>
     </div>
+  </section>
+
+  <section>
+    <p class="eyebrow">all projects</p>
+    <ul class="proj-links">
+      <li>
+        <span class="pname"><a href="https://wanhuatong.com">wanhuatong</a></span>
+        <span class="pdesc">渲染农场后台与监控</span>
+        <span class="ptag">prod</span>
+      </li>
+      <li>
+        <span class="pname"><a href="https://baodan.ranzi.space">baodan</a></span>
+        <span class="pdesc">道场客户报单中心</span>
+        <span class="ptag">auth</span>
+      </li>
+      <li>
+        <span class="pname"><a href="https://baodan.ranzi.space/admin/downloads">downloader</a></span>
+        <span class="pdesc">道观下载客户端 · 属 baodan</span>
+        <span class="ptag">auth</span>
+      </li>
+      <li>
+        <span class="pname"><a href="https://invest.ranzi.space">invest</a></span>
+        <span class="pdesc">美股 / A 股每日扫描</span>
+        <span class="ptag"></span>
+      </li>
+      <li>
+        <span class="pname"><a href="https://crypto.ranzi.space">crypto</a></span>
+        <span class="pdesc">跨交易所套利雷达</span>
+        <span class="ptag">auth</span>
+      </li>
+      <li>
+        <span class="pname"><a href="https://rec.ranzi.space">rec</a></span>
+        <span class="pdesc">直播 / 视频录制与提取</span>
+        <span class="ptag">auth</span>
+      </li>
+      <li>
+        <span class="pname"><a href="https://lab.ranzi.space">lab</a></span>
+        <span class="pdesc">HTML 实验场 · 教程 · 研究</span>
+        <span class="ptag">private</span>
+      </li>
+      <li class="disabled">
+        <span class="pname"><a href="#">xuanyi</a></span>
+        <span class="pdesc">国学命理推演工具</span>
+        <span class="ptag">soon</span>
+      </li>
+    </ul>
   </section>
 
   <section>
@@ -390,7 +504,7 @@ footer .meta { text-transform: uppercase; }
 </main>
 
 <script>
-// ─── Theme toggle ───────────────────────────────────────────────
+// ─── Theme toggle ────────────────────────────────────────
 (function() {
   var STORAGE_KEY = 'ranzi-space-theme';
   var root = document.documentElement;
@@ -403,7 +517,6 @@ footer .meta { text-transform: uppercase; }
     } catch (e) {}
     return 'auto';
   }
-
   function applyMode(mode) {
     if (mode === 'auto') {
       root.removeAttribute('data-theme');
@@ -416,19 +529,15 @@ footer .meta { text-transform: uppercase; }
       b.setAttribute('aria-pressed', b.dataset.theme === mode ? 'true' : 'false');
     });
   }
-
   applyMode(getMode());
-
   btns.forEach(function(b) {
-    b.addEventListener('click', function() {
-      applyMode(b.dataset.theme);
-    });
+    b.addEventListener('click', function() { applyMode(b.dataset.theme); });
   });
 })();
 
-// ─── Dashboard data ────────────────────────────────────────────
+// ─── Dashboard data ─────────────────────────────────────
 (function() {
-  var CACHE_KEY = 'ranzi-dash-cache-v1';
+  var CACHE_KEY = 'ranzi-dash-cache-v2';  // 升 schema，v1 缓存里没有 items 字段
   var grid = document.getElementById('grid');
   var meta = document.getElementById('refresh-meta');
 
@@ -442,12 +551,41 @@ footer .meta { text-transform: uppercase; }
     if (diff < 86400) return Math.floor(diff / 3600) + 'h ago';
     return Math.floor(diff / 86400) + 'd ago';
   }
-
   function statusClass(s) {
-    if (s === 'ok') return 'ok';
-    if (s === 'warn') return 'warn';
-    if (s === 'bad') return 'bad';
-    return '';
+    return (s === 'ok' || s === 'warn' || s === 'bad') ? s : '';
+  }
+
+  function renderStandardCard(card, p) {
+    var mainEl = card.querySelector('.card-main');
+    var subEl = card.querySelector('.card-sub');
+    var dotEl = card.querySelector('.status-dot');
+
+    if (p.main !== undefined && p.main !== null && p.main !== '') {
+      mainEl.textContent = p.main;
+      mainEl.classList.remove('placeholder');
+    }
+    if (p.sub) subEl.textContent = p.sub;
+    dotEl.className = 'status-dot ' + statusClass(p.status);
+  }
+
+  function renderItemCard(card, p) {
+    var ul = card.querySelector('.card-items');
+    var dotEl = card.querySelector('.status-dot');
+    dotEl.className = 'status-dot ' + statusClass(p.status);
+
+    if (!p.items || p.items.length === 0) return;
+
+    ul.innerHTML = '';
+    p.items.forEach(function(it) {
+      var li = document.createElement('li');
+      li.innerHTML =
+        '<span class="dot ' + statusClass(it.status) + '"></span>' +
+        '<span class="title"></span>' +
+        '<span class="time"></span>';
+      li.querySelector('.title').textContent = it.title || '—';
+      li.querySelector('.time').textContent = it.time || '';
+      ul.appendChild(li);
+    });
   }
 
   function render(data) {
@@ -457,16 +595,11 @@ footer .meta { text-transform: uppercase; }
       if (!card) return;
       if (p.href) card.setAttribute('href', p.href);
 
-      var mainEl = card.querySelector('.card-main');
-      var subEl = card.querySelector('.card-sub');
-      var dotEl = card.querySelector('.status-dot');
-
-      if (p.main !== undefined && p.main !== null && p.main !== '') {
-        mainEl.textContent = p.main;
-        mainEl.classList.remove('placeholder');
+      if (p.items) {
+        renderItemCard(card, p);
+      } else {
+        renderStandardCard(card, p);
       }
-      if (p.sub) subEl.textContent = p.sub;
-      dotEl.className = 'status-dot ' + statusClass(p.status);
     });
 
     if (data.received_at) {
@@ -476,12 +609,10 @@ footer .meta { text-transform: uppercase; }
     }
   }
 
-  // 1) 首屏：从 localStorage 读上次缓存，0ms 渲染
+  // 1) 首屏：localStorage 0ms 渲染
   try {
     var cached = localStorage.getItem(CACHE_KEY);
-    if (cached) {
-      render(JSON.parse(cached));
-    }
+    if (cached) render(JSON.parse(cached));
   } catch (e) {}
 
   // 2) 拉最新
@@ -500,20 +631,19 @@ footer .meta { text-transform: uppercase; }
         meta.textContent = 'offline';
       });
   }
-
   fetchSummary();
 
-  // 3) 每 30 秒刷一次（页面可见时）
+  // 3) 每 60 秒刷一次（数据后端 5 分钟一周期，前端 60 秒拉够新鲜了）
   setInterval(function() {
     if (document.visibilityState === 'visible') fetchSummary();
-  }, 30000);
+  }, 60000);
 
   // 4) 回到前台立刻刷一次
   document.addEventListener('visibilitychange', function() {
     if (document.visibilityState === 'visible') fetchSummary();
   });
 
-  // 5) 每 10 秒只更新"X 分钟前"的相对时间（不发请求）
+  // 5) 每 15 秒只更新"X 分钟前"显示，不发请求
   setInterval(function() {
     try {
       var cached = localStorage.getItem(CACHE_KEY);
@@ -522,10 +652,10 @@ footer .meta { text-transform: uppercase; }
       var t = data.received_at || data.generated_at;
       if (t) meta.textContent = fmtRelative(t);
     } catch (e) {}
-  }, 10000);
+  }, 15000);
 })();
 
-// ─── Service Worker（PWA 缓存 shell，不缓存 HTML 和 API） ───
+// ─── Service Worker ────────────────────────────────────
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', function() {
     navigator.serviceWorker.register('/sw.js').catch(function() {});
