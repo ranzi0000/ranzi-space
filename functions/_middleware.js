@@ -141,8 +141,13 @@ export async function onRequest(context) {
   const url = new URL(request.url);
   const password = env.SITE_PASSWORD;
 
-  // /api/push 走 Bearer token 不查 cookie，在 functions/api/push.js 里自己校验
-  if (url.pathname === "/api/push") {
+  // 这些路径走 Bearer token 不查 cookie，由各自的 function 校验
+  // /api/push                 collector 推数据
+  // /api/claude-launch-request poller 拉触发时间戳
+  if (
+    url.pathname === "/api/push" ||
+    url.pathname === "/api/claude-launch-request"
+  ) {
     return await next();
   }
 

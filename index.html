@@ -134,6 +134,40 @@ h1 {
 body.stale .card { opacity: 0.55; }
 body.stale .card-main { color: var(--muted); }
 
+/* ─── Launch Claude 按钮 ──────────────────── */
+.launch-btn {
+  display: block;
+  width: 100%;
+  padding: 14px 16px;
+  margin-bottom: 24px;
+  background: var(--fg);
+  color: var(--bg);
+  border: none;
+  border-radius: 10px;
+  font: inherit;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  text-align: center;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.1s ease, opacity 0.15s ease;
+}
+.launch-btn:active { transform: scale(0.985); }
+.launch-btn:disabled {
+  background: var(--muted);
+  cursor: wait;
+}
+.launch-btn .hint {
+  display: block;
+  margin-top: 4px;
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 0.05em;
+  opacity: 0.6;
+}
+
 /* ─── Card grid ───────────────────────────────── */
 .grid {
   display: grid;
@@ -408,6 +442,10 @@ footer .meta { text-transform: uppercase; }
 
   <section>
     <p class="eyebrow">dashboard</p>
+    <button class="launch-btn" id="launch-claude" type="button">
+      启动新 Claude 会话
+      <span class="hint" id="launch-hint">点击在 Mac mini 桌面开新 iTerm 窗口</span>
+    </button>
     <div class="grid" id="grid">
       <!-- 4 张小卡：wht / baodan / crypto / invest -->
       <a class="card" href="http://49.234.180.69:8888" data-project="wht">
@@ -682,6 +720,44 @@ footer .meta { text-transform: uppercase; }
       }
     } catch (e) {}
   }, 15000);
+})();
+
+// ─── Launch Claude button ─────────────────────────────
+(function() {
+  var btn = document.getElementById('launch-claude');
+  var hint = document.getElementById('launch-hint');
+  if (!btn) return;
+
+  btn.addEventListener('click', function() {
+    if (btn.disabled) return;
+    btn.disabled = true;
+    var origHint = hint.textContent;
+    hint.textContent = '触发中…';
+
+    fetch('/api/claude-launch', {
+      method: 'POST',
+      credentials: 'same-origin',
+      cache: 'no-store',
+    })
+      .then(function(r) {
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        return r.json();
+      })
+      .then(function(data) {
+        hint.textContent = '已触发 · ~25 秒后在 claude.ai 看到新 session';
+        setTimeout(function() {
+          hint.textContent = origHint;
+          btn.disabled = false;
+        }, 30000);
+      })
+      .catch(function(e) {
+        hint.textContent = '失败 · ' + (e.message || 'unknown') + '（再点试试）';
+        setTimeout(function() {
+          hint.textContent = origHint;
+          btn.disabled = false;
+        }, 5000);
+      });
+  });
 })();
 
 // ─── Service Worker ────────────────────────────────────
