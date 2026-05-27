@@ -121,6 +121,18 @@ h1 {
   color: var(--faint);
   text-transform: uppercase;
 }
+.refresh-meta.stale {
+  color: var(--status-bad);
+  font-weight: 600;
+}
+.refresh-meta.stale::before {
+  content: "⏸ ";
+  margin-right: 2px;
+}
+
+/* 数据陈旧时，所有卡片半透明 + 灰化，提示"这不是当前数据" */
+body.stale .card { opacity: 0.55; }
+body.stale .card-main { color: var(--muted); }
 
 /* ─── Card grid ───────────────────────────────── */
 .grid {
@@ -541,6 +553,10 @@ footer .meta { text-transform: uppercase; }
   var grid = document.getElementById('grid');
   var meta = document.getElementById('refresh-meta');
 
+  // 数据超过 STALE_SECONDS 没更新就标"陈旧"
+  // collector 周期 5min，给 3× buffer，15 分钟无更新 = 大概率 Mac mini 挂了
+  var STALE_SECONDS = 15 * 60;
+
   function fmtRelative(iso) {
     if (!iso) return '—';
     var d = new Date(iso);
@@ -550,6 +566,16 @@ footer .meta { text-transform: uppercase; }
     if (diff < 3600) return Math.floor(diff / 60) + 'min ago';
     if (diff < 86400) return Math.floor(diff / 3600) + 'h ago';
     return Math.floor(diff / 86400) + 'd ago';
+  }
+
+  function applyStaleness(iso) {
+    if (!iso) return;
+    var d = new Date(iso);
+    if (isNaN(d)) return;
+    var diff = (Date.now() - d.getTime()) / 1000;
+    var stale = diff > STALE_SECONDS;
+    document.body.classList.toggle('stale', stale);
+    meta.classList.toggle('stale', stale);
   }
   function statusClass(s) {
     return (s === 'ok' || s === 'warn' || s === 'bad') ? s : '';
@@ -602,10 +628,10 @@ footer .meta { text-transform: uppercase; }
       }
     });
 
-    if (data.received_at) {
-      meta.textContent = fmtRelative(data.received_at);
-    } else if (data.generated_at) {
-      meta.textContent = fmtRelative(data.generated_at);
+    var t = data.received_at || data.generated_at;
+    if (t) {
+      meta.textContent = fmtRelative(t);
+      applyStaleness(t);
     }
   }
 
@@ -643,14 +669,17 @@ footer .meta { text-transform: uppercase; }
     if (document.visibilityState === 'visible') fetchSummary();
   });
 
-  // 5) 每 15 秒只更新"X 分钟前"显示，不发请求
+  // 5) 每 15 秒只更新"X 分钟前"显示 + 陈旧标记，不发请求
   setInterval(function() {
     try {
       var cached = localStorage.getItem(CACHE_KEY);
       if (!cached) return;
       var data = JSON.parse(cached);
       var t = data.received_at || data.generated_at;
-      if (t) meta.textContent = fmtRelative(t);
+      if (t) {
+        meta.textContent = fmtRelative(t);
+        applyStaleness(t);
+      }
     } catch (e) {}
   }, 15000);
 })();
