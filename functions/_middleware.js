@@ -141,6 +141,11 @@ export async function onRequest(context) {
   const url = new URL(request.url);
   const password = env.SITE_PASSWORD;
 
+  // /api/push 走 Bearer token 不查 cookie，在 functions/api/push.js 里自己校验
+  if (url.pathname === "/api/push") {
+    return await next();
+  }
+
   if (!password) {
     return htmlResponse(
       "<h1>500</h1><p>SITE_PASSWORD env var not configured.</p>",

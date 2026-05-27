@@ -1,0 +1,7 @@
+name = "ranzi-space"
+compatibility_date = "2025-04-01"
+pages_build_output_dir = "."
+
+[[kv_namespaces]]
+binding = "DASHBOARD"
+id = "fbf6f5a6489d4f858026ea11059f3126"

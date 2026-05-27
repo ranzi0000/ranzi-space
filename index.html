@@ -4,9 +4,21 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>ranzi.space</title>
-<meta name="description" content="ranzi 的个人项目入口。工具、实验、研究。">
+<meta name="description" content="ranzi 的项目大屏。把各项目的当日状态聚合在一起。">
 <meta name="color-scheme" content="light dark">
+
+<!-- PWA -->
+<link rel="manifest" href="/manifest.json">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="ranzi">
+<meta name="theme-color" content="#fafaf8" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0c0c0c" media="(prefers-color-scheme: dark)">
+<link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+<link rel="icon" href="/icons/favicon.svg" type="image/svg+xml">
+
 <script>
+  // 应用保存的主题（防 FOUC）
   (function() {
     try {
       var t = localStorage.getItem('ranzi-space-theme');
@@ -16,7 +28,7 @@
     } catch (e) {}
   })();
 </script>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%2318181b'/%3E%3Ctext x='16' y='21' font-family='ui-monospace,monospace' font-size='14' font-weight='600' text-anchor='middle' fill='%23fafaf8'%3Er%3C/text%3E%3C/svg%3E">
+
 <style>
 :root {
   --bg: #fafaf8;
@@ -26,8 +38,12 @@
   --faint: #a8a29e;
   --border: #ebe9e4;
   --hover: #f2f0eb;
+  --card: #ffffff;
   --accent: oklch(54% 0.13 38);
   --accent-soft: oklch(54% 0.13 38 / 0.08);
+  --status-ok: oklch(64% 0.14 145);
+  --status-warn: oklch(72% 0.14 75);
+  --status-bad: oklch(60% 0.18 25);
   --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", system-ui, sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
 }
@@ -40,6 +56,7 @@
   --faint: #5a5a57;
   --border: #1c1c1a;
   --hover: #161614;
+  --card: #131311;
   --accent: oklch(72% 0.12 38);
   --accent-soft: oklch(72% 0.12 38 / 0.10);
 }
@@ -53,6 +70,7 @@
     --faint: #5a5a57;
     --border: #1c1c1a;
     --hover: #161614;
+    --card: #131311;
     --accent: oklch(72% 0.12 38);
     --accent-soft: oklch(72% 0.12 38 / 0.10);
   }
@@ -64,48 +82,128 @@ body {
   margin: 0;
   font-family: var(--font-sans);
   font-size: 16px;
-  line-height: 1.65;
+  line-height: 1.6;
   color: var(--fg);
   background: var(--bg);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   transition: background-color 0.15s ease, color 0.15s ease;
+  /* iOS safe area */
+  padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
 }
 
 main {
   max-width: 640px;
   margin: 0 auto;
-  padding: 96px 32px 64px;
+  padding: 48px 24px 64px;
 }
 
 @media (max-width: 640px) {
-  main { padding: 56px 24px 48px; }
+  main { padding: 32px 16px 48px; }
 }
 
 /* ─── Header ───────────────────────────────── */
 header {
-  margin-bottom: 64px;
+  margin-bottom: 32px;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
 }
 h1 {
   font-family: var(--font-mono);
   font-size: 15px;
   font-weight: 600;
   letter-spacing: 0.02em;
-  margin: 0 0 14px;
+  margin: 0;
   color: var(--fg);
 }
-header p {
-  margin: 0;
-  color: var(--muted);
-  font-size: 15px;
-  line-height: 1.6;
-  max-width: 32em;
+.refresh-meta {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  color: var(--faint);
+  text-transform: uppercase;
 }
 
-/* ─── Section ───────────────────────────────── */
-section { margin-bottom: 56px; }
-section:last-of-type { margin-bottom: 0; }
+/* ─── Card grid ───────────────────────────────── */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin-bottom: 32px;
+}
+@media (max-width: 380px) {
+  .grid { grid-template-columns: 1fr; }
+}
 
+.card {
+  position: relative;
+  display: block;
+  padding: 16px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.1s ease, border-color 0.15s ease, background-color 0.15s ease;
+  min-height: 110px;
+  -webkit-tap-highlight-color: transparent;
+}
+.card:active {
+  transform: scale(0.985);
+  background: var(--hover);
+}
+.card:hover {
+  border-color: var(--muted);
+}
+.card.disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.card-name {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--fg);
+  letter-spacing: 0.01em;
+}
+.status-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--faint);
+  flex-shrink: 0;
+}
+.status-dot.ok { background: var(--status-ok); }
+.status-dot.warn { background: var(--status-warn); }
+.status-dot.bad { background: var(--status-bad); }
+
+.card-main {
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 1.15;
+  color: var(--fg);
+  letter-spacing: -0.01em;
+  margin-bottom: 4px;
+  font-variant-numeric: tabular-nums;
+}
+.card-main.placeholder { color: var(--faint); font-size: 18px; font-weight: 400; }
+.card-sub {
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.4;
+}
+
+/* ─── Section divider ─── */
 .eyebrow {
   font-family: var(--font-mono);
   font-size: 11px;
@@ -113,92 +211,14 @@ section:last-of-type { margin-bottom: 0; }
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--faint);
-  margin: 0 0 20px;
-  padding-bottom: 12px;
+  margin: 0 0 16px;
+  padding-bottom: 10px;
   border-bottom: 1px solid var(--border);
 }
 
-/* ─── Project list ───────────────────────────────── */
-.list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-.row {
-  display: grid;
-  grid-template-columns: 36px 110px 1fr auto;
-  gap: 20px;
-  align-items: baseline;
-  padding: 16px 0;
-  border-bottom: 1px solid var(--border);
-  position: relative;
-}
-.row:last-child { border-bottom: none; }
-.row .num {
-  font-family: var(--font-mono);
-  font-size: 12px;
-  color: var(--faint);
-  letter-spacing: 0.02em;
-}
-.row .name {
-  font-family: var(--font-mono);
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--fg);
-  letter-spacing: -0.005em;
-}
-.row .name a {
-  color: inherit;
-  text-decoration: none;
-  border-bottom: 1px solid transparent;
-  padding-bottom: 1px;
-  transition: border-color 0.15s ease, color 0.15s ease;
-}
-.row .name a:hover {
-  color: var(--accent);
-  border-bottom-color: var(--accent);
-}
-.row .desc {
-  font-size: 14px;
-  line-height: 1.55;
-  color: var(--fg-soft);
-}
-.row .tag {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  letter-spacing: 0.03em;
-  color: var(--faint);
-  white-space: nowrap;
-}
-.row .tag.protected {
-  color: var(--muted);
-}
-.row .tag.wip {
-  color: var(--accent);
-  opacity: 0.85;
-}
-
-.row.disabled .name a {
-  color: var(--muted);
-  pointer-events: none;
-}
-
-@media (max-width: 640px) {
-  .row {
-    grid-template-columns: 28px 1fr auto;
-    grid-template-areas:
-      "num name tag"
-      ".   desc desc";
-    gap: 6px 16px;
-    padding: 18px 0;
-  }
-  .row .num { grid-area: num; }
-  .row .name { grid-area: name; }
-  .row .desc { grid-area: desc; margin-top: 4px; }
-  .row .tag { grid-area: tag; }
-}
-
-/* ─── Elsewhere list ───────────────────────────────── */
+/* ─── Elsewhere list (preserved) ───────────────────────────────── */
+section { margin-bottom: 40px; }
+section:last-of-type { margin-bottom: 0; }
 .links {
   list-style: none;
   margin: 0;
@@ -236,8 +256,8 @@ section:last-of-type { margin-bottom: 0; }
 
 /* ─── Footer ───────────────────────────────── */
 footer {
-  margin-top: 80px;
-  padding-top: 24px;
+  margin-top: 56px;
+  padding-top: 20px;
   border-top: 1px solid var(--border);
   display: flex;
   justify-content: space-between;
@@ -255,10 +275,6 @@ footer .meta { text-transform: uppercase; }
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  font-family: var(--font-mono);
-  font-size: 11px;
-  letter-spacing: 0.04em;
-  color: var(--faint);
 }
 .theme-toggle .seg {
   background: none;
@@ -266,8 +282,10 @@ footer .meta { text-transform: uppercase; }
   padding: 4px 8px;
   margin: 0;
   font: inherit;
-  color: inherit;
-  letter-spacing: inherit;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  color: var(--faint);
   cursor: pointer;
   border-radius: 3px;
   text-transform: uppercase;
@@ -304,56 +322,44 @@ footer .meta { text-transform: uppercase; }
 
   <header>
     <h1>ranzi.space</h1>
-    <p>个人项目入口。做点工具，写点代码，看点市场。</p>
+    <span class="refresh-meta" id="refresh-meta">—</span>
   </header>
 
   <section>
     <p class="eyebrow">projects</p>
-    <ul class="list">
-
-      <li class="row">
-        <span class="num">01</span>
-        <span class="name"><a href="https://lab.ranzi.space">lab</a></span>
-        <span class="desc">Claude 协作的 HTML 实验场，教程、研究与原型按主题归档</span>
-        <span class="tag protected">private</span>
-      </li>
-
-      <li class="row">
-        <span class="num">02</span>
-        <span class="name"><a href="https://baodan.ranzi.space">baodan</a></span>
-        <span class="desc">道场客户报单中心，法事申请的内部登记系统</span>
-        <span class="tag protected">auth</span>
-      </li>
-
-      <li class="row">
-        <span class="num">03</span>
-        <span class="name"><a href="https://invest.ranzi.space">invest</a></span>
-        <span class="desc">美股与 A 股每日扫描，把行情压成晨报推到 iPhone</span>
-        <span class="tag"></span>
-      </li>
-
-      <li class="row">
-        <span class="num">04</span>
-        <span class="name"><a href="https://crypto.ranzi.space">crypto</a></span>
-        <span class="desc">跨交易所套利雷达，订单簿深度过滤 + Telegram 推送</span>
-        <span class="tag protected">auth</span>
-      </li>
-
-      <li class="row">
-        <span class="num">05</span>
-        <span class="name"><a href="https://rec.ranzi.space">rec</a></span>
-        <span class="desc">抖音直播录制后台，粘贴直播链接即可录制，Mac mini 本地运行</span>
-        <span class="tag protected">auth</span>
-      </li>
-
-      <li class="row disabled">
-        <span class="num">06</span>
-        <span class="name"><a href="#">xuanyi</a></span>
-        <span class="desc">国学命理推演工具，本地 LLM + RAG 知识库</span>
-        <span class="tag wip">soon</span>
-      </li>
-
-    </ul>
+    <div class="grid" id="grid">
+      <!-- 卡片由 JS 渲染。下方为 SSR-like 骨架（首屏占位，避免空白） -->
+      <a class="card" href="https://invest.ranzi.space" data-project="invest">
+        <div class="card-head"><span class="card-name">invest</span><span class="status-dot"></span></div>
+        <div class="card-main placeholder">—</div>
+        <div class="card-sub">美股 / A 股扫描</div>
+      </a>
+      <a class="card" href="https://baodan.ranzi.space" data-project="baodan">
+        <div class="card-head"><span class="card-name">baodan</span><span class="status-dot"></span></div>
+        <div class="card-main placeholder">—</div>
+        <div class="card-sub">报单中心</div>
+      </a>
+      <a class="card" href="https://lab.ranzi.space" data-project="lab">
+        <div class="card-head"><span class="card-name">lab</span><span class="status-dot"></span></div>
+        <div class="card-main placeholder">—</div>
+        <div class="card-sub">HTML 实验场</div>
+      </a>
+      <a class="card" href="https://rec.ranzi.space" data-project="rec">
+        <div class="card-head"><span class="card-name">rec</span><span class="status-dot"></span></div>
+        <div class="card-main placeholder">—</div>
+        <div class="card-sub">直播 / 视频录制</div>
+      </a>
+      <a class="card" href="https://crypto.ranzi.space" data-project="crypto">
+        <div class="card-head"><span class="card-name">crypto</span><span class="status-dot"></span></div>
+        <div class="card-main placeholder">—</div>
+        <div class="card-sub">套利雷达</div>
+      </a>
+      <a class="card" href="https://baodan.ranzi.space/admin/downloads" data-project="downloader">
+        <div class="card-head"><span class="card-name">downloader</span><span class="status-dot"></span></div>
+        <div class="card-main placeholder">—</div>
+        <div class="card-sub">道观下载客户端</div>
+      </a>
+    </div>
   </section>
 
   <section>
@@ -384,6 +390,7 @@ footer .meta { text-transform: uppercase; }
 </main>
 
 <script>
+// ─── Theme toggle ───────────────────────────────────────────────
 (function() {
   var STORAGE_KEY = 'ranzi-space-theme';
   var root = document.documentElement;
@@ -418,6 +425,112 @@ footer .meta { text-transform: uppercase; }
     });
   });
 })();
+
+// ─── Dashboard data ────────────────────────────────────────────
+(function() {
+  var CACHE_KEY = 'ranzi-dash-cache-v1';
+  var grid = document.getElementById('grid');
+  var meta = document.getElementById('refresh-meta');
+
+  function fmtRelative(iso) {
+    if (!iso) return '—';
+    var d = new Date(iso);
+    if (isNaN(d)) return '—';
+    var diff = (Date.now() - d.getTime()) / 1000;
+    if (diff < 60) return Math.floor(diff) + 's ago';
+    if (diff < 3600) return Math.floor(diff / 60) + 'min ago';
+    if (diff < 86400) return Math.floor(diff / 3600) + 'h ago';
+    return Math.floor(diff / 86400) + 'd ago';
+  }
+
+  function statusClass(s) {
+    if (s === 'ok') return 'ok';
+    if (s === 'warn') return 'warn';
+    if (s === 'bad') return 'bad';
+    return '';
+  }
+
+  function render(data) {
+    if (!data || !Array.isArray(data.projects)) return;
+    data.projects.forEach(function(p) {
+      var card = grid.querySelector('[data-project="' + p.key + '"]');
+      if (!card) return;
+      if (p.href) card.setAttribute('href', p.href);
+
+      var mainEl = card.querySelector('.card-main');
+      var subEl = card.querySelector('.card-sub');
+      var dotEl = card.querySelector('.status-dot');
+
+      if (p.main !== undefined && p.main !== null && p.main !== '') {
+        mainEl.textContent = p.main;
+        mainEl.classList.remove('placeholder');
+      }
+      if (p.sub) subEl.textContent = p.sub;
+      dotEl.className = 'status-dot ' + statusClass(p.status);
+    });
+
+    if (data.received_at) {
+      meta.textContent = fmtRelative(data.received_at);
+    } else if (data.generated_at) {
+      meta.textContent = fmtRelative(data.generated_at);
+    }
+  }
+
+  // 1) 首屏：从 localStorage 读上次缓存，0ms 渲染
+  try {
+    var cached = localStorage.getItem(CACHE_KEY);
+    if (cached) {
+      render(JSON.parse(cached));
+    }
+  } catch (e) {}
+
+  // 2) 拉最新
+  function fetchSummary() {
+    fetch('/api/summary', { credentials: 'same-origin', cache: 'no-store' })
+      .then(function(r) {
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        return r.json();
+      })
+      .then(function(data) {
+        render(data);
+        try { localStorage.setItem(CACHE_KEY, JSON.stringify(data)); } catch (e) {}
+      })
+      .catch(function(e) {
+        console.warn('fetch summary failed:', e);
+        meta.textContent = 'offline';
+      });
+  }
+
+  fetchSummary();
+
+  // 3) 每 30 秒刷一次（页面可见时）
+  setInterval(function() {
+    if (document.visibilityState === 'visible') fetchSummary();
+  }, 30000);
+
+  // 4) 回到前台立刻刷一次
+  document.addEventListener('visibilitychange', function() {
+    if (document.visibilityState === 'visible') fetchSummary();
+  });
+
+  // 5) 每 10 秒只更新"X 分钟前"的相对时间（不发请求）
+  setInterval(function() {
+    try {
+      var cached = localStorage.getItem(CACHE_KEY);
+      if (!cached) return;
+      var data = JSON.parse(cached);
+      var t = data.received_at || data.generated_at;
+      if (t) meta.textContent = fmtRelative(t);
+    } catch (e) {}
+  }, 10000);
+})();
+
+// ─── Service Worker（PWA 缓存 shell，不缓存 HTML 和 API） ───
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function() {
+    navigator.serviceWorker.register('/sw.js').catch(function() {});
+  });
+}
 </script>
 </body>
 </html>
