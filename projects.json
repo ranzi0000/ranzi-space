@@ -225,6 +225,17 @@
       "show_on_dashboard": false
     },
     {
+      "slug": "heartbeat",
+      "title": "heartbeat",
+      "tagline": "共享心跳客户端库（被 investment-scanner / nexus / crypto-radar / hub-watchdog 4 个项目 import）",
+      "status": "infra",
+      "tier": 3,
+      "github": "https://github.com/ranzi0000/heartbeat",
+      "tags": ["基建", "shared lib"],
+      "show_on_site": false,
+      "show_on_dashboard": false
+    },
+    {
       "slug": "alpha-explorer",
       "title": "alpha-explorer",
       "tagline": "交易策略探索（无 GitHub 备份）",
@@ -304,11 +315,11 @@
       "show_on_dashboard": false
     }
   ],
-  "local_only_orphans": [
-    "_shared",
+  "_archived_local": [
     "bilibili_subtitles",
     "bilibili_transcript",
     "wecom-autobot",
     "xuanyi-docs"
-  ]
+  ],
+  "_archived_note": "已 mv 到 ~/Projects/_archive/，不再活跃。要彻底删可手动 rm -rf。"
 }
