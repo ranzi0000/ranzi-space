@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>projects · ranzi.space</title>
+<meta name="description" content="ranzi 的项目完整目录。">
+<meta name="color-scheme" content="light dark">
+
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#fafaf8" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0c0c0c" media="(prefers-color-scheme: dark)">
+<link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+<link rel="icon" href="/icons/favicon.svg" type="image/svg+xml">
+
+<script>
+  (function() {
+    try {
+      var t = localStorage.getItem('ranzi-space-theme');
+      if (t === 'light' || t === 'dark') {
+        document.documentElement.setAttribute('data-theme', t);
+      }
+    } catch (e) {}
+  })();
+</script>
+
+<style>
+:root {
+  --bg: #fafaf8;
+  --fg: #18181b;
+  --fg-soft: #3f3f46;
+  --muted: #71717a;
+  --faint: #a8a29e;
+  --border: #ebe9e4;
+  --hover: #f2f0eb;
+  --card: #ffffff;
+  --accent: oklch(54% 0.13 38);
+  --accent-soft: oklch(54% 0.13 38 / 0.08);
+  --status-ok: oklch(64% 0.14 145);
+  --status-warn: oklch(72% 0.14 75);
+  --status-bad: oklch(60% 0.18 25);
+  --status-infra: oklch(60% 0.12 240);
+  --status-dormant: #a8a29e;
+  --status-archived: #71717a;
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", system-ui, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+}
+
+:root[data-theme="dark"] {
+  --bg: #0c0c0c;
+  --fg: #ededec;
+  --fg-soft: #c4c4c0;
+  --muted: #8a8a87;
+  --faint: #5a5a57;
+  --border: #1c1c1a;
+  --hover: #161614;
+  --card: #131311;
+  --accent: oklch(72% 0.12 38);
+  --accent-soft: oklch(72% 0.12 38 / 0.10);
+  --status-dormant: #5a5a57;
+  --status-archived: #4a4a47;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0c0c0c;
+    --fg: #ededec;
+    --fg-soft: #c4c4c0;
+    --muted: #8a8a87;
+    --faint: #5a5a57;
+    --border: #1c1c1a;
+    --hover: #161614;
+    --card: #131311;
+    --accent: oklch(72% 0.12 38);
+    --accent-soft: oklch(72% 0.12 38 / 0.10);
+    --status-dormant: #5a5a57;
+    --status-archived: #4a4a47;
+  }
+}
+
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--fg);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transition: background-color 0.15s ease, color 0.15s ease;
+  padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+}
+
+main {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 48px 24px 64px;
+}
+@media (max-width: 640px) {
+  main { padding: 32px 16px 48px; }
+}
+
+/* ─── Header ───────────────────────────────── */
+header {
+  margin-bottom: 24px;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+}
+header h1 {
+  font-family: var(--font-mono);
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  margin: 0;
+}
+header h1 .crumb {
+  color: var(--faint);
+  font-weight: 400;
+}
+header h1 .crumb a {
+  color: var(--faint);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+}
+header h1 .crumb a:hover {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+.meta-count {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  color: var(--faint);
+  text-transform: uppercase;
+}
+
+/* ─── Filter chips ────────────────────────── */
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 32px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border);
+}
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  font: inherit;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muted);
+  cursor: pointer;
+  transition: all 0.12s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+.chip:hover { color: var(--fg); border-color: var(--muted); }
+.chip[aria-pressed="true"] {
+  background: var(--fg);
+  color: var(--bg);
+  border-color: var(--fg);
+}
+.chip .count {
+  font-size: 10px;
+  opacity: 0.6;
+}
+
+/* ─── Project list ────────────────────────── */
+.proj-group { margin-bottom: 40px; }
+.proj-group:last-child { margin-bottom: 0; }
+
+.group-head {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--faint);
+  margin: 0 0 12px;
+}
+.group-head .dot {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  margin-right: 8px;
+  vertical-align: middle;
+  background: var(--status-ok);
+}
+.group-head.infra .dot { background: var(--status-infra); }
+.group-head.dormant .dot { background: var(--status-dormant); }
+.group-head.archived .dot { background: var(--status-archived); }
+
+.proj-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.proj-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 12px 16px;
+  align-items: baseline;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border);
+}
+.proj-row:last-child { border-bottom: none; }
+.proj-row.hidden { display: none; }
+
+.proj-name {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--fg);
+  letter-spacing: 0.01em;
+}
+.proj-name .tier-flag {
+  display: inline-block;
+  font-size: 9px;
+  font-weight: 400;
+  padding: 1px 5px;
+  margin-left: 6px;
+  border-radius: 3px;
+  background: var(--accent-soft);
+  color: var(--accent);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  vertical-align: middle;
+}
+.proj-tagline {
+  grid-column: 1;
+  font-size: 13px;
+  color: var(--fg-soft);
+  line-height: 1.5;
+  margin-top: 2px;
+}
+.proj-tags {
+  grid-column: 1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 6px;
+}
+.proj-tags .t {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--faint);
+  letter-spacing: 0.04em;
+  padding: 1px 6px;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  text-transform: lowercase;
+}
+
+.proj-links {
+  grid-row: 1 / span 3;
+  grid-column: 2;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.proj-links a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  color: var(--muted);
+  text-decoration: none;
+  transition: all 0.12s ease;
+}
+.proj-links a:hover {
+  background: var(--hover);
+  color: var(--fg);
+}
+.proj-links a svg {
+  width: 16px;
+  height: 16px;
+}
+.proj-links a.disabled {
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+/* ─── Loading state ─────────────────────── */
+.loading {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--faint);
+  text-align: center;
+  padding: 40px 0;
+}
+.empty {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--faint);
+  text-align: center;
+  padding: 20px 0;
+}
+
+/* ─── Footer ────────────────────────────── */
+footer {
+  margin-top: 56px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  color: var(--faint);
+}
+footer .meta { text-transform: uppercase; }
+footer a {
+  color: var(--faint);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+}
+footer a:hover {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+
+.theme-toggle { display: inline-flex; align-items: center; gap: 4px; }
+.theme-toggle .seg {
+  background: none; border: none; padding: 4px 8px; margin: 0;
+  font: inherit; font-family: var(--font-mono); font-size: 11px;
+  letter-spacing: 0.04em; color: var(--faint); cursor: pointer;
+  border-radius: 3px; text-transform: uppercase;
+  transition: color 0.15s ease, background-color 0.15s ease;
+}
+.theme-toggle .seg:hover { color: var(--muted); }
+.theme-toggle .seg[aria-pressed="true"] {
+  color: var(--fg); background: var(--hover);
+}
+.theme-toggle .sep {
+  display: inline-block; width: 2px; height: 2px;
+  background: currentColor; border-radius: 50%; opacity: 0.5; margin: 0 2px;
+}
+
+@media (max-width: 480px) {
+  footer { flex-direction: column; align-items: flex-start; gap: 16px; }
+}
+
+::selection { background: var(--accent-soft); }
+</style>
+</head>
+<body>
+<main>
+
+  <header>
+    <h1><span class="crumb"><a href="/">ranzi.space</a> /</span> projects</h1>
+    <span class="meta-count" id="meta-count">—</span>
+  </header>
+
+  <nav class="chips" id="chips" role="tablist" aria-label="filter">
+    <button class="chip" data-filter="all" aria-pressed="true">全部 <span class="count" data-count-for="all"></span></button>
+    <button class="chip" data-filter="active" aria-pressed="false">主线 <span class="count" data-count-for="active"></span></button>
+    <button class="chip" data-filter="infra" aria-pressed="false">配套 <span class="count" data-count-for="infra"></span></button>
+    <button class="chip" data-filter="dormant" aria-pressed="false">暂停 <span class="count" data-count-for="dormant"></span></button>
+    <button class="chip" data-filter="archived" aria-pressed="false">已归档 <span class="count" data-count-for="archived"></span></button>
+    <button class="chip" data-filter="no-github" aria-pressed="false">本地无备份 <span class="count" data-count-for="no-github"></span></button>
+  </nav>
+
+  <div id="content">
+    <div class="loading">正在加载 projects.json…</div>
+  </div>
+
+  <footer>
+    <span class="meta">ranzi · since 2024 · <a href="/">← back</a></span>
+    <span class="theme-toggle" role="group" aria-label="theme">
+      <button class="seg" data-theme="auto" aria-pressed="true">auto</button>
+      <span class="sep" aria-hidden="true"></span>
+      <button class="seg" data-theme="light" aria-pressed="false">light</button>
+      <span class="sep" aria-hidden="true"></span>
+      <button class="seg" data-theme="dark" aria-pressed="false">dark</button>
+    </span>
+  </footer>
+
+</main>
+
+<script>
+// ─── Theme toggle (复用) ───────────────────
+(function() {
+  var STORAGE_KEY = 'ranzi-space-theme';
+  var root = document.documentElement;
+  var btns = document.querySelectorAll('.theme-toggle .seg');
+  function getMode() {
+    try {
+      var t = localStorage.getItem(STORAGE_KEY);
+      if (t === 'light' || t === 'dark') return t;
+    } catch (e) {}
+    return 'auto';
+  }
+  function applyMode(mode) {
+    if (mode === 'auto') {
+      root.removeAttribute('data-theme');
+      try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
+    } else {
+      root.setAttribute('data-theme', mode);
+      try { localStorage.setItem(STORAGE_KEY, mode); } catch (e) {}
+    }
+    btns.forEach(function(b) {
+      b.setAttribute('aria-pressed', b.dataset.theme === mode ? 'true' : 'false');
+    });
+  }
+  applyMode(getMode());
+  btns.forEach(function(b) {
+    b.addEventListener('click', function() { applyMode(b.dataset.theme); });
+  });
+})();
+
+// ─── Project list renderer ─────────────────
+(function() {
+  var content = document.getElementById('content');
+  var chipsEl = document.getElementById('chips');
+  var metaCount = document.getElementById('meta-count');
+
+  // SVG icons inline（github + external link）
+  var ICON_GITHUB = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.58.1.79-.25.79-.56 0-.28-.01-1.01-.02-1.98-3.2.7-3.88-1.54-3.88-1.54-.52-1.34-1.28-1.69-1.28-1.69-1.05-.71.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.76 2.7 1.25 3.36.96.1-.75.4-1.25.73-1.54-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.46.11-3.04 0 0 .97-.31 3.18 1.18.92-.26 1.92-.39 2.91-.39s1.99.13 2.91.39c2.21-1.49 3.18-1.18 3.18-1.18.63 1.58.23 2.75.11 3.04.74.81 1.19 1.84 1.19 3.1 0 4.42-2.69 5.39-5.25 5.68.41.36.78 1.06.78 2.13 0 1.54-.01 2.78-.01 3.15 0 .31.21.67.8.56C20.21 21.38 23.5 17.07 23.5 12 23.5 5.65 18.35.5 12 .5z"/></svg>';
+  var ICON_EXTERNAL = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>';
+
+  var STATUS_GROUPS = [
+    { key: 'active',   label: '主线在做',      cls: '' },
+    { key: 'infra',    label: '配套基建',      cls: 'infra' },
+    { key: 'dormant',  label: '暂停未删',      cls: 'dormant' },
+    { key: 'archived', label: '已归档',        cls: 'archived' }
+  ];
+
+  function renderProject(p) {
+    var tierFlag = p.tier === 1 ? '<span class="tier-flag">tier-1</span>' : '';
+    var tagsHtml = (p.tags || []).map(function(t) {
+      return '<span class="t">' + escapeHtml(t) + '</span>';
+    }).join('');
+
+    var githubLink = p.github
+      ? '<a href="' + escapeAttr(p.github) + '" target="_blank" rel="noopener" title="GitHub">' + ICON_GITHUB + '</a>'
+      : '<a class="disabled" title="未上 GitHub">' + ICON_GITHUB + '</a>';
+    var liveLink = p.live
+      ? '<a href="' + escapeAttr(p.live) + '" target="_blank" rel="noopener" title="访问 live">' + ICON_EXTERNAL + '</a>'
+      : '<a class="disabled" title="无 live URL">' + ICON_EXTERNAL + '</a>';
+
+    return '<li class="proj-row" data-status="' + p.status + '"' +
+      (p.github ? '' : ' data-no-github="1"') +
+      '>' +
+      '<div class="proj-name">' + escapeHtml(p.title) + tierFlag + '</div>' +
+      '<div class="proj-tagline">' + escapeHtml(p.tagline || '') + '</div>' +
+      (tagsHtml ? '<div class="proj-tags">' + tagsHtml + '</div>' : '') +
+      '<div class="proj-links">' + githubLink + liveLink + '</div>' +
+      '</li>';
+  }
+
+  function escapeHtml(s) {
+    if (s == null) return '';
+    return String(s).replace(/[&<>"']/g, function(c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+  function escapeAttr(s) { return escapeHtml(s); }
+
+  function renderAll(projects) {
+    var byStatus = {};
+    STATUS_GROUPS.forEach(function(g) { byStatus[g.key] = []; });
+
+    projects.forEach(function(p) {
+      if (byStatus[p.status] !== undefined) {
+        byStatus[p.status].push(p);
+      }
+    });
+
+    // 按 tier 排序（tier=1 在前）
+    Object.keys(byStatus).forEach(function(k) {
+      byStatus[k].sort(function(a, b) { return (a.tier || 9) - (b.tier || 9); });
+    });
+
+    var html = '';
+    STATUS_GROUPS.forEach(function(g) {
+      var rows = byStatus[g.key];
+      if (!rows.length) return;
+      html += '<div class="proj-group" data-group="' + g.key + '">';
+      html += '<h2 class="group-head ' + g.cls + '"><span class="dot"></span>' + g.label + ' · ' + rows.length + '</h2>';
+      html += '<ul class="proj-list">' + rows.map(renderProject).join('') + '</ul>';
+      html += '</div>';
+    });
+
+    content.innerHTML = html || '<div class="empty">没有项目</div>';
+
+    // 总数 + chip counts
+    var total = projects.length;
+    var counts = {
+      all: total,
+      active: byStatus.active.length,
+      infra: byStatus.infra.length,
+      dormant: byStatus.dormant.length,
+      archived: byStatus.archived.length,
+      'no-github': projects.filter(function(p) { return !p.github; }).length
+    };
+    metaCount.textContent = total + ' entries';
+    Object.keys(counts).forEach(function(k) {
+      var el = chipsEl.querySelector('[data-count-for="' + k + '"]');
+      if (el) el.textContent = '· ' + counts[k];
+    });
+  }
+
+  function applyFilter(filter) {
+    var rows = content.querySelectorAll('.proj-row');
+    var groups = content.querySelectorAll('.proj-group');
+
+    rows.forEach(function(row) {
+      var show = false;
+      if (filter === 'all') show = true;
+      else if (filter === 'no-github') show = row.hasAttribute('data-no-github');
+      else show = row.dataset.status === filter;
+      row.classList.toggle('hidden', !show);
+    });
+
+    // hide empty groups
+    groups.forEach(function(g) {
+      var visible = g.querySelectorAll('.proj-row:not(.hidden)').length;
+      g.style.display = visible ? '' : 'none';
+    });
+
+    chipsEl.querySelectorAll('.chip').forEach(function(c) {
+      c.setAttribute('aria-pressed', c.dataset.filter === filter ? 'true' : 'false');
+    });
+  }
+
+  chipsEl.addEventListener('click', function(e) {
+    var chip = e.target.closest('.chip');
+    if (!chip) return;
+    applyFilter(chip.dataset.filter);
+  });
+
+  fetch('/projects.json', { credentials: 'same-origin', cache: 'no-store' })
+    .then(function(r) {
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      return r.json();
+    })
+    .then(function(data) {
+      var projects = data.projects || [];
+      renderAll(projects);
+    })
+    .catch(function(e) {
+      content.innerHTML = '<div class="empty">加载失败: ' + escapeHtml(e.message || 'unknown') + '</div>';
+    });
+})();
+</script>
+</body>
+</html>
