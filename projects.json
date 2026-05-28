@@ -15,7 +15,11 @@
       "tier": 1,
       "github": "https://github.com/ranzi0000/wanhuatong",
       "live": "http://49.234.180.69:8888",
-      "tags": ["业务", "Flask", "MySQL"],
+      "tags": [
+        "业务",
+        "Flask",
+        "MySQL"
+      ],
       "show_on_site": true,
       "show_on_dashboard": true
     },
@@ -27,7 +31,12 @@
       "tier": 1,
       "github": "https://github.com/ranzi0000/baodan",
       "live": "https://baodan.ranzi.space",
-      "tags": ["业务", "Flask", "MySQL", "微信"],
+      "tags": [
+        "业务",
+        "Flask",
+        "MySQL",
+        "微信"
+      ],
       "show_on_site": true,
       "show_on_dashboard": true
     },
@@ -39,7 +48,12 @@
       "tier": 2,
       "github": "https://github.com/ranzi0000/baodan-downloader",
       "live": "https://baodan.ranzi.space/admin/downloads",
-      "tags": ["桌面", "PyInstaller", "tkinter", "ffmpeg"],
+      "tags": [
+        "桌面",
+        "PyInstaller",
+        "tkinter",
+        "ffmpeg"
+      ],
       "show_on_site": true,
       "show_on_dashboard": true
     },
@@ -51,7 +65,11 @@
       "tier": 1,
       "github": "https://github.com/ranzi0000/investment-scanner",
       "live": "https://invest.ranzi.space",
-      "tags": ["投资", "Python", "SQLite"],
+      "tags": [
+        "投资",
+        "Python",
+        "SQLite"
+      ],
       "show_on_site": true,
       "show_on_dashboard": true
     },
@@ -63,7 +81,10 @@
       "tier": 2,
       "github": "https://github.com/ranzi0000/crypto-radar",
       "live": "https://crypto.ranzi.space",
-      "tags": ["加密货币", "套利"],
+      "tags": [
+        "加密货币",
+        "套利"
+      ],
       "show_on_site": true,
       "show_on_dashboard": true
     },
@@ -75,7 +96,11 @@
       "tier": 2,
       "github": "https://github.com/ranzi0000/douyin-recorder",
       "live": "https://rec.ranzi.space",
-      "tags": ["内容采集", "ASR", "Obsidian"],
+      "tags": [
+        "内容采集",
+        "ASR",
+        "Obsidian"
+      ],
       "show_on_site": true,
       "show_on_dashboard": true
     },
@@ -87,7 +112,10 @@
       "tier": 1,
       "github": "https://github.com/ranzi0000/html-lab",
       "live": "https://lab.ranzi.space",
-      "tags": ["作品集", "CF Pages"],
+      "tags": [
+        "作品集",
+        "CF Pages"
+      ],
       "show_on_site": true,
       "show_on_dashboard": false,
       "private": true
@@ -99,7 +127,10 @@
       "status": "dormant",
       "tier": 2,
       "github": "https://github.com/ranzi0000/xuanyi-fortune",
-      "tags": ["AI", "话术"],
+      "tags": [
+        "AI",
+        "话术"
+      ],
       "show_on_site": true,
       "show_on_dashboard": false
     },
@@ -110,7 +141,10 @@
       "status": "active",
       "tier": 1,
       "github": "https://github.com/ranzi0000/nexus",
-      "tags": ["MCP", "智能家居"],
+      "tags": [
+        "MCP",
+        "智能家居"
+      ],
       "show_on_site": true,
       "show_on_dashboard": false
     },
@@ -121,7 +155,10 @@
       "status": "active",
       "tier": 3,
       "github": "https://github.com/ranzi0000/order-system",
-      "tags": ["业务", "Flask"],
+      "tags": [
+        "业务",
+        "Flask"
+      ],
       "show_on_site": true,
       "show_on_dashboard": false
     },
@@ -132,7 +169,10 @@
       "status": "dormant",
       "tier": 2,
       "github": "https://github.com/ranzi0000/wht-community",
-      "tags": ["桌面", "Windows"],
+      "tags": [
+        "桌面",
+        "Windows"
+      ],
       "show_on_site": true,
       "show_on_dashboard": false
     },
@@ -143,7 +183,10 @@
       "status": "active",
       "tier": 2,
       "github": "https://github.com/ranzi0000/paiban-tool",
-      "tags": ["桌面", "PyQt6"],
+      "tags": [
+        "桌面",
+        "PyQt6"
+      ],
       "show_on_site": true,
       "show_on_dashboard": false
     },
@@ -154,7 +197,11 @@
       "status": "active",
       "tier": 2,
       "github": "https://github.com/ranzi0000/streambridge",
-      "tags": ["音视频", "ffmpeg", "tkinter"],
+      "tags": [
+        "音视频",
+        "ffmpeg",
+        "tkinter"
+      ],
       "show_on_site": true,
       "show_on_dashboard": false
     },
@@ -165,7 +212,10 @@
       "status": "dormant",
       "tier": 3,
       "github": "https://github.com/ranzi0000/notes-ocr",
-      "tags": ["工具", "OCR"],
+      "tags": [
+        "工具",
+        "OCR"
+      ],
       "show_on_site": true,
       "show_on_dashboard": false
     },
@@ -176,7 +226,10 @@
       "status": "infra",
       "tier": 3,
       "github": "https://github.com/ranzi0000/hub",
-      "tags": ["基建", "watchdog"],
+      "tags": [
+        "基建",
+        "watchdog"
+      ],
       "show_on_site": false,
       "show_on_dashboard": false
     },
@@ -187,7 +240,10 @@
       "status": "infra",
       "tier": 3,
       "github": "https://github.com/ranzi0000/skills",
-      "tags": ["基建", "Claude"],
+      "tags": [
+        "基建",
+        "Claude"
+      ],
       "show_on_site": false,
       "show_on_dashboard": false
     },
@@ -198,7 +254,10 @@
       "status": "infra",
       "tier": 3,
       "github": "https://github.com/ranzi0000/dotfiles-mac",
-      "tags": ["基建", "macOS"],
+      "tags": [
+        "基建",
+        "macOS"
+      ],
       "show_on_site": false,
       "show_on_dashboard": false
     },
@@ -209,7 +268,10 @@
       "status": "infra",
       "tier": 3,
       "github": "https://github.com/ranzi0000/dash-collector",
-      "tags": ["基建", "LaunchAgent"],
+      "tags": [
+        "基建",
+        "LaunchAgent"
+      ],
       "show_on_site": false,
       "show_on_dashboard": false
     },
@@ -220,7 +282,10 @@
       "status": "infra",
       "tier": 3,
       "github": "https://github.com/ranzi0000/claude-rc",
-      "tags": ["基建", "LaunchAgent"],
+      "tags": [
+        "基建",
+        "LaunchAgent"
+      ],
       "show_on_site": false,
       "show_on_dashboard": false
     },
@@ -231,7 +296,10 @@
       "status": "infra",
       "tier": 3,
       "github": "https://github.com/ranzi0000/heartbeat",
-      "tags": ["基建", "shared lib"],
+      "tags": [
+        "基建",
+        "shared lib"
+      ],
       "show_on_site": false,
       "show_on_dashboard": false
     },
@@ -242,7 +310,10 @@
       "status": "archived",
       "tier": 3,
       "github": "https://github.com/ranzi0000/alpha-explorer",
-      "tags": ["投资", "研究"],
+      "tags": [
+        "投资",
+        "研究"
+      ],
       "show_on_site": false,
       "show_on_dashboard": false,
       "local_path": "~/Projects/_archive/alpha-explorer"
@@ -254,7 +325,10 @@
       "status": "archived",
       "tier": 3,
       "github": "https://github.com/ranzi0000/saki-backtest",
-      "tags": ["投资", "回测"],
+      "tags": [
+        "投资",
+        "回测"
+      ],
       "show_on_site": false,
       "show_on_dashboard": false,
       "local_path": "~/Projects/_archive/saki_backtest"
@@ -266,7 +340,9 @@
       "status": "infra",
       "tier": 3,
       "github": "https://github.com/ranzi0000/openclaw-workspace",
-      "tags": ["基建"],
+      "tags": [
+        "基建"
+      ],
       "show_on_site": false,
       "show_on_dashboard": false
     },
@@ -277,7 +353,10 @@
       "status": "archived",
       "tier": 3,
       "github": "https://github.com/ranzi0000/lppls",
-      "tags": ["历史", "投资"],
+      "tags": [
+        "历史",
+        "投资"
+      ],
       "show_on_site": false,
       "show_on_dashboard": false
     },
@@ -288,7 +367,10 @@
       "status": "archived",
       "tier": 3,
       "github": "https://github.com/ranzi0000/market-breadth",
-      "tags": ["历史", "投资"],
+      "tags": [
+        "历史",
+        "投资"
+      ],
       "show_on_site": false,
       "show_on_dashboard": false
     },
@@ -299,7 +381,9 @@
       "status": "archived",
       "tier": 3,
       "github": "https://github.com/ranzi0000/DreamTrader",
-      "tags": ["历史"],
+      "tags": [
+        "历史"
+      ],
       "show_on_site": false,
       "show_on_dashboard": false
     },
@@ -310,8 +394,27 @@
       "status": "archived",
       "tier": 3,
       "github": "https://github.com/ranzi0000/lonecapital-chart",
-      "tags": ["历史"],
+      "tags": [
+        "历史"
+      ],
       "show_on_site": false,
+      "show_on_dashboard": false
+    },
+    {
+      "slug": "stream-relay",
+      "title": "stream-relay",
+      "tagline": "SRT/RTMP 直播流中转服务，自带 Web 管理后台",
+      "status": "active",
+      "tier": 2,
+      "github": "https://github.com/ranzi0000/stream-relay",
+      "live": null,
+      "tags": [
+        "mediamtx",
+        "SRT",
+        "RTMP",
+        "Flask"
+      ],
+      "show_on_site": true,
       "show_on_dashboard": false
     }
   ],
