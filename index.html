@@ -171,12 +171,17 @@ body.stale .card-main { color: var(--muted); }
 /* ─── Card grid ───────────────────────────────── */
 .grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  /* minmax(0,1fr) 而非 1fr：防止某张卡片的不可换行内容（如 rec 的列表标题）撑爆所在列、
+     把两列挤成 2:1 的宽度。minmax(0,…) 把列的最小宽度锁到 0，两列恒等宽。 */
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  /* 所有行等高 → 卡片高度统一，消除"某行换行变高、别行偏矮"的高度偏差 */
+  grid-auto-rows: 1fr;
   gap: 12px;
   margin-bottom: 32px;
 }
 @media (max-width: 380px) {
-  .grid { grid-template-columns: 1fr; }
+  /* 单列时是纵向列表，不强制等高（否则短卡片被拉高、留大片空白） */
+  .grid { grid-template-columns: 1fr; grid-auto-rows: auto; }
 }
 
 .card {
@@ -238,6 +243,11 @@ body.stale .card-main { color: var(--muted); }
   font-size: 12px;
   color: var(--muted);
   line-height: 1.4;
+}
+/* 窄屏两列时卡片内宽约 140px，22px 主指标遇到较长文案（如"1.65% 最大价差"）会折成两行。
+   缩到 19px 让常见指标单行显示。即便仍折行，等高已由 grid-auto-rows 保证整齐。 */
+@media (max-width: 480px) {
+  .card-main { font-size: 19px; }
 }
 
 /* ─── Item list（rec 用） ──────── */
@@ -449,14 +459,14 @@ footer .meta { text-transform: uppercase; }
     <div class="grid" id="grid">
       <!-- 4 张小卡：wht / baodan / crypto / invest -->
       <a class="card" href="http://49.234.180.69:8888" data-project="wht">
-        <div class="card-head"><span class="card-name">wanhuatong</span><span class="status-dot"></span></div>
+        <div class="card-head"><span class="card-name">万花筒</span><span class="status-dot"></span></div>
         <div class="card-main placeholder">—</div>
         <div class="card-sub">渲染消耗 / 充值</div>
       </a>
       <a class="card" href="https://baodan.ranzi.space" data-project="baodan">
-        <div class="card-head"><span class="card-name">baodan</span><span class="status-dot"></span></div>
+        <div class="card-head"><span class="card-name">报单中心</span><span class="status-dot"></span></div>
         <div class="card-main placeholder">—</div>
-        <div class="card-sub">报单中心</div>
+        <div class="card-sub">道场客户报单</div>
       </a>
       <a class="card" href="https://crypto.ranzi.space" data-project="crypto">
         <div class="card-head"><span class="card-name">crypto</span><span class="status-dot"></span></div>
