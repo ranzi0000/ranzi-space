@@ -403,7 +403,7 @@
     {
       "slug": "stream-relay",
       "title": "直播推流中转（stream-relay）",
-      "tagline": "SRT/RTMP 直播流中转服务，自带 Web 管理后台；配套 streambridge 客户端",
+      "tagline": "SRT/RTMP 直播流中转服务，自带 Web 管理后台；配套 [streambridge](https://github.com/ranzi0000/streambridge) 客户端",
       "status": "active",
       "tier": 2,
       "github": "https://github.com/ranzi0000/stream-relay",

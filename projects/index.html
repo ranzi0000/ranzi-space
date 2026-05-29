@@ -460,7 +460,7 @@ footer a:hover {
       (p.github ? '' : ' data-no-github="1"') +
       '>' +
       '<div class="proj-name">' + escapeHtml(p.title) + tierFlag + '</div>' +
-      '<div class="proj-tagline">' + escapeHtml(p.tagline || '') + '</div>' +
+      '<div class="proj-tagline">' + renderTagline(p.tagline) + '</div>' +
       (tagsHtml ? '<div class="proj-tags">' + tagsHtml + '</div>' : '') +
       '<div class="proj-links">' + githubLink + liveLink + '</div>' +
       '</li>';
@@ -473,6 +473,27 @@ footer a:hover {
     });
   }
   function escapeAttr(s) { return escapeHtml(s); }
+
+  // tagline 支持 markdown 风格 [文字](链接)；其余文本照常转义。
+  // URL 只放行 http(s) 和站内路径，挡掉 javascript: 等注入。
+  function renderTagline(s) {
+    if (s == null) return '';
+    s = String(s);
+    var out = '', last = 0, m;
+    var re = /\[([^\]]+)\]\(([^)]+)\)/g;
+    while ((m = re.exec(s)) !== null) {
+      out += escapeHtml(s.slice(last, m.index));
+      var url = m[2];
+      if (/^(https?:\/\/|\/)/.test(url)) {
+        out += '<a href="' + escapeAttr(url) + '" target="_blank" rel="noopener">' + escapeHtml(m[1]) + '</a>';
+      } else {
+        out += escapeHtml(m[0]);
+      }
+      last = re.lastIndex;
+    }
+    out += escapeHtml(s.slice(last));
+    return out;
+  }
 
   function renderAll(projects) {
     var byStatus = {};
