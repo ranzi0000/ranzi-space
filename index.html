@@ -469,13 +469,19 @@ footer .meta { text-transform: uppercase; }
         <div class="card-sub">美股 / A 股扫描</div>
       </a>
 
-      <!-- rec 宽卡：列表展示最新 2 条 -->
-      <a class="card wide" href="https://rec.ranzi.space" data-project="rec">
+      <!-- rec：列表展示最新 2 条（缩为普通卡，与 relay 并列） -->
+      <a class="card" href="https://rec.ranzi.space" data-project="rec">
         <div class="card-head"><span class="card-name">rec · 最新</span><span class="status-dot"></span></div>
         <ul class="card-items" id="rec-items">
           <li><span class="dot"></span><span class="title">—</span><span class="time"></span></li>
           <li><span class="dot"></span><span class="title">—</span><span class="time"></span></li>
         </ul>
+      </a>
+      <!-- relay：直播推流中转，内容简单 → 小卡 -->
+      <a class="card" href="http://82.156.120.246:5556/" data-project="relay">
+        <div class="card-head"><span class="card-name">relay</span><span class="status-dot"></span></div>
+        <div class="card-main">中转后台</div>
+        <div class="card-sub">直播推流 SRT/RTMP 中转</div>
       </a>
     </div>
   </section>
@@ -511,6 +517,11 @@ footer .meta { text-transform: uppercase; }
       <li>
         <span class="pname"><a href="https://rec.ranzi.space">rec</a></span>
         <span class="pdesc">直播 / 视频录制与提取</span>
+        <span class="ptag">auth</span>
+      </li>
+      <li>
+        <span class="pname"><a href="http://82.156.120.246:5556/">relay</a></span>
+        <span class="pdesc">直播推流 SRT/RTMP 中转 · 配套 streambridge</span>
         <span class="ptag">auth</span>
       </li>
       <li>
