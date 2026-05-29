@@ -402,12 +402,12 @@
     },
     {
       "slug": "stream-relay",
-      "title": "stream-relay",
-      "tagline": "SRT/RTMP 直播流中转服务，自带 Web 管理后台",
+      "title": "直播推流中转（stream-relay）",
+      "tagline": "SRT/RTMP 直播流中转服务，自带 Web 管理后台；配套 streambridge 客户端",
       "status": "active",
       "tier": 2,
       "github": "https://github.com/ranzi0000/stream-relay",
-      "live": null,
+      "live": "http://82.156.120.246:5556/",
       "tags": [
         "mediamtx",
         "SRT",
