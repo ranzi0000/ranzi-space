@@ -5,6 +5,12 @@
 set -e
 cd "$(dirname "$0")"
 
+# CF 凭证：优先用 API token（持久，不像 OAuth 会被吊销/过期）。
+# 文件 ~/.cloudflare-ranzi.env 不进 git，内容形如：
+#   export CLOUDFLARE_API_TOKEN=xxxxx
+#   export CLOUDFLARE_ACCOUNT_ID=71e4dd729484545c2b992269733c7002
+[ -f "$HOME/.cloudflare-ranzi.env" ] && source "$HOME/.cloudflare-ranzi.env"
+
 # 找 wrangler：交互 shell 用 PATH，post-commit hook 没 nvm init 用绝对路径
 if ! command -v wrangler >/dev/null 2>&1; then
   # 找 nvm 安装的 node 版本，优先用最新
