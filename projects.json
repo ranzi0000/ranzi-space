@@ -442,16 +442,16 @@
       "status": "active",
       "tier": 2,
       "github": "https://github.com/ranzi0000/private-live",
-      "live": null,
+      "live": "http://82.156.120.246:8000/admin-ui/",
       "tags": [
         "Flask",
         "Vue3",
-        "TRTC",
+        "COS",
         "直播",
         "变现"
       ],
       "show_on_site": true,
-      "show_on_dashboard": false
+      "show_on_dashboard": true
     }
   ],
   "_archived_local": [
