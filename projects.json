@@ -416,6 +416,42 @@
       ],
       "show_on_site": true,
       "show_on_dashboard": false
+    },
+    {
+      "github": "https://github.com/ranzi0000/auth-hub",
+      "live": "http://82.156.120.246:5557/admin",
+      "show_on_dashboard": false,
+      "show_on_site": true,
+      "slug": "auth-hub",
+      "status": "active",
+      "tagline": "通用授权系统：admin 给加盟商开户发激活码，工具启动找中控验签放行，可远程吊销。Ed25519 签名凭证 + 48h 离线宽限。配套 SDK [authlib] 一行接入",
+      "tags": [
+        "Flask",
+        "SQLite",
+        "Ed25519",
+        "JWT",
+        "授权"
+      ],
+      "tier": 2,
+      "title": "通用授权系统（auth-hub）"
+    },
+    {
+      "slug": "private-live",
+      "title": "私域直播后台（private-live）",
+      "tagline": "主播私域直播变现后台：限时卡密 + 第二视角直播 + 设备绑定",
+      "status": "active",
+      "tier": 2,
+      "github": "https://github.com/ranzi0000/private-live",
+      "live": null,
+      "tags": [
+        "Flask",
+        "Vue3",
+        "TRTC",
+        "直播",
+        "变现"
+      ],
+      "show_on_site": true,
+      "show_on_dashboard": false
     }
   ],
   "_archived_local": [
