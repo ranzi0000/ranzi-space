@@ -4,8 +4,8 @@ ranzi.space 主域名的源代码 — CF Pages 部署的密码保护 PWA。
 
 ## 用途
 
-- 📱 **iPhone 主屏 PWA 大屏** — 5 张项目活数据卡片（wht / baodan / crypto / invest / rec）+ 一键启动 Claude 远程会话按钮
-- 📋 **完整项目目录** `/projects/` — 27 entries 数据驱动列表页（filter chips + status 分组）
+- 📱 **iPhone 主屏 PWA 大屏** — 项目活数据卡片（crypto / invest / rec / relay + auth / private-live 入口卡）+ 一键启动 Claude 远程会话按钮
+- 📋 **完整项目目录** `/projects/` — 数据驱动列表页（filter chips + status 分组，清单见 projects.json）
 - 🔒 **密码门** — CF Pages Functions middleware，未登录看不到内容
 
 线上：https://ranzi.space（密码 cookie 30 天）
