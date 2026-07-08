@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Mac mini 服务 · ranzi.space</title>
+<style>
+:root {
+  --bg: #fafaf8;
+  --fg: #18181b;
+  --fg-soft: #3f3f46;
+  --muted: #71717a;
+  --faint: #a8a29e;
+  --border: #ebe9e4;
+  --hover: #f2f0eb;
+  --card: #ffffff;
+  --accent: oklch(54% 0.13 38);
+  --status-ok: oklch(64% 0.14 145);
+  --status-warn: oklch(72% 0.14 75);
+  --status-bad: oklch(60% 0.18 25);
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", system-ui, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0c0c0c; --fg: #ededec; --fg-soft: #c4c4c0; --muted: #8a8a87;
+    --faint: #5a5a57; --border: #1c1c1a; --hover: #161614; --card: #131311;
+    --accent: oklch(72% 0.12 38);
+  }
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--fg); font-family: var(--font-sans);
+  max-width: 720px; margin: 0 auto;
+  padding: max(24px, env(safe-area-inset-top)) 20px 60px;
+  font-size: 15px; line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+header { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 6px; }
+h1 { font-size: 20px; font-weight: 650; letter-spacing: -0.01em; }
+a.back { color: var(--muted); text-decoration: none; font-size: 13px; }
+a.back:hover { color: var(--accent); }
+.sub { color: var(--muted); font-size: 13px; margin-bottom: 22px; }
+.stats { display: flex; gap: 18px; margin-bottom: 24px; flex-wrap: wrap; }
+.stat { font-size: 13px; color: var(--muted); }
+.stat b { font-size: 20px; font-weight: 650; color: var(--fg); font-variant-numeric: tabular-nums; margin-right: 5px; }
+.group-title {
+  font-size: 12px; font-weight: 600; color: var(--muted); text-transform: uppercase;
+  letter-spacing: 0.08em; margin: 26px 0 8px; padding-bottom: 6px;
+  border-bottom: 1px solid var(--border);
+}
+.svc {
+  display: flex; align-items: center; gap: 12px;
+  padding: 10px 8px; border-radius: 8px;
+}
+.svc:hover { background: var(--hover); }
+.dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.dot.run { background: var(--status-ok); }
+.dot.idle { background: var(--status-warn); }
+.dot.err { background: var(--status-bad); }
+.dot.unloaded { background: transparent; border: 1.5px solid var(--faint); }
+.svc-main { flex: 1; min-width: 0; }
+.svc-name { font-family: var(--font-mono); font-size: 13.5px; font-weight: 550; word-break: break-all; }
+.svc-cmd { font-family: var(--font-mono); font-size: 11px; color: var(--faint); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.svc-meta { text-align: right; flex-shrink: 0; }
+.svc-sched { font-size: 12.5px; color: var(--fg-soft); }
+.svc-state { font-size: 11.5px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.svc-state.err { color: var(--status-bad); font-weight: 600; }
+.badge {
+  display: inline-block; font-size: 10.5px; padding: 1px 6px; border-radius: 4px;
+  border: 1px solid var(--border); color: var(--muted); margin-left: 6px; vertical-align: 1px;
+}
+.empty { color: var(--muted); padding: 30px 0; text-align: center; }
+footer { margin-top: 36px; font-size: 12px; color: var(--faint); }
+</style>
+</head>
+<body>
+<header>
+  <h1>Mac mini 服务</h1>
+  <a class="back" href="/">← 大屏</a>
+</header>
+<p class="sub" id="sub">加载中…</p>
+<div class="stats" id="stats"></div>
+<div id="list"></div>
+<footer>数据来自 dash-collector（每 5 分钟采集 ~/Library/LaunchAgents + launchctl）。<br>
+状态：绿=运行中 · 黄=定时空闲（退出码 0，正常）· 红=异常退出 · 空圈=未加载。</footer>
+
+<script>
+const STATE_TEXT = { run: "运行中", idle: "空闲", err: "异常", unloaded: "未加载" };
+const GROUPS = [
+  ["err", "异常 — 上次退出码非 0"],
+  ["run", "运行中（常驻）"],
+  ["idle", "定时任务（空闲，正常）"],
+  ["unloaded", "未加载"],
+];
+
+function esc(s) {
+  return String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+}
+
+async function load() {
+  let data;
+  try {
+    const r = await fetch("/api/summary", { credentials: "same-origin" });
+    data = await r.json();
+  } catch (e) {
+    document.getElementById("sub").textContent = "加载失败：" + e;
+    return;
+  }
+  const svcs = data.mac_services || [];
+  if (!svcs.length) {
+    document.getElementById("sub").textContent = "collector 尚未推送 mac_services 数据（等下一轮 5 分钟采集）";
+    return;
+  }
+  const gen = data.generated_at ? new Date(data.generated_at) : null;
+  const ageMin = gen ? Math.round((Date.now() - gen.getTime()) / 60000) : null;
+  document.getElementById("sub").textContent =
+    `共 ${svcs.length} 个 LaunchAgent` + (ageMin !== null ? ` · 数据 ${ageMin} 分钟前` : "");
+
+  const counts = { run: 0, idle: 0, err: 0, unloaded: 0 };
+  let autostart = 0;
+  svcs.forEach(s => { counts[s.state] = (counts[s.state] || 0) + 1; if (s.run_at_load || s.type === "常驻") autostart++; });
+  document.getElementById("stats").innerHTML =
+    `<span class="stat"><b>${counts.run}</b>运行中</span>` +
+    `<span class="stat"><b>${counts.idle}</b>定时空闲</span>` +
+    `<span class="stat"><b style="${counts.err ? 'color:var(--status-bad)' : ''}">${counts.err}</b>异常</span>` +
+    `<span class="stat"><b>${autostart}</b>开机自启</span>`;
+
+  const list = document.getElementById("list");
+  list.innerHTML = "";
+  for (const [state, title] of GROUPS) {
+    const items = svcs.filter(s => s.state === state);
+    if (!items.length) continue;
+    const h = document.createElement("div");
+    h.className = "group-title";
+    h.textContent = title + ` · ${items.length}`;
+    list.appendChild(h);
+    for (const s of items) {
+      const auto = (s.run_at_load || s.type === "常驻") ? '<span class="badge">自启</span>' : "";
+      const stateLine = state === "err"
+        ? `退出码 ${esc(s.exit_code)}`
+        : (state === "run" && s.pid ? `PID ${esc(s.pid)}` : STATE_TEXT[state]);
+      const div = document.createElement("div");
+      div.className = "svc";
+      div.innerHTML =
+        `<span class="dot ${state}"></span>` +
+        `<div class="svc-main"><div class="svc-name">${esc(s.label)}${auto}</div>` +
+        `<div class="svc-cmd">${esc(s.cmd || "")}</div></div>` +
+        `<div class="svc-meta"><div class="svc-sched">${esc(s.type)} · ${esc(s.sched)}</div>` +
+        `<div class="svc-state ${state}">${stateLine}</div></div>`;
+      list.appendChild(div);
+    }
+  }
+}
+load();
+setInterval(load, 5 * 60 * 1000);
+</script>
+</body>
+</html>
