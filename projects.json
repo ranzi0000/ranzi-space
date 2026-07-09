@@ -445,6 +445,21 @@
       ],
       "show_on_site": true,
       "show_on_dashboard": true
+    },
+    {
+      "slug": "listing-radar",
+      "title": "上下币雷达（listing-radar）",
+      "tagline": "Binance/OKX/HL 上下币公告聚合 → Bark 推送 + 看板",
+      "status": "active",
+      "github": "https://github.com/ranzi0000/listing-radar",
+      "live": "https://radar.ranzi.space",
+      "tags": [
+        "投资",
+        "Python",
+        "SQLite"
+      ],
+      "show_on_site": true,
+      "show_on_dashboard": false
     }
   ],
   "_archived_local": [
