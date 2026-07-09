@@ -24,7 +24,7 @@
     {
       "slug": "baodan",
       "title": "报单中心（baodan）",
-      "tagline": "法事报单录入 + 视频/图片交付（2026-07 业务关停）",
+      "tagline": "法事报单录入 + 视频/图片交付（v1，2026-07 销毁；后继 → baodan2）",
       "status": "archived",
       "github": "https://github.com/ranzi0000/baodan",
       "tags": [
@@ -39,8 +39,8 @@
     {
       "slug": "baodan-downloader",
       "title": "报单交付下载客户端",
-      "tagline": "Windows 桌面端，自动下载 + H.265 压缩（2026-07 业务关停）",
-      "status": "archived",
+      "tagline": "Windows 桌面端，自动下载 + H.265 压缩（暂停，等 baodan2 后端复活）",
+      "status": "dormant",
       "github": "https://github.com/ranzi0000/baodan-downloader",
       "tags": [
         "桌面",
@@ -463,16 +463,16 @@
     },
     {
       "slug": "baodan2",
-      "title": "baodan2",
-      "tagline": "法事报单+视频交付中心 v2 · 单服务器无 COS 版",
+      "title": "报单中心 v2（baodan2）",
+      "tagline": "法事报单 + 视频交付：单服务器、无对象存储、SQLite",
       "status": "active",
       "tier": 2,
       "github": "https://github.com/ranzi0000/baodan2",
-      "live": null,
       "tags": [
-        "Python",
+        "业务",
         "Flask",
-        "SQLite"
+        "SQLite",
+        "nginx"
       ],
       "show_on_site": true,
       "show_on_dashboard": false
