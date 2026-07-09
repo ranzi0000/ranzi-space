@@ -460,6 +460,22 @@
       ],
       "show_on_site": true,
       "show_on_dashboard": false
+    },
+    {
+      "slug": "baodan2",
+      "title": "baodan2",
+      "tagline": "法事报单+视频交付中心 v2 · 单服务器无 COS 版",
+      "status": "active",
+      "tier": 2,
+      "github": "https://github.com/ranzi0000/baodan2",
+      "live": null,
+      "tags": [
+        "Python",
+        "Flask",
+        "SQLite"
+      ],
+      "show_on_site": true,
+      "show_on_dashboard": false
     }
   ],
   "_archived_local": [
