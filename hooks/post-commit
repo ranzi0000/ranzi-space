@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+# 本地 commit 后自动 deploy 到 CF Pages（等价于 GitHub auto-build）
+# 跳过：SKIP_DEPLOY=1 git commit ...
+#
+# ⚠️ git **不看** post-commit 的退出码：这里失败，commit 照样成功。
+# 所以 deploy.sh 失败时必须自己喊（横幅 + Bark），否则线上会和仓库悄悄脱节。
+# 2026-07-09 就发生过一次：网络抖动 → wrangler fetch failed → 无人察觉。
+[ "$SKIP_DEPLOY" = "1" ] && { echo "[post-commit] SKIP_DEPLOY=1，跳过部署"; exit 0; }
+
+echo "[post-commit] 自动部署到 CF Pages..."
+cd "$(git rev-parse --show-toplevel)"
+
+if bash deploy.sh; then
+  exit 0
+fi
+
+echo "[post-commit] ✗ 部署失败，commit 已保留。修好网络后跑：bash deploy.sh" >&2
+echo "[post-commit]   随时核对线上是否与本地一致：bash deploy.sh --check" >&2
+exit 0   # 不阻断 commit（git 本来也不看），失败信息已在上面喊过

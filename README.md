@@ -22,7 +22,8 @@ ranzi.space 主域名的源代码 — CF Pages 部署的密码保护 PWA。
 │   └── api/               # /api/push /api/summary /api/claude-launch /api/claude-launch-request
 ├── manifest.json + sw.js  # PWA
 ├── icons/                 # PWA + favicon
-├── deploy.sh              # wrangler 部署封装（含 nvm node PATH fallback）
+├── deploy.sh              # wrangler 部署封装（nvm PATH fallback + 重试 + 自我验证 + --check）
+├── hooks/post-commit      # 版本化的 git 钩子（core.hooksPath=hooks）
 └── wrangler.toml          # CF Pages 配置（KV namespace 绑定）
 ```
 
@@ -39,18 +40,36 @@ ranzi.space 主域名的源代码 — CF Pages 部署的密码保护 PWA。
 ```
 本地 git commit
     ↓
-.git/hooks/post-commit
+hooks/post-commit          ← 版本化在仓库里（core.hooksPath=hooks）
     ↓
-bash deploy.sh
+bash deploy.sh             ← 重试 3 次 + 部署完回查 CF API 自我验证
     ↓
-wrangler pages deploy . --project-name=ranzi-space --branch=main
+wrangler pages deploy . --commit-hash=<HEAD>
     ↓
-~30 秒后线上 production 生效
+~30 秒后线上 production 生效；失败则打横幅 + 推 Bark
 ```
 
-**关键陷阱（已修）**：post-commit hook 是 git 子进程，**没有 nvm init**，wrangler/node 不在默认 PATH。`deploy.sh` 自动 fallback 找 `~/.nvm/versions/node/*/bin/`，所以日常 git commit 不用关心。
+**重新 clone 之后要跑一次**（`core.hooksPath` 是本地 git 配置，不随仓库走）：
+
+```bash
+git config core.hooksPath hooks
+```
 
 跳过部署：`SKIP_DEPLOY=1 git commit ...`
+随时核对线上是否与本地一致：`bash deploy.sh --check`（一致返回 0，漂移返回 1）
+
+### 踩过的坑（都已修）
+
+1. **post-commit hook 没有 nvm init**，wrangler/node 不在默认 PATH → `deploy.sh` 自动 fallback 找 `~/.nvm/versions/node/*/bin/`。
+2. **git 不看 post-commit 的退出码**：部署失败，commit 照样成功。2026-07-09 网络抖动
+   （wrangler `TypeError: fetch failed`）导致部署失败，线上和仓库悄悄脱节了几十分钟没人发现。
+   现在：deploy.sh 重试 3 次 → 仍失败就打横幅 + 推 Bark；部署完还要回查 CF API 确认
+   最新部署的 commit hash == 本地 HEAD（**wrangler 说成功不算数，CF 说了才算**）。
+3. **兜底**：LaunchAgent `com.chenguodong.ranzi-space-drift` 每天 10:30 跑一次
+   `deploy.sh --check`，发现漂移才推 Bark（一致就静默）。plist 在 dotfiles-mac。
+4. **凭证**：用 `~/.cloudflare-ranzi.env` 里的 API token（持久）。wrangler 自己的 OAuth
+   4 小时过期、非交互环境刷不了新的，缺凭证时它会退回 OAuth 报一个看不懂的
+   `Failed to fetch auth token: 400`，容易误判成权限问题 —— 所以 deploy.sh 现在缺凭证直接停。
 
 ## 配套子系统（不在本 repo）
 
