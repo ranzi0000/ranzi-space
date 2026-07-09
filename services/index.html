@@ -61,6 +61,7 @@ a.back:hover { color: var(--accent); }
 .dot.unloaded { background: transparent; border: 1.5px solid var(--faint); }
 .svc-main { flex: 1; min-width: 0; }
 .svc-name { font-family: var(--font-mono); font-size: 13.5px; font-weight: 550; word-break: break-all; }
+.svc-note { font-size: 12px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .svc-cmd { font-family: var(--font-mono); font-size: 11px; color: var(--faint); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .svc-meta { text-align: right; flex-shrink: 0; }
 .svc-sched { font-size: 12.5px; color: var(--fg-soft); }
@@ -142,10 +143,13 @@ async function load() {
         : (state === "run" && s.pid ? `PID ${esc(s.pid)}` : STATE_TEXT[state]);
       const div = document.createElement("div");
       div.className = "svc";
+      const subLine = s.note
+        ? `<div class="svc-note" title="${esc(s.cmd || "")}">${esc(s.note)}</div>`
+        : `<div class="svc-cmd">${esc(s.cmd || "")}</div>`;
       div.innerHTML =
         `<span class="dot ${state}"></span>` +
         `<div class="svc-main"><div class="svc-name">${esc(s.label)}${auto}</div>` +
-        `<div class="svc-cmd">${esc(s.cmd || "")}</div></div>` +
+        subLine + `</div>` +
         `<div class="svc-meta"><div class="svc-sched">${esc(s.type)} · ${esc(s.sched)}</div>` +
         `<div class="svc-state ${state}">${stateLine}</div></div>`;
       list.appendChild(div);
