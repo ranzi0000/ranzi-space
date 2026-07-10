@@ -4,7 +4,7 @@ ranzi.space 主域名的源代码 — CF Pages 部署的密码保护 PWA。
 
 ## 用途
 
-- 📱 **iPhone 主屏 PWA 大屏** — 项目活数据卡片（crypto / invest / rec / relay + auth / private-live 入口卡）+ 一键启动 Claude 远程会话按钮
+- 📱 **iPhone 主屏 PWA 大屏** — 项目活数据卡片 + 纯入口卡（清单来自 projects.json，活数据来自 dash-collector）+ 一键启动 Claude 远程会话按钮
 - 📋 **完整项目目录** `/projects/` — 数据驱动列表页（filter chips + status 分组，清单见 projects.json）
 - 🔒 **密码门** — CF Pages Functions middleware，未登录看不到内容
 
@@ -14,8 +14,8 @@ ranzi.space 主域名的源代码 — CF Pages 部署的密码保护 PWA。
 
 ```
 .
-├── index.html             # 主屏 PWA 大屏
-├── projects/index.html    # /projects 完整目录页（数据驱动）
+├── index.html             # 主屏 PWA 大屏（卡片 + 底部列表从 projects.json 生成）
+├── projects/index.html    # /projects 完整目录页（数据驱动，show_on_site=false 不展示）
 ├── projects.json          # ⭐ 项目清单单一真源（手动维护，新项目走 /new-project skill 自动 append）
 ├── functions/             # CF Pages Functions
 │   ├── _middleware.js     # 密码门 + Bearer 白名单
@@ -29,7 +29,13 @@ ranzi.space 主域名的源代码 — CF Pages 部署的密码保护 PWA。
 
 ## 项目清单单源（projects.json）
 
-`projects.json` 是 27 个项目的元数据：slug / title / tagline / status / tier / github / live / tags。`/projects/index.html` 客户端 fetch 这份 JSON 渲染列表，新增项目改 JSON 而不是 HTML。
+`projects.json` 是所有项目的元数据单一真源（schema v2）：slug / title / tagline / status / tier / github / live / tags / access + 首页卡片元数据 `dash`。站内三处消费，全部客户端 fetch 渲染，改 JSON 而不是 HTML：
+
+- **首页大屏卡片**：`show_on_dashboard: true` + `dash: {key, title, sub, href, order, items}` 的条目按 order 生成卡片。`dash.key` 对应 dash-collector push 的 summary key；纯入口卡（无活数据，如 auth-hub / private-live）不填 key；`items: true` 走列表卡结构（rec 用）
+- **首页底部 all projects**：`show_on_site !== false` 且 `status=active` 且有链接（`dash.href` 优先，其次 `live`）的条目；`access` 字段渲染成右侧标签
+- **`/projects/` 完整目录**：`show_on_site !== false` 的条目，按 status 分组 + tier 排序
+
+**新增一张首页卡片**：① 在 projects.json 对应条目设 `show_on_dashboard: true` 并补 `dash` 元数据，commit 自动部署；② 卡片要有活数据的话，在 dash-collector 的 `collect.py` 写 collector 函数并在 `CARDS` 表加一行 `(key, 函数)`，key 与 `dash.key` 一致。纯入口卡只做 ①。
 
 **新起项目的标准流程**：在另一个 Claude 会话里说「/new-project my-bot "一句话描述"」，skill 会自动建本地目录、git init、写 README、gh repo create private、push、追加 entry 到这份 JSON、commit ranzi-space 触发部署。30 秒后 `/projects/` 出现新条目。
 

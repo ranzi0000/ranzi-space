@@ -1,9 +1,12 @@
 {
-  "_schema": "v1",
-  "_note": "single source of truth for ranzi.space /projects page + hub README. 编辑后 commit ranzi-space repo 自动部署。",
+  "_schema": "v2",
+  "_note": "single source of truth for ranzi.space 首页大屏卡片 + 首页 all projects 列表 + /projects 页 + hub README. 编辑后 commit ranzi-space repo 自动部署。",
   "_legend": {
     "status": "active=主线在做 | dormant=暂停未删 | archived=完结归档 | infra=基础设施(配套不主推)",
     "show_on_site": "true=进 /projects 列表页 | false=只记录不展示",
+    "show_on_dashboard": "true=进首页大屏卡片（需配 dash 元数据）",
+    "dash": "首页卡片元数据 {key,title,sub,href,order,items}。key=对应 /api/summary 的数据 key（collector 在 dash-collector/collect.py 的 CARDS 表），纯入口卡不填；items=true 走列表卡结构",
+    "access": "首页 all projects 列表的访问标签（auth/private），不填=公开",
     "tier": "1=旗舰主推 | 2=工具/产品 | 3=配套/历史"
   },
   "projects": [
@@ -65,7 +68,14 @@
         "SQLite"
       ],
       "show_on_site": true,
-      "show_on_dashboard": true
+      "show_on_dashboard": true,
+      "dash": {
+        "key": "invest",
+        "title": "invest",
+        "sub": "美股 / A 股扫描",
+        "href": "https://invest.ranzi.space",
+        "order": 2
+      }
     },
     {
       "slug": "crypto-radar",
@@ -80,7 +90,15 @@
         "套利"
       ],
       "show_on_site": true,
-      "show_on_dashboard": true
+      "show_on_dashboard": true,
+      "access": "auth",
+      "dash": {
+        "key": "crypto",
+        "title": "crypto",
+        "sub": "套利雷达",
+        "href": "https://crypto.ranzi.space",
+        "order": 1
+      }
     },
     {
       "slug": "douyin-recorder",
@@ -96,7 +114,15 @@
         "Obsidian"
       ],
       "show_on_site": true,
-      "show_on_dashboard": true
+      "show_on_dashboard": true,
+      "access": "auth",
+      "dash": {
+        "key": "rec",
+        "title": "rec · 最新",
+        "href": "https://rec.ranzi.space",
+        "order": 4,
+        "items": true
+      }
     },
     {
       "slug": "html-lab",
@@ -112,6 +138,7 @@
       ],
       "show_on_site": true,
       "show_on_dashboard": false,
+      "access": "private",
       "private": true
     },
     {
@@ -408,12 +435,27 @@
         "Flask"
       ],
       "show_on_site": true,
-      "show_on_dashboard": false
+      "show_on_dashboard": true,
+      "access": "auth",
+      "dash": {
+        "key": "relay",
+        "title": "Stream Relay",
+        "sub": "直播推流 SRT/RTMP 中转",
+        "href": "https://relay.ranzi.space",
+        "order": 5
+      }
     },
     {
       "github": "https://github.com/ranzi0000/auth-hub",
       "live": "http://82.156.120.246:5557/admin",
-      "show_on_dashboard": false,
+      "show_on_dashboard": true,
+      "access": "auth",
+      "dash": {
+        "title": "授权中控",
+        "sub": "加盟商授权 / 开户管理",
+        "href": "https://auth.ranzi.space/admin/login",
+        "order": 6
+      },
       "show_on_site": true,
       "slug": "auth-hub",
       "status": "active",
@@ -444,7 +486,14 @@
         "变现"
       ],
       "show_on_site": true,
-      "show_on_dashboard": true
+      "show_on_dashboard": true,
+      "access": "auth",
+      "dash": {
+        "title": "私域直播",
+        "sub": "主播私域直播变现",
+        "href": "http://82.156.120.246:8000/admin-ui/",
+        "order": 7
+      }
     },
     {
       "slug": "listing-radar",
@@ -459,7 +508,15 @@
         "SQLite"
       ],
       "show_on_site": true,
-      "show_on_dashboard": false
+      "show_on_dashboard": true,
+      "access": "auth",
+      "dash": {
+        "key": "radar",
+        "title": "radar",
+        "sub": "上下币公告雷达",
+        "href": "https://radar.ranzi.space",
+        "order": 3
+      }
     },
     {
       "slug": "baodan2",

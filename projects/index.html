@@ -574,7 +574,8 @@ footer a:hover {
       return r.json();
     })
     .then(function(data) {
-      var projects = data.projects || [];
+      // show_on_site=false 的条目只记录不展示
+      var projects = (data.projects || []).filter(function(p) { return p.show_on_site !== false; });
       renderAll(projects);
     })
     .catch(function(e) {

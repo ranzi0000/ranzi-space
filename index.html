@@ -204,6 +204,15 @@ body.stale .card-main { color: var(--muted); }
 .card:hover { border-color: var(--muted); }
 .card.wide { grid-column: 1 / -1; }
 
+/* projects.json 加载失败时的一行提示（不白屏） */
+.grid-error {
+  grid-column: 1 / -1;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--status-bad);
+  padding: 8px 0;
+}
+
 .card-head {
   display: flex;
   align-items: center;
@@ -456,102 +465,14 @@ footer .meta { text-transform: uppercase; }
       启动新 Claude 会话
       <span class="hint" id="launch-hint">点击在 Mac mini 桌面开新 iTerm 窗口</span>
     </button>
-    <div class="grid" id="grid">
-      <!-- 小卡：crypto / invest -->
-      <a class="card" href="https://crypto.ranzi.space" data-project="crypto">
-        <div class="card-head"><span class="card-name">crypto</span><span class="status-dot"></span></div>
-        <div class="card-main placeholder">—</div>
-        <div class="card-sub">套利雷达</div>
-      </a>
-      <a class="card" href="https://invest.ranzi.space" data-project="invest">
-        <div class="card-head"><span class="card-name">invest</span><span class="status-dot"></span></div>
-        <div class="card-main placeholder">—</div>
-        <div class="card-sub">美股 / A 股扫描</div>
-      </a>
-
-      <!-- rec：列表展示最新 2 条（缩为普通卡，与 relay 并列） -->
-      <a class="card" href="https://radar.ranzi.space" data-project="radar">
-        <div class="card-head"><span class="card-name">radar</span><span class="status-dot"></span></div>
-        <div class="card-main placeholder">—</div>
-        <div class="card-sub">上下币公告雷达</div>
-      </a>
-      <a class="card" href="https://rec.ranzi.space" data-project="rec">
-        <div class="card-head"><span class="card-name">rec · 最新</span><span class="status-dot"></span></div>
-        <ul class="card-items" id="rec-items">
-          <li><span class="dot"></span><span class="title">—</span><span class="time"></span></li>
-          <li><span class="dot"></span><span class="title">—</span><span class="time"></span></li>
-        </ul>
-      </a>
-      <!-- Stream Relay：直播推流中转，实时显示推/拉/带宽（数据由 collector 抓 /api/pubstat） -->
-      <a class="card" href="https://relay.ranzi.space" data-project="relay">
-        <div class="card-head"><span class="card-name">Stream Relay</span><span class="status-dot"></span></div>
-        <div class="card-main placeholder">—</div>
-        <div class="card-sub">直播推流 SRT/RTMP 中转</div>
-      </a>
-      <!-- auth-hub：通用授权中控（开户/停用/续期），纯入口 -->
-      <a class="card" href="https://auth.ranzi.space/admin/login" data-project="auth">
-        <div class="card-head"><span class="card-name">授权中控</span><span class="status-dot"></span></div>
-        <div class="card-main placeholder">—</div>
-        <div class="card-sub">加盟商授权 / 开户管理</div>
-      </a>
-      <!-- private-live：主播私域直播变现后台，纯入口（IP:端口，无域名） -->
-      <a class="card" href="http://82.156.120.246:8000/admin-ui/" data-project="private-live">
-        <div class="card-head"><span class="card-name">私域直播</span><span class="status-dot"></span></div>
-        <div class="card-main placeholder">—</div>
-        <div class="card-sub">主播私域直播变现</div>
-      </a>
-    </div>
+    <!-- 卡片由 JS 从 /projects.json 生成：show_on_dashboard=true + dash 元数据，按 dash.order 排 -->
+    <div class="grid" id="grid"></div>
   </section>
 
   <section>
     <p class="eyebrow">all projects</p>
-    <ul class="proj-links">
-      <li>
-        <span class="pname"><a href="https://invest.ranzi.space">invest</a></span>
-        <span class="pdesc">美股 / A 股每日扫描</span>
-        <span class="ptag"></span>
-      </li>
-      <li>
-        <span class="pname"><a href="https://crypto.ranzi.space">crypto</a></span>
-        <span class="pdesc">跨交易所套利雷达</span>
-        <span class="ptag">auth</span>
-      </li>
-      <li>
-        <span class="pname"><a href="https://radar.ranzi.space">radar</a></span>
-        <span class="pdesc">Binance/OKX/HL 上下币公告雷达</span>
-        <span class="ptag">auth</span>
-      </li>
-      <li>
-        <span class="pname"><a href="https://rec.ranzi.space">rec</a></span>
-        <span class="pdesc">直播 / 视频录制与提取</span>
-        <span class="ptag">auth</span>
-      </li>
-      <li>
-        <span class="pname"><a href="https://relay.ranzi.space">relay</a></span>
-        <span class="pdesc">直播推流 SRT/RTMP 中转 · 配套 streambridge</span>
-        <span class="ptag">auth</span>
-      </li>
-      <li>
-        <span class="pname"><a href="http://82.156.120.246:8000/admin-ui/">private-live</a></span>
-        <span class="pdesc">主播私域直播变现 · 付费墙 H5 + 第二视角直播</span>
-        <span class="ptag">auth</span>
-      </li>
-      <li>
-        <span class="pname"><a href="https://auth.ranzi.space/admin/login">授权中控</a></span>
-        <span class="pdesc">加盟商工具授权 · 开户/停用/续期</span>
-        <span class="ptag">auth</span>
-      </li>
-      <li>
-        <span class="pname"><a href="https://lab.ranzi.space">lab</a></span>
-        <span class="pdesc">HTML 实验场 · 教程 · 研究</span>
-        <span class="ptag">private</span>
-      </li>
-      <li class="disabled">
-        <span class="pname"><a href="#">xuanyi</a></span>
-        <span class="pdesc">国学命理推演工具</span>
-        <span class="ptag">soon</span>
-      </li>
-    </ul>
+    <!-- 条目由 JS 从 /projects.json 生成，规则见脚本里 buildProjLinks 的注释 -->
+    <ul class="proj-links" id="proj-links"></ul>
   </section>
 
   <section>
@@ -621,11 +542,17 @@ footer .meta { text-transform: uppercase; }
   });
 })();
 
-// ─── Dashboard data ─────────────────────────────────────
+// ─── Dashboard ──────────────────────────────────────────
+// 卡片和底部 all projects 列表从 /projects.json 真源生成；活数据照旧来自 /api/summary。
 (function() {
+  var PROJ_CACHE_KEY = 'ranzi-projects-cache-v1';  // projects.json 缓存，保住 0ms 首屏
   var CACHE_KEY = 'ranzi-dash-cache-v2';  // 升 schema，v1 缓存里没有 items 字段
   var grid = document.getElementById('grid');
+  var projLinks = document.getElementById('proj-links');
   var meta = document.getElementById('refresh-meta');
+
+  var lastSummary = null;     // 卡片重建后用它回填活数据
+  var summaryStarted = false;
 
   // 数据超过 STALE_SECONDS 没更新就标"陈旧"
   // collector 周期 5min，给 3× buffer，15 分钟无更新 = 大概率 Mac mini 挂了
@@ -653,6 +580,81 @@ footer .meta { text-transform: uppercase; }
   }
   function statusClass(s) {
     return (s === 'ok' || s === 'warn' || s === 'bad') ? s : '';
+  }
+
+  // ── 卡片生成：show_on_dashboard=true 且带 dash 元数据的条目，按 dash.order 排 ──
+  function buildCards(data) {
+    var entries = (data.projects || [])
+      .filter(function(p) { return p.show_on_dashboard === true && p.dash; })
+      .sort(function(a, b) { return (a.dash.order || 99) - (b.dash.order || 99); });
+
+    grid.innerHTML = '';
+    entries.forEach(function(p) {
+      var d = p.dash;
+      var a = document.createElement('a');
+      a.className = 'card';
+      a.href = d.href || p.live || '#';
+      // 无 key = 纯入口卡，summary 数据不会往里填
+      if (d.key) a.setAttribute('data-project', d.key);
+      a.innerHTML =
+        '<div class="card-head"><span class="card-name"></span><span class="status-dot"></span></div>' +
+        (d.items
+          ? '<ul class="card-items">' +
+              '<li><span class="dot"></span><span class="title">—</span><span class="time"></span></li>' +
+              '<li><span class="dot"></span><span class="title">—</span><span class="time"></span></li>' +
+            '</ul>'
+          : '<div class="card-main placeholder">—</div><div class="card-sub"></div>');
+      a.querySelector('.card-name').textContent = d.title || p.slug;
+      var subEl = a.querySelector('.card-sub');
+      if (subEl) subEl.textContent = d.sub || '';
+      grid.appendChild(a);
+    });
+  }
+
+  // ── 底部 all projects 列表 ──
+  // 规则：show_on_site !== false 且 status=active 且有可点链接（dash.href 优先，其次 live）。
+  // 名称：dash.key → *.ranzi.space 子域名 → slug；标签用 access 字段（不填=公开，留空）。
+  // 排序：带 dash 的按 dash.order（和卡片同序），其余按 tier 排在后面。
+  function shortName(p, href) {
+    if (p.dash && p.dash.key) return p.dash.key;
+    var m = /^https?:\/\/([a-z0-9-]+)\.ranzi\.space/.exec(href);
+    return m ? m[1] : p.slug;
+  }
+
+  function buildProjLinks(data) {
+    var rows = (data.projects || [])
+      .map(function(p) { return { p: p, href: (p.dash && p.dash.href) || p.live || '' }; })
+      .filter(function(r) {
+        return r.p.show_on_site !== false && r.p.status === 'active' && r.href;
+      })
+      .sort(function(a, b) {
+        var oa = a.p.dash ? (a.p.dash.order || 89) : 90 + (a.p.tier || 9);
+        var ob = b.p.dash ? (b.p.dash.order || 89) : 90 + (b.p.tier || 9);
+        return oa - ob;
+      });
+
+    projLinks.innerHTML = '';
+    rows.forEach(function(r) {
+      var li = document.createElement('li');
+      li.innerHTML =
+        '<span class="pname"><a></a></span>' +
+        '<span class="pdesc"></span>' +
+        '<span class="ptag"></span>';
+      var a = li.querySelector('a');
+      a.href = r.href;
+      a.textContent = shortName(r.p, r.href);
+      // tagline 里的 markdown 链接语法只留文字
+      li.querySelector('.pdesc').textContent =
+        String(r.p.tagline || '').replace(/\[([^\]]+)\]\([^)]*\)/g, '$1');
+      li.querySelector('.ptag').textContent = r.p.access || '';
+      projLinks.appendChild(li);
+    });
+  }
+
+  function renderProjects(data) {
+    buildCards(data);
+    buildProjLinks(data);
+    if (lastSummary) renderSummary(lastSummary);  // 卡片重建后回填活数据
   }
 
   function renderStandardCard(card, p) {
@@ -688,8 +690,9 @@ footer .meta { text-transform: uppercase; }
     });
   }
 
-  function render(data) {
+  function renderSummary(data) {
     if (!data || !Array.isArray(data.projects)) return;
+    lastSummary = data;
     data.projects.forEach(function(p) {
       var card = grid.querySelector('[data-project="' + p.key + '"]');
       if (!card) return;
@@ -709,53 +712,95 @@ footer .meta { text-transform: uppercase; }
     }
   }
 
-  // 1) 首屏：localStorage 0ms 渲染
-  try {
-    var cached = localStorage.getItem(CACHE_KEY);
-    if (cached) render(JSON.parse(cached));
-  } catch (e) {}
+  // ── summary 活数据流程（卡片就位后启动，只启动一次） ──
+  function startSummary() {
+    if (summaryStarted) return;
+    summaryStarted = true;
 
-  // 2) 拉最新
-  function fetchSummary() {
-    fetch('/api/summary', { credentials: 'same-origin', cache: 'no-store' })
-      .then(function(r) {
-        if (!r.ok) throw new Error('HTTP ' + r.status);
-        return r.json();
-      })
-      .then(function(data) {
-        render(data);
-        try { localStorage.setItem(CACHE_KEY, JSON.stringify(data)); } catch (e) {}
-      })
-      .catch(function(e) {
-        console.warn('fetch summary failed:', e);
-        meta.textContent = 'offline';
-      });
-  }
-  fetchSummary();
-
-  // 3) 每 60 秒刷一次（数据后端 5 分钟一周期，前端 60 秒拉够新鲜了）
-  setInterval(function() {
-    if (document.visibilityState === 'visible') fetchSummary();
-  }, 60000);
-
-  // 4) 回到前台立刻刷一次
-  document.addEventListener('visibilitychange', function() {
-    if (document.visibilityState === 'visible') fetchSummary();
-  });
-
-  // 5) 每 15 秒只更新"X 分钟前"显示 + 陈旧标记，不发请求
-  setInterval(function() {
+    // 1) 首屏：localStorage 0ms 渲染
     try {
       var cached = localStorage.getItem(CACHE_KEY);
-      if (!cached) return;
-      var data = JSON.parse(cached);
-      var t = data.received_at || data.generated_at;
-      if (t) {
-        meta.textContent = fmtRelative(t);
-        applyStaleness(t);
-      }
+      if (cached) renderSummary(JSON.parse(cached));
     } catch (e) {}
-  }, 15000);
+
+    // 2) 拉最新
+    function fetchSummary() {
+      fetch('/api/summary', { credentials: 'same-origin', cache: 'no-store' })
+        .then(function(r) {
+          if (!r.ok) throw new Error('HTTP ' + r.status);
+          return r.json();
+        })
+        .then(function(data) {
+          renderSummary(data);
+          try { localStorage.setItem(CACHE_KEY, JSON.stringify(data)); } catch (e) {}
+        })
+        .catch(function(e) {
+          console.warn('fetch summary failed:', e);
+          meta.textContent = 'offline';
+        });
+    }
+    fetchSummary();
+
+    // 3) 每 60 秒刷一次（数据后端 5 分钟一周期，前端 60 秒拉够新鲜了）
+    setInterval(function() {
+      if (document.visibilityState === 'visible') fetchSummary();
+    }, 60000);
+
+    // 4) 回到前台立刻刷一次
+    document.addEventListener('visibilitychange', function() {
+      if (document.visibilityState === 'visible') fetchSummary();
+    });
+
+    // 5) 每 15 秒只更新"X 分钟前"显示 + 陈旧标记，不发请求
+    setInterval(function() {
+      try {
+        var cached = localStorage.getItem(CACHE_KEY);
+        if (!cached) return;
+        var data = JSON.parse(cached);
+        var t = data.received_at || data.generated_at;
+        if (t) {
+          meta.textContent = fmtRelative(t);
+          applyStaleness(t);
+        }
+      } catch (e) {}
+    }, 15000);
+  }
+
+  // ── projects.json 加载流程：缓存 0ms 出卡片 → 拉最新，变了才重渲染 ──
+  var renderedJson = '';
+  try {
+    var cachedProj = localStorage.getItem(PROJ_CACHE_KEY);
+    if (cachedProj) {
+      renderProjects(JSON.parse(cachedProj));
+      renderedJson = cachedProj;
+      startSummary();
+    }
+  } catch (e) {}
+
+  fetch('/projects.json', { credentials: 'same-origin', cache: 'no-store' })
+    .then(function(r) {
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      return r.text();
+    })
+    .then(function(text) {
+      var data = JSON.parse(text);
+      if (text !== renderedJson) {
+        renderProjects(data);
+        renderedJson = text;
+        try { localStorage.setItem(PROJ_CACHE_KEY, text); } catch (e) {}
+      }
+      startSummary();
+    })
+    .catch(function(e) {
+      console.warn('fetch projects.json failed:', e);
+      if (renderedJson) return;  // 已有缓存渲染，忽略
+      grid.innerHTML = '';
+      var err = document.createElement('div');
+      err.className = 'grid-error';
+      err.textContent = 'projects.json 加载失败：' + (e.message || 'unknown');
+      grid.appendChild(err);
+      projLinks.innerHTML = '<li><span class="pname"></span><span class="pdesc">projects.json 加载失败</span><span class="ptag"></span></li>';
+    });
 })();
 
 // ─── Launch Claude button ─────────────────────────────
