@@ -533,6 +533,22 @@
       ],
       "show_on_site": true,
       "show_on_dashboard": false
+    },
+    {
+      "slug": "duanju-studio",
+      "title": "duanju-studio",
+      "tagline": "短剧剧本工作台：红果热度雷达 + 框架赛马制知识库 + AI 剧本流水线",
+      "status": "active",
+      "tier": 2,
+      "github": "https://github.com/ranzi0000/duanju-studio",
+      "live": null,
+      "tags": [
+        "Python",
+        "SQLite",
+        "AI创作"
+      ],
+      "show_on_site": true,
+      "show_on_dashboard": false
     }
   ],
   "_archived_local": [
