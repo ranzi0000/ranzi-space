@@ -60,6 +60,15 @@ header a { color: var(--muted); text-decoration: none; font-size: 0.85rem; }
 .a.show { display: block; }
 .src { margin-top: 12px; font-size: 0.85rem; }
 .src a { color: var(--accent); text-decoration: none; }
+.full-btn { display: none; margin-top: 14px; padding: 8px 14px;
+  font: inherit; font-size: 0.85rem; color: var(--muted);
+  background: none; border: 1px solid var(--border); border-radius: 8px; cursor: pointer; }
+.full-btn.show { display: inline-block; }
+.full { display: none; margin-top: 14px; padding: 14px;
+  background: var(--hover); border-radius: 10px;
+  color: var(--fg-soft); line-height: 1.75; white-space: pre-wrap; font-size: 0.9rem;
+  max-height: 60vh; overflow-y: auto; }
+.full.show { display: block; }
 .meta { margin-top: 20px; color: var(--muted); font-size: 0.78rem; text-align: center; }
 </style>
 </head>
@@ -77,12 +86,15 @@ header a { color: var(--muted); text-decoration: none; font-size: 0.85rem; }
   <button class="reveal-btn" id="reveal">看他的答案</button>
   <div class="a" id="a"></div>
   <div class="src" id="src"></div>
+  <button class="full-btn" id="fullBtn">看完整文案</button>
+  <div class="full" id="full"></div>
 </div>
 
 <div class="meta" id="meta"></div>
 
 <script>
 const $ = (id) => document.getElementById(id);
+let transcript = "";
 $("draw").addEventListener("click", async () => {
   $("draw").disabled = true;
   $("draw").textContent = "抽卡中…";
@@ -98,6 +110,11 @@ $("draw").addEventListener("click", async () => {
     $("src").innerHTML = c.src_url
       ? `出处：<a href="${c.src_url}" target="_blank" rel="noopener">《${c.src_title}》</a>`
       : "";
+    transcript = d.transcript || "";
+    $("full").textContent = "";
+    $("full").classList.remove("show");
+    $("fullBtn").classList.remove("show");
+    $("fullBtn").textContent = "看完整文案";
     $("card").classList.add("show");
     $("meta").textContent = `牌堆 ${d.deck_size} 张 · ${d.barked ? "已推 Bark 留档" : "未推送"}`;
   } catch (e) {
@@ -110,6 +127,12 @@ $("draw").addEventListener("click", async () => {
 $("reveal").addEventListener("click", () => {
   $("a").classList.add("show");
   $("reveal").style.display = "none";
+  if (transcript) $("fullBtn").classList.add("show");
+});
+$("fullBtn").addEventListener("click", () => {
+  const showing = $("full").classList.toggle("show");
+  if (showing && !$("full").textContent) $("full").textContent = transcript;
+  $("fullBtn").textContent = showing ? "收起完整文案" : "看完整文案";
 });
 </script>
 </body>
