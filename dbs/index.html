@@ -86,6 +86,8 @@ header a { color: var(--muted); text-decoration: none; font-size: 0.85rem; }
   <button class="reveal-btn" id="reveal">看他的答案</button>
   <div class="a" id="a"></div>
   <div class="src" id="src"></div>
+  <button class="full-btn" id="bdBtn">看结构拆解</button>
+  <div class="full" id="bd"></div>
   <button class="full-btn" id="fullBtn">看完整文案</button>
   <div class="full" id="full"></div>
 </div>
@@ -95,6 +97,7 @@ header a { color: var(--muted); text-decoration: none; font-size: 0.85rem; }
 <script>
 const $ = (id) => document.getElementById(id);
 let transcript = "";
+let breakdown = "";
 $("draw").addEventListener("click", async () => {
   $("draw").disabled = true;
   $("draw").textContent = "抽卡中…";
@@ -111,10 +114,13 @@ $("draw").addEventListener("click", async () => {
       ? `出处：<a href="${c.src_url}" target="_blank" rel="noopener">《${c.src_title}》</a>`
       : "";
     transcript = d.transcript || "";
-    $("full").textContent = "";
-    $("full").classList.remove("show");
-    $("fullBtn").classList.remove("show");
-    $("fullBtn").textContent = "看完整文案";
+    breakdown = d.breakdown || "";
+    for (const [btn, panel, label] of [["fullBtn", "full", "看完整文案"], ["bdBtn", "bd", "看结构拆解"]]) {
+      $(panel).textContent = "";
+      $(panel).classList.remove("show");
+      $(btn).classList.remove("show");
+      $(btn).textContent = label;
+    }
     $("card").classList.add("show");
     $("meta").textContent = `牌堆 ${d.deck_size} 张 · ${d.barked ? "已推 Bark 留档" : "未推送"}`;
   } catch (e) {
@@ -128,11 +134,17 @@ $("reveal").addEventListener("click", () => {
   $("a").classList.add("show");
   $("reveal").style.display = "none";
   if (transcript) $("fullBtn").classList.add("show");
+  if (breakdown) $("bdBtn").classList.add("show");
 });
 $("fullBtn").addEventListener("click", () => {
   const showing = $("full").classList.toggle("show");
   if (showing && !$("full").textContent) $("full").textContent = transcript;
   $("fullBtn").textContent = showing ? "收起完整文案" : "看完整文案";
+});
+$("bdBtn").addEventListener("click", () => {
+  const showing = $("bd").classList.toggle("show");
+  if (showing && !$("bd").textContent) $("bd").textContent = breakdown;
+  $("bdBtn").textContent = showing ? "收起结构拆解" : "看结构拆解";
 });
 </script>
 </body>

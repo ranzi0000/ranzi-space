@@ -32,11 +32,13 @@ export async function onRequestGet(context) {
     }
   }
 
-  // 完整逐字稿（页面"看完整文案"用，不进 Bark）
+  // 完整逐字稿 + 结构拆解（页面展开用，不进 Bark）
   const transcript =
     (card.bvid && deck.transcripts && deck.transcripts[card.bvid]) || "";
+  const breakdown =
+    (card.bvid && deck.breakdowns && deck.breakdowns[card.bvid]) || "";
 
-  return jsonResponse({ card, transcript, barked, deck_size: deck.cards.length, deck_at: deck.received_at }, 200);
+  return jsonResponse({ card, transcript, breakdown, barked, deck_size: deck.cards.length, deck_at: deck.received_at }, 200);
 }
 
 export async function onRequest(context) {
