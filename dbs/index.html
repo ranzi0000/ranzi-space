@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>dbs 抽卡</title>
+<style>
+:root {
+  --bg: #fafaf8;
+  --fg: #18181b;
+  --fg-soft: #3f3f46;
+  --muted: #71717a;
+  --border: #ebe9e4;
+  --hover: #f2f0eb;
+  --card: #ffffff;
+  --accent: oklch(54% 0.13 38);
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0c0c0c; --fg: #ededec; --fg-soft: #c4c4c0; --muted: #8a8a87;
+    --border: #1c1c1a; --hover: #161614; --card: #131311;
+    --accent: oklch(72% 0.12 38);
+  }
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: var(--font-sans);
+  background: var(--bg); color: var(--fg);
+  max-width: 640px; margin: 0 auto;
+  padding: 24px 20px calc(24px + env(safe-area-inset-bottom));
+  -webkit-font-smoothing: antialiased;
+}
+header { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 20px; }
+h1 { font-size: 1.15rem; font-weight: 650; }
+header a { color: var(--muted); text-decoration: none; font-size: 0.85rem; }
+.draw-btn {
+  display: block; width: 100%; padding: 14px;
+  font: inherit; font-size: 1rem; font-weight: 600;
+  color: #fff; background: var(--accent);
+  border: none; border-radius: 10px; cursor: pointer;
+}
+.draw-btn:disabled { opacity: 0.5; }
+.card {
+  margin-top: 20px; padding: 18px;
+  background: var(--card); border: 1px solid var(--border); border-radius: 12px;
+  display: none;
+}
+.card.show { display: block; }
+.q { font-size: 1.05rem; font-weight: 650; line-height: 1.55; }
+.hint { color: var(--muted); font-size: 0.85rem; margin-top: 14px; }
+.reveal-btn {
+  margin-top: 14px; padding: 9px 16px;
+  font: inherit; font-size: 0.9rem; font-weight: 550;
+  color: var(--accent); background: none;
+  border: 1px solid var(--accent); border-radius: 8px; cursor: pointer;
+}
+.a { display: none; margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border);
+     color: var(--fg-soft); line-height: 1.7; white-space: pre-wrap; font-size: 0.95rem; }
+.a.show { display: block; }
+.src { margin-top: 12px; font-size: 0.85rem; }
+.src a { color: var(--accent); text-decoration: none; }
+.meta { margin-top: 20px; color: var(--muted); font-size: 0.78rem; text-align: center; }
+</style>
+</head>
+<body>
+<header>
+  <h1>dbs 抽卡</h1>
+  <a href="/">← 返回大屏</a>
+</header>
+
+<button class="draw-btn" id="draw">抽一张</button>
+
+<div class="card" id="card">
+  <div class="q" id="q"></div>
+  <div class="hint">先自己想 30 秒——他会怎么答、为什么。</div>
+  <button class="reveal-btn" id="reveal">看他的答案</button>
+  <div class="a" id="a"></div>
+  <div class="src" id="src"></div>
+</div>
+
+<div class="meta" id="meta"></div>
+
+<script>
+const $ = (id) => document.getElementById(id);
+$("draw").addEventListener("click", async () => {
+  $("draw").disabled = true;
+  $("draw").textContent = "抽卡中…";
+  try {
+    const r = await fetch("/api/dbs-draw", { credentials: "same-origin" });
+    const d = await r.json();
+    if (!r.ok) throw new Error(d.error || r.status);
+    const c = d.card;
+    $("q").textContent = c.q;
+    $("a").textContent = c.a;
+    $("a").classList.remove("show");
+    $("reveal").style.display = "";
+    $("src").innerHTML = c.src_url
+      ? `出处：<a href="${c.src_url}" target="_blank" rel="noopener">《${c.src_title}》</a>`
+      : "";
+    $("card").classList.add("show");
+    $("meta").textContent = `牌堆 ${d.deck_size} 张 · ${d.barked ? "已推 Bark 留档" : "未推送"}`;
+  } catch (e) {
+    $("meta").textContent = "抽卡失败：" + e.message;
+  } finally {
+    $("draw").disabled = false;
+    $("draw").textContent = "再抽一张";
+  }
+});
+$("reveal").addEventListener("click", () => {
+  $("a").classList.add("show");
+  $("reveal").style.display = "none";
+});
+</script>
+</body>
+</html>

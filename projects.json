@@ -564,7 +564,13 @@
     "Obsidian"
    ],
    "show_on_site": true,
-   "show_on_dashboard": false
+   "show_on_dashboard": true,
+   "dash": {
+    "title": "dbs",
+    "sub": "抽一张卡自测",
+    "href": "/dbs/",
+    "order": 8
+   }
   }
  ],
  "_archived_local": [
