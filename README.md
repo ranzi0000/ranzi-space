@@ -18,8 +18,11 @@ ranzi.space 主域名的源代码 — CF Pages 部署的密码保护 PWA。
 ├── projects/index.html    # /projects 完整目录页（数据驱动，show_on_site=false 不展示）
 ├── projects.json          # ⭐ 项目清单单一真源（手动维护，新项目走 /new-project skill 自动 append）
 ├── functions/             # CF Pages Functions
-│   ├── _middleware.js     # 密码门 + Bearer 白名单
+│   ├── _middleware.js     # 密码门 + Bearer 白名单（/api/push /api/claude-launch-request /api/dbs-deck）
 │   └── api/               # /api/push /api/summary /api/claude-launch /api/claude-launch-request
+│                          # /api/dbs-deck（Bearer，Mac 推抽卡牌堆进 KV）/api/dbs-draw（cookie，抽卡+推 Bark 留档）
+├── dbs/index.html         # dbs 抽卡页（先显问题再揭答案；牌堆来自 dontbesilent-corpus/scripts/push_deck.py）
+├── services/index.html    # Mac mini 服务列表页
 ├── manifest.json + sw.js  # PWA
 ├── icons/                 # PWA + favicon
 ├── deploy.sh              # wrangler 部署封装（nvm PATH fallback + 重试 + 自我验证 + --check）
