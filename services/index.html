@@ -72,6 +72,14 @@ a.back:hover { color: var(--accent); }
   border: 1px solid var(--border); color: var(--muted); margin-left: 6px; vertical-align: 1px;
 }
 .empty { color: var(--muted); padding: 30px 0; text-align: center; }
+#filter {
+  width: 100%; padding: 8px 12px; margin-bottom: 4px;
+  font-family: var(--font-sans); font-size: 14px;
+  color: var(--fg); background: var(--card);
+  border: 1px solid var(--border); border-radius: 8px; outline: none;
+}
+#filter:focus { border-color: var(--accent); }
+#filter::placeholder { color: var(--faint); }
 footer { margin-top: 36px; font-size: 12px; color: var(--faint); }
 </style>
 </head>
@@ -82,6 +90,7 @@ footer { margin-top: 36px; font-size: 12px; color: var(--faint); }
 </header>
 <p class="sub" id="sub">加载中…</p>
 <div class="stats" id="stats"></div>
+<input id="filter" type="search" placeholder="过滤：名称 / 备注 / 命令（如 kindle）" autocomplete="off">
 <div id="list"></div>
 <footer>数据来自 dash-collector（每 5 分钟采集 ~/Library/LaunchAgents + launchctl）。<br>
 状态：绿=运行中 · 黄=定时空闲（退出码 0，正常）· 红=异常退出 · 空圈=未加载。</footer>
@@ -97,6 +106,47 @@ const GROUPS = [
 
 function esc(s) {
   return String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+}
+
+let allSvcs = [];
+
+function render() {
+  const q = document.getElementById("filter").value.trim().toLowerCase();
+  const svcs = q
+    ? allSvcs.filter(s => `${s.label} ${s.note || ""} ${s.cmd || ""}`.toLowerCase().includes(q))
+    : allSvcs;
+  const list = document.getElementById("list");
+  list.innerHTML = "";
+  if (!svcs.length) {
+    list.innerHTML = '<div class="empty">没有匹配的服务</div>';
+    return;
+  }
+  for (const [state, title] of GROUPS) {
+    const items = svcs.filter(s => s.state === state);
+    if (!items.length) continue;
+    const h = document.createElement("div");
+    h.className = "group-title";
+    h.textContent = title + ` · ${items.length}`;
+    list.appendChild(h);
+    for (const s of items) {
+      const auto = (s.run_at_load || s.type === "常驻") ? '<span class="badge">自启</span>' : "";
+      const stateLine = state === "err"
+        ? `退出码 ${esc(s.exit_code)}`
+        : (state === "run" && s.pid ? `PID ${esc(s.pid)}` : STATE_TEXT[state]);
+      const div = document.createElement("div");
+      div.className = "svc";
+      const subLine = s.note
+        ? `<div class="svc-note" title="${esc(s.cmd || "")}">${esc(s.note)}</div>`
+        : `<div class="svc-cmd">${esc(s.cmd || "")}</div>`;
+      div.innerHTML =
+        `<span class="dot ${state}"></span>` +
+        `<div class="svc-main"><div class="svc-name">${esc(s.label)}${auto}</div>` +
+        subLine + `</div>` +
+        `<div class="svc-meta"><div class="svc-sched">${esc(s.type)} · ${esc(s.sched)}</div>` +
+        `<div class="svc-state ${state}">${stateLine}</div></div>`;
+      list.appendChild(div);
+    }
+  }
 }
 
 async function load() {
@@ -127,35 +177,10 @@ async function load() {
     `<span class="stat"><b style="${counts.err ? 'color:var(--status-bad)' : ''}">${counts.err}</b>异常</span>` +
     `<span class="stat"><b>${autostart}</b>开机自启</span>`;
 
-  const list = document.getElementById("list");
-  list.innerHTML = "";
-  for (const [state, title] of GROUPS) {
-    const items = svcs.filter(s => s.state === state);
-    if (!items.length) continue;
-    const h = document.createElement("div");
-    h.className = "group-title";
-    h.textContent = title + ` · ${items.length}`;
-    list.appendChild(h);
-    for (const s of items) {
-      const auto = (s.run_at_load || s.type === "常驻") ? '<span class="badge">自启</span>' : "";
-      const stateLine = state === "err"
-        ? `退出码 ${esc(s.exit_code)}`
-        : (state === "run" && s.pid ? `PID ${esc(s.pid)}` : STATE_TEXT[state]);
-      const div = document.createElement("div");
-      div.className = "svc";
-      const subLine = s.note
-        ? `<div class="svc-note" title="${esc(s.cmd || "")}">${esc(s.note)}</div>`
-        : `<div class="svc-cmd">${esc(s.cmd || "")}</div>`;
-      div.innerHTML =
-        `<span class="dot ${state}"></span>` +
-        `<div class="svc-main"><div class="svc-name">${esc(s.label)}${auto}</div>` +
-        subLine + `</div>` +
-        `<div class="svc-meta"><div class="svc-sched">${esc(s.type)} · ${esc(s.sched)}</div>` +
-        `<div class="svc-state ${state}">${stateLine}</div></div>`;
-      list.appendChild(div);
-    }
-  }
+  allSvcs = svcs;
+  render();
 }
+document.getElementById("filter").addEventListener("input", render);
 load();
 setInterval(load, 5 * 60 * 1000);
 </script>
