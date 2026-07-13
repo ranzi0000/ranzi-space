@@ -80,6 +80,20 @@ a.back:hover { color: var(--accent); }
 }
 #filter:focus { border-color: var(--accent); }
 #filter::placeholder { color: var(--faint); }
+.ctl {
+  display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+  padding: 10px 12px; margin-bottom: 18px;
+  border: 1px solid var(--border); border-radius: 8px; background: var(--card);
+}
+.ctl-label { font-size: 13px; color: var(--muted); margin-right: 4px; }
+.ctl button {
+  font-family: var(--font-sans); font-size: 13px; padding: 5px 12px;
+  color: var(--fg); background: var(--bg);
+  border: 1px solid var(--border); border-radius: 6px; cursor: pointer;
+}
+.ctl button:hover { border-color: var(--accent); color: var(--accent); }
+.ctl button:disabled { opacity: 0.5; cursor: default; }
+.ctl-msg { font-size: 12px; color: var(--muted); }
 footer { margin-top: 36px; font-size: 12px; color: var(--faint); }
 </style>
 </head>
@@ -90,6 +104,13 @@ footer { margin-top: 36px; font-size: 12px; color: var(--faint); }
 </header>
 <p class="sub" id="sub">加载中…</p>
 <div class="stats" id="stats"></div>
+<div class="ctl">
+  <span class="ctl-label">Kindle 看板</span>
+  <button data-action="pause">退出看板</button>
+  <button data-action="resume">打开看板</button>
+  <button data-action="reboot">重启 Kindle</button>
+  <span class="ctl-msg" id="ctl-msg"></span>
+</div>
 <input id="filter" type="search" placeholder="过滤：名称 / 备注 / 命令（如 kindle）" autocomplete="off">
 <div id="list"></div>
 <footer>数据来自 dash-collector（每 5 分钟采集 ~/Library/LaunchAgents + launchctl）。<br>
@@ -181,6 +202,33 @@ async function load() {
   render();
 }
 document.getElementById("filter").addEventListener("input", render);
+
+const CTL_TEXT = { pause: "退出看板", resume: "打开看板", reboot: "重启 Kindle" };
+document.querySelectorAll(".ctl button").forEach(btn => {
+  btn.addEventListener("click", async () => {
+    const action = btn.dataset.action;
+    if (action === "reboot" && !confirm("确认重启 Kindle？重启约需 1 分钟，之后 Mac 会自动蹲守恢复看板。")) return;
+    const msg = document.getElementById("ctl-msg");
+    document.querySelectorAll(".ctl button").forEach(b => b.disabled = true);
+    msg.textContent = "发送中…";
+    try {
+      const r = await fetch("/api/kindle-control", {
+        method: "POST",
+        credentials: "same-origin",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action }),
+      });
+      const d = await r.json();
+      msg.textContent = d.ok
+        ? `已发送「${CTL_TEXT[action]}」，约 10 秒内执行（结果推 Bark）`
+        : `失败：${d.error || r.status}`;
+    } catch (e) {
+      msg.textContent = "发送失败：" + e;
+    }
+    setTimeout(() => document.querySelectorAll(".ctl button").forEach(b => b.disabled = false), 3000);
+  });
+});
+
 load();
 setInterval(load, 5 * 60 * 1000);
 </script>

@@ -142,13 +142,15 @@ export async function onRequest(context) {
   const password = env.SITE_PASSWORD;
 
   // 这些路径走 Bearer token 不查 cookie，由各自的 function 校验
-  // /api/push                 collector 推数据
+  // /api/push                  collector 推数据
   // /api/claude-launch-request poller 拉触发时间戳
-  // /api/dbs-deck             Mac 推 dbs 抽卡牌堆
+  // /api/dbs-deck              Mac 推 dbs 抽卡牌堆
+  // /api/kindle-control-request poller 拉 Kindle 控制命令
   if (
     url.pathname === "/api/push" ||
     url.pathname === "/api/claude-launch-request" ||
-    url.pathname === "/api/dbs-deck"
+    url.pathname === "/api/dbs-deck" ||
+    url.pathname === "/api/kindle-control-request"
   ) {
     return await next();
   }
