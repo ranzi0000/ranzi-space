@@ -18,10 +18,11 @@ ranzi.space 主域名的源代码 — CF Pages 部署的密码保护 PWA。
 ├── projects/index.html    # /projects 完整目录页（数据驱动，show_on_site=false 不展示）
 ├── projects.json          # ⭐ 项目清单单一真源（手动维护，新项目走 /new-project skill 自动 append）
 ├── functions/             # CF Pages Functions
-│   ├── _middleware.js     # 密码门 + Bearer 白名单（/api/push /api/claude-launch-request /api/dbs-deck）
+│   ├── _middleware.js     # 密码门 + Bearer 白名单（push / claude-launch-request / dbs-deck / dbs-config-pull / kindle-control-request）
 │   └── api/               # /api/push /api/summary /api/claude-launch /api/claude-launch-request
-│                          # /api/dbs-deck（Bearer，Mac 推抽卡牌堆进 KV）/api/dbs-draw（cookie，抽卡+推 Bark 留档）
-├── dbs/index.html         # dbs 抽卡页（先显问题再揭答案；牌堆来自 dontbesilent-corpus/scripts/push_deck.py）
+│                          # /api/dbs-deck（Bearer，Mac 推抽卡牌堆进 KV）/api/dbs-draw（cookie，抽卡+推 Bark，?id= 回看）
+│                          # /api/dbs-config（cookie，读写推送时间）/api/dbs-config-pull（Bearer，Mac 闸门拉取）
+├── dbs/index.html         # dbs 抽卡页 v2（问题先行 + md 阅读版式 + 本机抽卡历史 + 推送时间设置；牌堆来自 corpus/push_deck.py）
 ├── services/index.html    # Mac mini 服务列表页
 ├── manifest.json + sw.js  # PWA
 ├── icons/                 # PWA + favicon
