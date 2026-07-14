@@ -145,11 +145,13 @@ export async function onRequest(context) {
   // /api/push                  collector 推数据
   // /api/claude-launch-request poller 拉触发时间戳
   // /api/dbs-deck              Mac 推 dbs 抽卡牌堆
+  // /api/dbs-config-pull       Mac 拉 dbs 推送时间设置
   // /api/kindle-control-request poller 拉 Kindle 控制命令
   if (
     url.pathname === "/api/push" ||
     url.pathname === "/api/claude-launch-request" ||
     url.pathname === "/api/dbs-deck" ||
+    url.pathname === "/api/dbs-config-pull" ||
     url.pathname === "/api/kindle-control-request"
   ) {
     return await next();

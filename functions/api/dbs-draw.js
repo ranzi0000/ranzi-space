@@ -10,9 +10,17 @@ export async function onRequestGet(context) {
     return jsonResponse({ error: "牌堆还没上传（等 Mac mini 早上 08:30 推一次，或手动跑 push_deck.py）" }, 404);
   }
   const deck = JSON.parse(raw);
-  const card = deck.cards[Math.floor(Math.random() * deck.cards.length)];
-
   const url = new URL(request.url);
+  // ?id= 指定卡（抽卡历史回看用），否则随机
+  const wantId = url.searchParams.get("id");
+  let card;
+  if (wantId) {
+    card = deck.cards.find((c) => c.id === wantId);
+    if (!card) return jsonResponse({ error: "卡片不存在（牌堆可能已更新）" }, 404);
+  } else {
+    card = deck.cards[Math.floor(Math.random() * deck.cards.length)];
+  }
+
   let barked = false;
   if (url.searchParams.get("push") !== "0" && deck.bark_key) {
     try {

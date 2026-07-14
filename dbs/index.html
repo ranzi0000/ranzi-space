@@ -27,9 +27,10 @@
 body {
   font-family: var(--font-sans);
   background: var(--bg); color: var(--fg);
-  max-width: 640px; margin: 0 auto;
-  padding: 24px 20px calc(24px + env(safe-area-inset-bottom));
+  max-width: 680px; margin: 0 auto;
+  padding: 24px 20px calc(48px + env(safe-area-inset-bottom));
   -webkit-font-smoothing: antialiased;
+  font-size: 16px;
 }
 header { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 20px; }
 h1 { font-size: 1.15rem; font-weight: 650; }
@@ -42,34 +43,61 @@ header a { color: var(--muted); text-decoration: none; font-size: 0.85rem; }
 }
 .draw-btn:disabled { opacity: 0.5; }
 .card {
-  margin-top: 20px; padding: 18px;
+  margin-top: 20px; padding: 22px 20px;
   background: var(--card); border: 1px solid var(--border); border-radius: 12px;
   display: none;
 }
 .card.show { display: block; }
-.q { font-size: 1.05rem; font-weight: 650; line-height: 1.55; }
+.q { font-size: 1.1rem; font-weight: 650; line-height: 1.6; }
 .hint { color: var(--muted); font-size: 0.85rem; margin-top: 14px; }
-.reveal-btn {
-  margin-top: 14px; padding: 9px 16px;
+.btn {
+  margin-top: 16px; margin-right: 10px; padding: 9px 16px;
   font: inherit; font-size: 0.9rem; font-weight: 550;
   color: var(--accent); background: none;
   border: 1px solid var(--accent); border-radius: 8px; cursor: pointer;
 }
-.a { display: none; margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border);
-     color: var(--fg-soft); line-height: 1.7; white-space: pre-wrap; font-size: 0.95rem; }
-.a.show { display: block; }
-.src { margin-top: 12px; font-size: 0.85rem; }
+.btn.soft { color: var(--muted); border-color: var(--border); }
+.hidden { display: none; }
+
+/* 阅读区：正常文章版式，跟随页面滚动，不做内嵌小滚动框 */
+.reading { margin-top: 20px; padding-top: 4px; border-top: 1px solid var(--border);
+           color: var(--fg-soft); font-size: 0.98rem; line-height: 1.85; }
+.reading h3 { color: var(--fg); font-size: 1.02rem; margin: 22px 0 8px; }
+.reading h4 { color: var(--fg); font-size: 0.98rem; margin: 20px 0 8px;
+              padding-left: 9px; border-left: 3px solid var(--accent); }
+.reading p { margin: 10px 0; }
+.reading ul { margin: 10px 0 10px 2px; list-style: none; }
+.reading li { margin: 7px 0; padding-left: 16px; position: relative; }
+.reading li::before { content: ""; position: absolute; left: 2px; top: 0.72em;
+                      width: 5px; height: 5px; border-radius: 50%; background: var(--muted); }
+.reading blockquote { margin: 10px 0; padding: 8px 14px; background: var(--hover);
+                      border-radius: 8px; color: var(--muted); }
+.reading strong { color: var(--fg); }
+.reading .label { margin: 24px 0 6px; font-size: 0.8rem; font-weight: 650;
+                  color: var(--muted); letter-spacing: 0.08em; }
+
+.src { margin-top: 14px; font-size: 0.85rem; }
 .src a { color: var(--accent); text-decoration: none; }
-.full-btn { display: none; margin-top: 14px; padding: 8px 14px;
-  font: inherit; font-size: 0.85rem; color: var(--muted);
-  background: none; border: 1px solid var(--border); border-radius: 8px; cursor: pointer; }
-.full-btn.show { display: inline-block; }
-.full { display: none; margin-top: 14px; padding: 14px;
-  background: var(--hover); border-radius: 10px;
-  color: var(--fg-soft); line-height: 1.75; white-space: pre-wrap; font-size: 0.9rem;
-  max-height: 60vh; overflow-y: auto; }
-.full.show { display: block; }
-.meta { margin-top: 20px; color: var(--muted); font-size: 0.78rem; text-align: center; }
+.meta { margin-top: 18px; color: var(--muted); font-size: 0.78rem; text-align: center; }
+
+section { margin-top: 36px; }
+section > h2 { font-size: 0.85rem; font-weight: 650; color: var(--muted);
+               letter-spacing: 0.08em; margin-bottom: 10px; }
+.hist { list-style: none; }
+.hist li { border-bottom: 1px solid var(--border); }
+.hist a { display: flex; justify-content: space-between; gap: 12px; padding: 10px 2px;
+          color: var(--fg-soft); text-decoration: none; font-size: 0.9rem; line-height: 1.5; }
+.hist a:hover { background: var(--hover); }
+.hist .t { color: var(--muted); font-size: 0.78rem; white-space: nowrap; padding-top: 2px; }
+.empty { color: var(--muted); font-size: 0.85rem; }
+
+.cfg { display: flex; align-items: center; gap: 10px; font-size: 0.9rem; color: var(--fg-soft); }
+.cfg input[type="time"] { font: inherit; padding: 6px 10px; background: var(--card);
+  color: var(--fg); border: 1px solid var(--border); border-radius: 8px; }
+.cfg button { padding: 7px 14px; font: inherit; font-size: 0.85rem; font-weight: 550;
+  color: var(--accent); background: none; border: 1px solid var(--accent);
+  border-radius: 8px; cursor: pointer; }
+.cfg .note { color: var(--muted); font-size: 0.78rem; }
 </style>
 </head>
 <body>
@@ -82,69 +110,175 @@ header a { color: var(--muted); text-decoration: none; font-size: 0.85rem; }
 
 <div class="card" id="card">
   <div class="q" id="q"></div>
-  <div class="hint">先自己想 30 秒——他会怎么答、为什么。</div>
-  <button class="reveal-btn" id="reveal">看他的答案</button>
-  <div class="a" id="a"></div>
+  <div class="hint" id="qhint">先自己想 30 秒——他会怎么答、为什么。</div>
+  <button class="btn" id="reveal">看他的答案</button>
+  <div id="body"></div>
   <div class="src" id="src"></div>
-  <button class="full-btn" id="bdBtn">看结构拆解</button>
-  <div class="full" id="bd"></div>
-  <button class="full-btn" id="fullBtn">看完整文案</button>
-  <div class="full" id="full"></div>
+  <div>
+    <button class="btn soft hidden" id="bdBtn">看结构拆解</button>
+    <button class="btn soft hidden" id="fullBtn">看完整文案</button>
+  </div>
 </div>
-
 <div class="meta" id="meta"></div>
+
+<section>
+  <h2>推送时间</h2>
+  <div class="cfg">
+    <span>每日一问</span>
+    <input type="time" id="pushTime" value="09:20">
+    <button id="saveCfg">保存</button>
+    <span class="note" id="cfgNote">10 分钟内生效</span>
+  </div>
+</section>
+
+<section>
+  <h2>抽卡历史（本机）</h2>
+  <ul class="hist" id="hist"></ul>
+  <p class="empty" id="histEmpty">还没抽过卡。</p>
+</section>
 
 <script>
 const $ = (id) => document.getElementById(id);
-let transcript = "";
-let breakdown = "";
+let cur = null; // {card, transcript, breakdown}
+
+/* ---- 极简 markdown 渲染（内容来自自家语料，仍先转义再转换）---- */
+function esc(s) {
+  return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
+function inline(s) {
+  return esc(s).replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>").replace(/`([^`]+)`/g, "<strong>$1</strong>");
+}
+function mdToHtml(md) {
+  const out = [];
+  let list = false;
+  const closeList = () => { if (list) { out.push("</ul>"); list = false; } };
+  for (const raw of md.split("\n")) {
+    const line = raw.trim();
+    if (!line) { closeList(); continue; }
+    if (line.startsWith("### "))      { closeList(); out.push("<h4>" + inline(line.slice(4)) + "</h4>"); }
+    else if (line.startsWith("## ")) { closeList(); out.push("<h4>" + inline(line.slice(3)) + "</h4>"); }
+    else if (line.startsWith("# "))  { closeList(); out.push("<h3>" + inline(line.slice(2)) + "</h3>"); }
+    else if (line.startsWith("> "))  { closeList(); out.push("<blockquote>" + inline(line.slice(2)) + "</blockquote>"); }
+    else if (/^([-*]|\d+[.、])\s/.test(line)) {
+      if (!list) { out.push("<ul>"); list = true; }
+      out.push("<li>" + inline(line.replace(/^([-*]|\d+[.、])\s+/, "")) + "</li>");
+    }
+    else { closeList(); out.push("<p>" + inline(line) + "</p>"); }
+  }
+  closeList();
+  return out.join("");
+}
+function textToHtml(t) {
+  return t.split(/\n+/).filter(Boolean).map((p) => "<p>" + inline(p) + "</p>").join("");
+}
+
+/* ---- 卡片渲染 ---- */
+function showCard(d, { fromHistory } = {}) {
+  cur = d;
+  const c = d.card;
+  $("q").textContent = c.q;
+  $("qhint").style.display = "";
+  $("reveal").style.display = "";
+  $("body").innerHTML = "";
+  $("src").innerHTML = "";
+  $("bdBtn").classList.add("hidden");
+  $("fullBtn").classList.add("hidden");
+  $("bdBtn").dataset.open = ""; $("fullBtn").dataset.open = "";
+  $("bdBtn").textContent = "看结构拆解"; $("fullBtn").textContent = "看完整文案";
+  $("card").classList.add("show");
+  if (!fromHistory) addHist(c);
+  $("meta").textContent = `牌堆 ${d.deck_size} 张 · ${d.barked ? "已推 Bark 留档" : "本次未推送"}`;
+}
+function reveal() {
+  const c = cur.card;
+  $("qhint").style.display = "none";
+  $("reveal").style.display = "none";
+  $("body").innerHTML = `<div class="reading"><div class="label">他的答案</div>${textToHtml(c.a)}</div>`;
+  $("src").innerHTML = c.src_url
+    ? `出处：<a href="${c.src_url}" target="_blank" rel="noopener">《${esc(c.src_title)}》</a>`
+    : "";
+  if (cur.breakdown) $("bdBtn").classList.remove("hidden");
+  if (cur.transcript) $("fullBtn").classList.remove("hidden");
+}
+function togglePanel(btn, label, cls, html) {
+  const open = btn.dataset.open === "1";
+  document.querySelectorAll("." + cls).forEach((n) => n.remove());
+  if (!open) {
+    $("body").insertAdjacentHTML("beforeend",
+      `<div class="reading ${cls}"><div class="label">${label}</div>${html}</div>`);
+  }
+  btn.dataset.open = open ? "" : "1";
+  btn.textContent = (open ? "看" : "收起") + label;
+}
+
+/* ---- 抽卡 / 回看 ---- */
+async function fetchCard(params) {
+  const r = await fetch("/api/dbs-draw" + params, { credentials: "same-origin" });
+  const d = await r.json();
+  if (!r.ok) throw new Error(d.error || r.status);
+  return d;
+}
 $("draw").addEventListener("click", async () => {
-  $("draw").disabled = true;
-  $("draw").textContent = "抽卡中…";
+  $("draw").disabled = true; $("draw").textContent = "抽卡中…";
   try {
-    const r = await fetch("/api/dbs-draw", { credentials: "same-origin" });
+    showCard(await fetchCard(""));
+  } catch (e) { $("meta").textContent = "抽卡失败：" + e.message; }
+  finally { $("draw").disabled = false; $("draw").textContent = "再抽一张"; }
+});
+$("reveal").addEventListener("click", reveal);
+$("bdBtn").addEventListener("click", () => togglePanel($("bdBtn"), "结构拆解", "p-bd", mdToHtml(cur.breakdown)));
+$("fullBtn").addEventListener("click", () => togglePanel($("fullBtn"), "完整文案", "p-full", textToHtml(cur.transcript)));
+
+/* ---- 历史（localStorage，本机）---- */
+const HKEY = "dbs_draw_history";
+function getHist() { try { return JSON.parse(localStorage.getItem(HKEY)) || []; } catch (e) { return []; } }
+function addHist(c) {
+  let h = getHist().filter((x) => x.id !== c.id);
+  h.unshift({ id: c.id, q: c.q, ts: Date.now() });
+  localStorage.setItem(HKEY, JSON.stringify(h.slice(0, 200)));
+  renderHist();
+}
+function renderHist() {
+  const h = getHist();
+  $("histEmpty").style.display = h.length ? "none" : "";
+  $("hist").innerHTML = h.map((x) => {
+    const d = new Date(x.ts);
+    const t = `${d.getMonth() + 1}-${d.getDate()}`;
+    return `<li><a href="#" data-id="${x.id}"><span>${esc(x.q)}</span><span class="t">${t}</span></a></li>`;
+  }).join("");
+}
+$("hist").addEventListener("click", async (e) => {
+  const a = e.target.closest("a[data-id]");
+  if (!a) return;
+  e.preventDefault();
+  $("meta").textContent = "加载中…";
+  try {
+    showCard(await fetchCard(`?id=${a.dataset.id}&push=0`), { fromHistory: true });
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    $("meta").textContent = "历史回看（未重复推送）";
+  } catch (e2) { $("meta").textContent = "加载失败：" + e2.message; }
+});
+renderHist();
+
+/* ---- 推送时间设置 ---- */
+(async () => {
+  try {
+    const r = await fetch("/api/dbs-config", { credentials: "same-origin" });
+    if (r.ok) { const d = await r.json(); if (d.push_time) $("pushTime").value = d.push_time; }
+  } catch (e) {}
+})();
+$("saveCfg").addEventListener("click", async () => {
+  $("cfgNote").textContent = "保存中…";
+  try {
+    const r = await fetch("/api/dbs-config", {
+      method: "POST", credentials: "same-origin",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ push_time: $("pushTime").value }),
+    });
     const d = await r.json();
     if (!r.ok) throw new Error(d.error || r.status);
-    const c = d.card;
-    $("q").textContent = c.q;
-    $("a").textContent = c.a;
-    $("a").classList.remove("show");
-    $("reveal").style.display = "";
-    $("src").innerHTML = c.src_url
-      ? `出处：<a href="${c.src_url}" target="_blank" rel="noopener">《${c.src_title}》</a>`
-      : "";
-    transcript = d.transcript || "";
-    breakdown = d.breakdown || "";
-    for (const [btn, panel, label] of [["fullBtn", "full", "看完整文案"], ["bdBtn", "bd", "看结构拆解"]]) {
-      $(panel).textContent = "";
-      $(panel).classList.remove("show");
-      $(btn).classList.remove("show");
-      $(btn).textContent = label;
-    }
-    $("card").classList.add("show");
-    $("meta").textContent = `牌堆 ${d.deck_size} 张 · ${d.barked ? "已推 Bark 留档" : "未推送"}`;
-  } catch (e) {
-    $("meta").textContent = "抽卡失败：" + e.message;
-  } finally {
-    $("draw").disabled = false;
-    $("draw").textContent = "再抽一张";
-  }
-});
-$("reveal").addEventListener("click", () => {
-  $("a").classList.add("show");
-  $("reveal").style.display = "none";
-  if (transcript) $("fullBtn").classList.add("show");
-  if (breakdown) $("bdBtn").classList.add("show");
-});
-$("fullBtn").addEventListener("click", () => {
-  const showing = $("full").classList.toggle("show");
-  if (showing && !$("full").textContent) $("full").textContent = transcript;
-  $("fullBtn").textContent = showing ? "收起完整文案" : "看完整文案";
-});
-$("bdBtn").addEventListener("click", () => {
-  const showing = $("bd").classList.toggle("show");
-  if (showing && !$("bd").textContent) $("bd").textContent = breakdown;
-  $("bdBtn").textContent = showing ? "收起结构拆解" : "看结构拆解";
+    $("cfgNote").textContent = `已保存 ${d.push_time}，10 分钟内生效`;
+  } catch (e) { $("cfgNote").textContent = "保存失败：" + e.message; }
 });
 </script>
 </body>
