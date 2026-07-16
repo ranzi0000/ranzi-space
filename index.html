@@ -134,6 +134,31 @@ h1 {
 body.stale .card { opacity: 0.55; }
 body.stale .card-main { color: var(--muted); }
 
+/* ─── 项目登记漂移提醒（projects.json 真源 vs 本地实况对账） ── */
+.drift-banner {
+  display: block;
+  margin: 0 0 20px;
+  padding: 10px 13px;
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--status-warn);
+  border-radius: 8px;
+  background: var(--card);
+  font-size: 13px;
+  line-height: 1.5;
+  text-decoration: none;
+}
+.drift-banner[hidden] { display: none; }
+.drift-banner .drift-title { color: var(--fg-soft); }
+.drift-banner .drift-count { color: var(--status-warn); font-weight: 600; }
+.drift-banner .drift-detail {
+  display: block;
+  margin-top: 3px;
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  word-break: break-word;
+}
+
 /* ─── Launch Claude 按钮 ──────────────────── */
 .launch-btn {
   display: block;
@@ -459,6 +484,11 @@ footer .meta { text-transform: uppercase; }
     <span class="refresh-meta" id="refresh-meta">—</span>
   </header>
 
+  <div class="drift-banner" id="drift-banner" hidden>
+    <span class="drift-title"></span>
+    <span class="drift-detail"></span>
+  </div>
+
   <section>
     <p class="eyebrow">dashboard</p>
     <button class="launch-btn" id="launch-claude" type="button">
@@ -710,6 +740,27 @@ footer .meta { text-transform: uppercase; }
       meta.textContent = fmtRelative(t);
       applyStaleness(t);
     }
+
+    renderDrift(data.registry_drift);
+  }
+
+  // 项目登记漂移提醒：本地 git 仓库 vs projects.json 真源对不上时提示
+  function renderDrift(rd) {
+    var el = document.getElementById('drift-banner');
+    if (!el) return;
+    if (!rd || !rd.count) { el.hidden = true; return; }
+    var miss = (rd.missing || []).map(function(m) { return m.slug; });
+    var stale = (rd.stale || []).map(function(s) { return s.slug; });
+    var summ = [];
+    if (miss.length) summ.push(miss.length + ' 个未登记');
+    if (stale.length) summ.push(stale.length + ' 个可能过时');
+    el.querySelector('.drift-title').innerHTML =
+      '项目登记 · <span class="drift-count">' + summ.join(' · ') + '</span>';
+    var detail = [];
+    if (miss.length) detail.push(miss.join(' · '));
+    if (stale.length) detail.push('过时: ' + stale.join(' · '));
+    el.querySelector('.drift-detail').textContent = detail.join('   |   ');
+    el.hidden = false;
   }
 
   // ── summary 活数据流程（卡片就位后启动，只启动一次） ──
