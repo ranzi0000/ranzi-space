@@ -571,6 +571,36 @@
     "href": "/dbs/",
     "order": 8
    }
+  },
+  {
+   "slug": "kindle-dash",
+   "title": "Kindle 仪表盘（kindle-dash）",
+   "tagline": "日版 KPW2 改装 E-Ink 面板，业务/运维/项目多页速览",
+   "status": "active",
+   "tier": 2,
+   "github": "https://github.com/ranzi0000/kindle-dash",
+   "tags": [
+    "E-Ink",
+    "Python",
+    "看板"
+   ],
+   "show_on_site": true,
+   "show_on_dashboard": false
+  },
+  {
+   "slug": "dylive-monitor",
+   "title": "抖音聚合弹幕监控（dylive-monitor）",
+   "tagline": "多直播间弹幕/进场/送礼聚合到本地网页 + 话术提词",
+   "status": "active",
+   "tier": 2,
+   "github": "https://github.com/ranzi0000/dylive-monitor",
+   "tags": [
+    "抖音",
+    "弹幕",
+    "Python"
+   ],
+   "show_on_site": true,
+   "show_on_dashboard": false
   }
  ],
  "_archived_local": [
