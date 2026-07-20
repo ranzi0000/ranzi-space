@@ -42,8 +42,8 @@
   {
    "slug": "baodan-downloader",
    "title": "报单交付下载客户端",
-   "tagline": "Windows 桌面端，自动下载 + H.265 压缩（暂停，等 baodan2 后端复活）",
-   "status": "dormant",
+   "tagline": "Windows 桌面端，自动下载 + H.265 压缩（v0.4.1，随 baodan2 后端复活）",
+   "status": "active",
    "github": "https://github.com/ranzi0000/baodan-downloader",
    "tags": [
     "桌面",
@@ -541,14 +541,20 @@
    "status": "active",
    "tier": 2,
    "github": "https://github.com/ranzi0000/duanju-studio",
-   "live": null,
+   "live": "https://duanju.ranzi.space",
    "tags": [
     "Python",
     "SQLite",
     "AI创作"
    ],
    "show_on_site": true,
-   "show_on_dashboard": false
+   "show_on_dashboard": true,
+   "dash": {
+    "title": "duanju",
+    "sub": "短剧剧本流水线",
+    "href": "https://duanju.ranzi.space",
+    "order": 9
+   }
   },
   {
    "slug": "dontbesilent-corpus",
