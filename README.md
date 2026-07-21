@@ -4,8 +4,8 @@ ranzi.space 主域名的源代码 — CF Pages 部署的密码保护 PWA。
 
 ## 用途
 
-- 📱 **iPhone 主屏 PWA 大屏** — 项目活数据卡片 + 纯入口卡（清单来自 projects.json，活数据来自 dash-collector）+ 一键启动 Claude 远程会话按钮
-- 📋 **完整项目目录** `/projects/` — 数据驱动列表页（filter chips + status 分组，清单见 projects.json）
+- 📱 **iPhone 主屏 PWA 大屏** — 项目活数据卡片 + 纯入口卡（清单来自 projects.json，活数据来自 dash-collector）+ 云服务器状态条（summary.servers 渲染）+ 一键启动 Claude 远程会话按钮
+- 📋 **完整项目目录** `/projects/` — 数据驱动列表页（状态构成条 + filter chips + status 分组，清单见 projects.json）
 - 🔒 **密码门** — CF Pages Functions middleware，未登录看不到内容
 
 线上：https://ranzi.space（密码 cookie 30 天）
@@ -14,7 +14,7 @@ ranzi.space 主域名的源代码 — CF Pages 部署的密码保护 PWA。
 
 ```
 .
-├── index.html             # 主屏 PWA 大屏（卡片 + 底部列表从 projects.json 生成）
+├── index.html             # 主屏 PWA 大屏（卡片从 projects.json 生成；服务器状态条从 /api/summary.servers 渲染）
 ├── projects/index.html    # /projects 完整目录页（数据驱动，show_on_site=false 不展示）
 ├── projects.json          # ⭐ 项目清单单一真源（手动维护，新项目走 /new-project skill 自动 append）
 ├── functions/             # CF Pages Functions
@@ -33,11 +33,12 @@ ranzi.space 主域名的源代码 — CF Pages 部署的密码保护 PWA。
 
 ## 项目清单单源（projects.json）
 
-`projects.json` 是所有项目的元数据单一真源（schema v2）：slug / title / tagline / status / tier / github / live / tags / access + 首页卡片元数据 `dash`。站内三处消费，全部客户端 fetch 渲染，改 JSON 而不是 HTML：
+`projects.json` 是所有项目的元数据单一真源（schema v2）：slug / title / tagline / status / tier / github / live / tags / access + 首页卡片元数据 `dash`。站内两处消费，全部客户端 fetch 渲染，改 JSON 而不是 HTML：
 
-- **首页大屏卡片**：`show_on_dashboard: true` + `dash: {key, title, sub, href, order, items}` 的条目按 order 生成卡片。`dash.key` 对应 dash-collector push 的 summary key；纯入口卡（无活数据，如 auth-hub / private-live）不填 key；`items: true` 走列表卡结构（rec 用）
-- **首页底部 all projects**：`show_on_site !== false` 且 `status=active` 且有链接（`dash.href` 优先，其次 `live`）的条目；`access` 字段渲染成右侧标签
-- **`/projects/` 完整目录**：`show_on_site !== false` 的条目，按 status 分组 + tier 排序
+- **首页大屏卡片**：`show_on_dashboard: true` + `dash: {key, title, sub, href, order, items}` 的条目按 order 生成卡片。`dash.key` 对应 dash-collector push 的 summary key；纯入口卡（无活数据）不填 key；`items: true` 走列表卡结构（rec 用）
+- **`/projects/` 完整目录**：`show_on_site !== false` 的条目，按 status 分组 + tier 排序，顶部状态构成条自动汇总
+
+（首页原「all projects」区块 2026-07-21 删除——与卡片重复；首页卡片下方的**云服务器状态条**不吃 projects.json，数据来自 `/api/summary` 的 `servers` 键，由 dash-collector `collect_servers()` 探活生成，服务器 IP/到期只存在 dash-collector 私库）
 
 **新增一张首页卡片**：① 在 projects.json 对应条目设 `show_on_dashboard: true` 并补 `dash` 元数据，commit 自动部署；② 卡片要有活数据的话，在 dash-collector 的 `collect.py` 写 collector 函数并在 `CARDS` 表加一行 `(key, 函数)`，key 与 `dash.key` 一致。纯入口卡只做 ①。
 
