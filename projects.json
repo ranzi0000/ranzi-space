@@ -1,6 +1,6 @@
 {
  "_schema": "v2",
- "_note": "single source of truth for ranzi.space 首页大屏卡片 + 首页 all projects 列表 + /projects 页 + hub README. 编辑后 commit ranzi-space repo 自动部署。",
+ "_note": "single source of truth for ranzi.space 首页大屏卡片 + /projects 页 + hub README. 编辑后 commit ranzi-space repo 自动部署。",
  "_legend": {
   "status": "active=主线在做 | dormant=暂停未删 | archived=完结归档 | infra=基础设施(配套不主推)",
   "show_on_site": "true=进 /projects 列表页 | false=只记录不展示",

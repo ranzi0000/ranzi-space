@@ -553,7 +553,7 @@ footer .meta { text-transform: uppercase; }
 })();
 
 // ─── Dashboard ──────────────────────────────────────────
-// 卡片和底部 all projects 列表从 /projects.json 真源生成；活数据照旧来自 /api/summary。
+// 卡片从 /projects.json 真源生成；活数据（含云服务器状态条）来自 /api/summary。
 (function() {
   var PROJ_CACHE_KEY = 'ranzi-projects-cache-v1';  // projects.json 缓存，保住 0ms 首屏
   var CACHE_KEY = 'ranzi-dash-cache-v2';  // 升 schema，v1 缓存里没有 items 字段
