@@ -607,6 +607,22 @@
    ],
    "show_on_site": true,
    "show_on_dashboard": false
+  },
+  {
+   "slug": "duanju-faceswap",
+   "title": "短剧换脸流水线（duanju-faceswap）",
+   "tagline": "短剧后期换脸：DFM/FaceFusion 双路线 + 判断-复核-渲染两段式",
+   "status": "active",
+   "tier": 3,
+   "github": "https://github.com/ranzi0000/duanju-faceswap",
+   "tags": [
+    "换脸",
+    "短剧",
+    "Python",
+    "DeepFaceLive"
+   ],
+   "show_on_site": true,
+   "show_on_dashboard": false
   }
  ],
  "_archived_local": [
