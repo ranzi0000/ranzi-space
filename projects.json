@@ -1,635 +1,651 @@
 {
- "_schema": "v2",
- "_note": "single source of truth for ranzi.space 首页大屏卡片 + /projects 页 + hub README. 编辑后 commit ranzi-space repo 自动部署。",
- "_legend": {
-  "status": "active=主线在做 | dormant=暂停未删 | archived=完结归档 | infra=基础设施(配套不主推)",
-  "show_on_site": "true=进 /projects 列表页 | false=只记录不展示",
-  "show_on_dashboard": "true=进首页大屏卡片（需配 dash 元数据）",
-  "dash": "首页卡片元数据 {key,title,sub,href,order,items}。key=对应 /api/summary 的数据 key（collector 在 dash-collector/collect.py 的 CARDS 表），纯入口卡不填；items=true 走列表卡结构",
-  "access": "首页 all projects 列表的访问标签（auth/private），不填=公开",
-  "tier": "1=旗舰主推 | 2=工具/产品 | 3=配套/历史"
- },
- "projects": [
-  {
-   "slug": "wanhuatong",
-   "title": "万花筒（wanhuatong）",
-   "tagline": "万花筒主业务后台 + 客户运营周报（2026-07 业务关停）",
-   "status": "archived",
-   "github": "https://github.com/ranzi0000/wanhuatong",
-   "tags": [
-    "业务",
-    "Flask",
-    "MySQL"
-   ],
-   "show_on_site": true,
-   "show_on_dashboard": false
+  "_schema": "v2",
+  "_note": "single source of truth for ranzi.space 首页大屏卡片 + /projects 页 + hub README. 编辑后 commit ranzi-space repo 自动部署。",
+  "_legend": {
+    "status": "active=主线在做 | dormant=暂停未删 | archived=完结归档 | infra=基础设施(配套不主推)",
+    "show_on_site": "true=进 /projects 列表页 | false=只记录不展示",
+    "show_on_dashboard": "true=进首页大屏卡片（需配 dash 元数据）",
+    "dash": "首页卡片元数据 {key,title,sub,href,order,items}。key=对应 /api/summary 的数据 key（collector 在 dash-collector/collect.py 的 CARDS 表），纯入口卡不填；items=true 走列表卡结构",
+    "access": "首页 all projects 列表的访问标签（auth/private），不填=公开",
+    "tier": "1=旗舰主推 | 2=工具/产品 | 3=配套/历史"
   },
-  {
-   "slug": "baodan",
-   "title": "报单中心（baodan）",
-   "tagline": "法事报单录入 + 视频/图片交付（v1，2026-07 销毁；后继 → baodan2）",
-   "status": "archived",
-   "github": "https://github.com/ranzi0000/baodan",
-   "tags": [
-    "业务",
-    "Flask",
-    "MySQL",
-    "微信"
-   ],
-   "show_on_site": true,
-   "show_on_dashboard": false
-  },
-  {
-   "slug": "baodan-downloader",
-   "title": "报单交付下载客户端",
-   "tagline": "Windows 桌面端，自动下载 + H.265 压缩（v0.4.1，随 baodan2 后端复活）",
-   "status": "active",
-   "github": "https://github.com/ranzi0000/baodan-downloader",
-   "tags": [
-    "桌面",
-    "PyInstaller",
-    "tkinter",
-    "ffmpeg"
-   ],
-   "show_on_site": true,
-   "show_on_dashboard": false
-  },
-  {
-   "slug": "investment-scanner",
-   "title": "投资扫描器（invest）",
-   "tagline": "美股+A股扫描 + 双引擎主题图谱",
-   "status": "active",
-   "tier": 1,
-   "github": "https://github.com/ranzi0000/investment-scanner",
-   "live": "https://invest.ranzi.space",
-   "tags": [
-    "投资",
-    "Python",
-    "SQLite"
-   ],
-   "show_on_site": true,
-   "show_on_dashboard": true,
-   "dash": {
-    "key": "invest",
-    "title": "invest",
-    "sub": "美股 / A 股扫描",
-    "href": "https://invest.ranzi.space",
-    "order": 2
-   }
-  },
-  {
-   "slug": "crypto-radar",
-   "title": "CryptoRadar",
-   "tagline": "加密货币跨所套利监控",
-   "status": "active",
-   "tier": 2,
-   "github": "https://github.com/ranzi0000/crypto-radar",
-   "live": "https://crypto.ranzi.space",
-   "tags": [
-    "加密货币",
-    "套利"
-   ],
-   "show_on_site": true,
-   "show_on_dashboard": true,
-   "access": "auth",
-   "dash": {
-    "key": "crypto",
-    "title": "crypto",
-    "sub": "套利雷达",
-    "href": "https://crypto.ranzi.space",
-    "order": 1
-   }
-  },
-  {
-   "slug": "douyin-recorder",
-   "title": "ingest-system（rec）",
-   "tagline": "通用「URL → 落地 + 处理」基建",
-   "status": "active",
-   "tier": 2,
-   "github": "https://github.com/ranzi0000/douyin-recorder",
-   "live": "https://rec.ranzi.space",
-   "tags": [
-    "内容采集",
-    "ASR",
-    "Obsidian"
-   ],
-   "show_on_site": true,
-   "show_on_dashboard": true,
-   "access": "auth",
-   "dash": {
-    "key": "rec",
-    "title": "rec · 最新",
-    "href": "https://rec.ranzi.space",
-    "order": 4,
-    "items": true
-   }
-  },
-  {
-   "slug": "html-lab",
-   "title": "HTML Lab",
-   "tagline": "Claude 生成的所有 HTML 作品集",
-   "status": "active",
-   "tier": 1,
-   "github": "https://github.com/ranzi0000/html-lab",
-   "live": "https://lab.ranzi.space",
-   "tags": [
-    "作品集",
-    "CF Pages"
-   ],
-   "show_on_site": true,
-   "show_on_dashboard": false,
-   "access": "private",
-   "private": true
-  },
-  {
-   "slug": "xuanyi-fortune",
-   "title": "玄一先生",
-   "tagline": "AI 算命话术系统",
-   "status": "dormant",
-   "tier": 2,
-   "github": "https://github.com/ranzi0000/xuanyi-fortune",
-   "tags": [
-    "AI",
-    "话术"
-   ],
-   "show_on_site": true,
-   "show_on_dashboard": false
-  },
-  {
-   "slug": "nexus",
-   "title": "Nexus",
-   "tagline": "家庭设备 MCP 控制平台",
-   "status": "active",
-   "tier": 1,
-   "github": "https://github.com/ranzi0000/nexus",
-   "tags": [
-    "MCP",
-    "智能家居"
-   ],
-   "show_on_site": true,
-   "show_on_dashboard": false
-  },
-  {
-   "slug": "order-system",
-   "title": "订单流转系统",
-   "tagline": "Flask + MySQL 订单管理（2026-07 业务关停）",
-   "status": "archived",
-   "github": "https://github.com/ranzi0000/order-system",
-   "tags": [
-    "业务",
-    "Flask"
-   ],
-   "show_on_site": true,
-   "show_on_dashboard": false
-  },
-  {
-   "slug": "wht-community",
-   "title": "万花筒社区版",
-   "tagline": "反盗版桌面工具",
-   "status": "dormant",
-   "tier": 2,
-   "github": "https://github.com/ranzi0000/wht-community",
-   "tags": [
-    "桌面",
-    "Windows"
-   ],
-   "show_on_site": true,
-   "show_on_dashboard": false
-  },
-  {
-   "slug": "paiban-tool",
-   "title": "排版小工具",
-   "tagline": "PyQt6 拖框排版 + 导 PDF",
-   "status": "active",
-   "tier": 2,
-   "github": "https://github.com/ranzi0000/paiban-tool",
-   "tags": [
-    "桌面",
-    "PyQt6"
-   ],
-   "show_on_site": true,
-   "show_on_dashboard": false
-  },
-  {
-   "slug": "streambridge",
-   "title": "StreamBridge",
-   "tagline": "DFL 换脸机 → 直播伴侣机音视频中转",
-   "status": "active",
-   "tier": 2,
-   "github": "https://github.com/ranzi0000/streambridge",
-   "tags": [
-    "音视频",
-    "ffmpeg",
-    "tkinter"
-   ],
-   "show_on_site": true,
-   "show_on_dashboard": false
-  },
-  {
-   "slug": "notes-ocr",
-   "title": "Apple Notes OCR",
-   "tagline": "Apple Notes PDF OCR → Markdown",
-   "status": "dormant",
-   "tier": 3,
-   "github": "https://github.com/ranzi0000/notes-ocr",
-   "tags": [
-    "工具",
-    "OCR"
-   ],
-   "show_on_site": true,
-   "show_on_dashboard": false
-  },
-  {
-   "slug": "hub",
-   "title": "Hub",
-   "tagline": "项目导航中心 + heartbeat watchdog",
-   "status": "infra",
-   "tier": 3,
-   "github": "https://github.com/ranzi0000/hub",
-   "tags": [
-    "基建",
-    "watchdog"
-   ],
-   "show_on_site": false,
-   "show_on_dashboard": false
-  },
-  {
-   "slug": "skills",
-   "title": "Claude Skills",
-   "tagline": "个人 skill 收藏",
-   "status": "infra",
-   "tier": 3,
-   "github": "https://github.com/ranzi0000/skills",
-   "tags": [
-    "基建",
-    "Claude"
-   ],
-   "show_on_site": false,
-   "show_on_dashboard": false
-  },
-  {
-   "slug": "dotfiles-mac",
-   "title": "dotfiles-mac",
-   "tagline": "Mac mini LaunchAgent + 配置版本化",
-   "status": "infra",
-   "tier": 3,
-   "github": "https://github.com/ranzi0000/dotfiles-mac",
-   "tags": [
-    "基建",
-    "macOS"
-   ],
-   "show_on_site": false,
-   "show_on_dashboard": false
-  },
-  {
-   "slug": "dash-collector",
-   "title": "dash-collector",
-   "tagline": "ranzi.space 大屏数据采集器",
-   "status": "infra",
-   "tier": 3,
-   "github": "https://github.com/ranzi0000/dash-collector",
-   "tags": [
-    "基建",
-    "LaunchAgent"
-   ],
-   "show_on_site": false,
-   "show_on_dashboard": false
-  },
-  {
-   "slug": "claude-rc",
-   "title": "claude-rc",
-   "tagline": "一键启 Claude 远程会话",
-   "status": "infra",
-   "tier": 3,
-   "github": "https://github.com/ranzi0000/claude-rc",
-   "tags": [
-    "基建",
-    "LaunchAgent"
-   ],
-   "show_on_site": false,
-   "show_on_dashboard": false
-  },
-  {
-   "slug": "heartbeat",
-   "title": "heartbeat",
-   "tagline": "共享心跳客户端库（被 investment-scanner / nexus / crypto-radar / hub-watchdog 4 个项目 import）",
-   "status": "infra",
-   "tier": 3,
-   "github": "https://github.com/ranzi0000/heartbeat",
-   "tags": [
-    "基建",
-    "shared lib"
-   ],
-   "show_on_site": false,
-   "show_on_dashboard": false
-  },
-  {
-   "slug": "alpha-explorer",
-   "title": "alpha-explorer",
-   "tagline": "散户可执行正期望策略组合的文献综述+实证回测（2026-05-17 中断于 Phase 2）",
-   "status": "archived",
-   "tier": 3,
-   "github": "https://github.com/ranzi0000/alpha-explorer",
-   "tags": [
-    "投资",
-    "研究"
-   ],
-   "show_on_site": false,
-   "show_on_dashboard": false,
-   "local_path": "~/Projects/_archive/alpha-explorer"
-  },
-  {
-   "slug": "saki-backtest",
-   "title": "saki_backtest",
-   "tagline": "Saki 低位二板策略证伪研究（已完成）",
-   "status": "archived",
-   "tier": 3,
-   "github": "https://github.com/ranzi0000/saki-backtest",
-   "tags": [
-    "投资",
-    "回测"
-   ],
-   "show_on_site": false,
-   "show_on_dashboard": false,
-   "local_path": "~/Projects/_archive/saki_backtest"
-  },
-  {
-   "slug": "openclaw-workspace",
-   "title": "openclaw-workspace",
-   "tagline": "OpenClaw 服务器工作区",
-   "status": "infra",
-   "tier": 3,
-   "github": "https://github.com/ranzi0000/openclaw-workspace",
-   "tags": [
-    "基建"
-   ],
-   "show_on_site": false,
-   "show_on_dashboard": false
-  },
-  {
-   "slug": "lppls",
-   "title": "lppls",
-   "tagline": "LPPLS 模型拟合库（2021）",
-   "status": "archived",
-   "tier": 3,
-   "github": "https://github.com/ranzi0000/lppls",
-   "tags": [
-    "历史",
-    "投资"
-   ],
-   "show_on_site": false,
-   "show_on_dashboard": false
-  },
-  {
-   "slug": "market-breadth",
-   "title": "market-breadth",
-   "tagline": "美股 A 股市场宽度（2020）",
-   "status": "archived",
-   "tier": 3,
-   "github": "https://github.com/ranzi0000/market-breadth",
-   "tags": [
-    "历史",
-    "投资"
-   ],
-   "show_on_site": false,
-   "show_on_dashboard": false
-  },
-  {
-   "slug": "dreamtrader",
-   "title": "DreamTrader",
-   "tagline": "（2020）",
-   "status": "archived",
-   "tier": 3,
-   "github": "https://github.com/ranzi0000/DreamTrader",
-   "tags": [
-    "历史"
-   ],
-   "show_on_site": false,
-   "show_on_dashboard": false
-  },
-  {
-   "slug": "lonecapital-chart",
-   "title": "lonecapital-chart",
-   "tagline": "（2020）",
-   "status": "archived",
-   "tier": 3,
-   "github": "https://github.com/ranzi0000/lonecapital-chart",
-   "tags": [
-    "历史"
-   ],
-   "show_on_site": false,
-   "show_on_dashboard": false
-  },
-  {
-   "slug": "stream-relay",
-   "title": "直播推流中转（stream-relay）",
-   "tagline": "SRT/RTMP 直播流中转服务，自带 Web 管理后台（⏸ 项目停滞，服务器保留在线）；配套 [streambridge](https://github.com/ranzi0000/streambridge) 客户端",
-   "status": "dormant",
-   "tier": 2,
-   "github": "https://github.com/ranzi0000/stream-relay",
-   "live": "http://82.156.120.246:5556/",
-   "tags": [
-    "mediamtx",
-    "SRT",
-    "RTMP",
-    "Flask"
-   ],
-   "show_on_site": true,
-   "show_on_dashboard": false,
-   "access": "auth",
-   "dash": {
-    "key": "relay",
-    "title": "Stream Relay",
-    "sub": "直播推流 SRT/RTMP 中转",
-    "href": "https://relay.ranzi.space",
-    "order": 5
-   }
-  },
-  {
-   "github": "https://github.com/ranzi0000/auth-hub",
-   "live": "http://82.156.120.246:5557/admin",
-   "show_on_dashboard": false,
-   "access": "auth",
-   "dash": {
-    "title": "授权中控",
-    "sub": "加盟商授权 / 开户管理",
-    "href": "https://auth.ranzi.space/admin/login",
-    "order": 6
-   },
-   "show_on_site": true,
-   "slug": "auth-hub",
-   "status": "dormant",
-   "tagline": "通用授权系统：admin 给加盟商开户发激活码，工具启动找中控验签放行，可远程吊销（⏸ 随直播业务暂停）。Ed25519 签名凭证 + 48h 离线宽限",
-   "tags": [
-    "Flask",
-    "SQLite",
-    "Ed25519",
-    "JWT",
-    "授权"
-   ],
-   "tier": 2,
-   "title": "通用授权系统（auth-hub）"
-  },
-  {
-   "slug": "private-live",
-   "title": "私域直播后台（private-live）",
-   "tagline": "主播私域直播变现后台：限时卡密 + 第二视角直播 + 设备绑定（⏸ 停滞，等新备案域名）",
-   "status": "dormant",
-   "tier": 2,
-   "github": "https://github.com/ranzi0000/private-live",
-   "live": "http://82.156.120.246:8000/admin-ui/",
-   "tags": [
-    "Flask",
-    "Vue3",
-    "COS",
-    "直播",
-    "变现"
-   ],
-   "show_on_site": true,
-   "show_on_dashboard": false,
-   "access": "auth",
-   "dash": {
-    "title": "私域直播",
-    "sub": "主播私域直播变现",
-    "href": "http://82.156.120.246:8000/admin-ui/",
-    "order": 7
-   }
-  },
-  {
-   "slug": "listing-radar",
-   "title": "上下币雷达（listing-radar）",
-   "tagline": "Binance/OKX/HL 上下币公告聚合 → Bark 推送 + 看板",
-   "status": "active",
-   "github": "https://github.com/ranzi0000/listing-radar",
-   "live": "https://radar.ranzi.space",
-   "tags": [
-    "投资",
-    "Python",
-    "SQLite"
-   ],
-   "show_on_site": true,
-   "show_on_dashboard": true,
-   "access": "auth",
-   "dash": {
-    "key": "radar",
-    "title": "radar",
-    "sub": "上下币公告雷达",
-    "href": "https://radar.ranzi.space",
-    "order": 3
-   }
-  },
-  {
-   "slug": "baodan2",
-   "title": "报单中心 v2（baodan2）",
-   "tagline": "法事报单 + 视频交付：单服务器、无对象存储、SQLite",
-   "status": "active",
-   "tier": 2,
-   "github": "https://github.com/ranzi0000/baodan2",
-   "tags": [
-    "业务",
-    "Flask",
-    "SQLite",
-    "nginx"
-   ],
-   "show_on_site": true,
-   "show_on_dashboard": false
-  },
-  {
-   "slug": "duanju-studio",
-   "title": "duanju-studio",
-   "tagline": "短剧剧本工作台：红果热度雷达 + 框架赛马制知识库 + AI 剧本流水线",
-   "status": "active",
-   "tier": 2,
-   "github": "https://github.com/ranzi0000/duanju-studio",
-   "live": "https://duanju.ranzi.space",
-   "tags": [
-    "Python",
-    "SQLite",
-    "AI创作"
-   ],
-   "show_on_site": true,
-   "show_on_dashboard": true,
-   "dash": {
-    "title": "duanju",
-    "sub": "短剧剧本流水线",
-    "href": "https://duanju.ranzi.space",
-    "order": 9
-   }
-  },
-  {
-   "slug": "dontbesilent-corpus",
-   "title": "dontbesilent 知识底座",
-   "tagline": "dbs 博主全量内容：167 视频+7396 推文语料 + 605 单元知识网络 + 每日一卡推送",
-   "status": "active",
-   "tier": 2,
-   "github": "https://github.com/ranzi0000/dontbesilent-corpus",
-   "live": null,
-   "tags": [
-    "知识工程",
-    "Python",
-    "Obsidian"
-   ],
-   "show_on_site": true,
-   "show_on_dashboard": true,
-   "dash": {
-    "title": "dbs",
-    "sub": "抽一张卡自测",
-    "href": "/dbs/",
-    "order": 8
-   }
-  },
-  {
-   "slug": "kindle-dash",
-   "title": "Kindle 仪表盘（kindle-dash）",
-   "tagline": "日版 KPW2 改装 E-Ink 面板，业务/运维/项目多页速览",
-   "status": "active",
-   "tier": 2,
-   "github": "https://github.com/ranzi0000/kindle-dash",
-   "tags": [
-    "E-Ink",
-    "Python",
-    "看板"
-   ],
-   "show_on_site": true,
-   "show_on_dashboard": false
-  },
-  {
-   "slug": "dylive-monitor",
-   "title": "抖音聚合弹幕监控（dylive-monitor）",
-   "tagline": "多直播间弹幕/进场/送礼聚合到本地网页 + 话术提词",
-   "status": "active",
-   "tier": 2,
-   "github": "https://github.com/ranzi0000/dylive-monitor",
-   "tags": [
-    "抖音",
-    "弹幕",
-    "Python"
-   ],
-   "show_on_site": true,
-   "show_on_dashboard": false
-  },
-  {
-   "slug": "duanju-faceswap",
-   "title": "短剧换脸流水线（duanju-faceswap）",
-   "tagline": "短剧后期换脸：DFM/FaceFusion 双路线 + 判断-复核-渲染两段式",
-   "status": "active",
-   "tier": 3,
-   "github": "https://github.com/ranzi0000/duanju-faceswap",
-   "tags": [
-    "换脸",
-    "短剧",
-    "Python",
-    "DeepFaceLive"
-   ],
-   "show_on_site": true,
-   "show_on_dashboard": false
-  }
- ],
- "_archived_local": [
-  "bilibili_subtitles",
-  "bilibili_transcript",
-  "wecom-autobot",
-  "xuanyi-docs"
- ],
- "_archived_note": "已 mv 到 ~/Projects/_archive/，不再活跃。要彻底删可手动 rm -rf。"
+  "projects": [
+    {
+      "slug": "wanhuatong",
+      "title": "万花筒（wanhuatong）",
+      "tagline": "万花筒主业务后台 + 客户运营周报（2026-07 业务关停）",
+      "status": "archived",
+      "github": "https://github.com/ranzi0000/wanhuatong",
+      "tags": [
+        "业务",
+        "Flask",
+        "MySQL"
+      ],
+      "show_on_site": true,
+      "show_on_dashboard": false
+    },
+    {
+      "slug": "baodan",
+      "title": "报单中心（baodan）",
+      "tagline": "法事报单录入 + 视频/图片交付（v1，2026-07 销毁；后继 → baodan2）",
+      "status": "archived",
+      "github": "https://github.com/ranzi0000/baodan",
+      "tags": [
+        "业务",
+        "Flask",
+        "MySQL",
+        "微信"
+      ],
+      "show_on_site": true,
+      "show_on_dashboard": false
+    },
+    {
+      "slug": "baodan-downloader",
+      "title": "报单交付下载客户端",
+      "tagline": "Windows 桌面端，自动下载 + H.265 压缩（v0.4.1，随 baodan2 后端复活）",
+      "status": "active",
+      "github": "https://github.com/ranzi0000/baodan-downloader",
+      "tags": [
+        "桌面",
+        "PyInstaller",
+        "tkinter",
+        "ffmpeg"
+      ],
+      "show_on_site": true,
+      "show_on_dashboard": false
+    },
+    {
+      "slug": "investment-scanner",
+      "title": "投资扫描器（invest）",
+      "tagline": "美股+A股扫描 + 双引擎主题图谱",
+      "status": "active",
+      "tier": 1,
+      "github": "https://github.com/ranzi0000/investment-scanner",
+      "live": "https://invest.ranzi.space",
+      "tags": [
+        "投资",
+        "Python",
+        "SQLite"
+      ],
+      "show_on_site": true,
+      "show_on_dashboard": true,
+      "dash": {
+        "key": "invest",
+        "title": "invest",
+        "sub": "美股 / A 股扫描",
+        "href": "https://invest.ranzi.space",
+        "order": 2
+      }
+    },
+    {
+      "slug": "crypto-radar",
+      "title": "CryptoRadar",
+      "tagline": "加密货币跨所套利监控",
+      "status": "active",
+      "tier": 2,
+      "github": "https://github.com/ranzi0000/crypto-radar",
+      "live": "https://crypto.ranzi.space",
+      "tags": [
+        "加密货币",
+        "套利"
+      ],
+      "show_on_site": true,
+      "show_on_dashboard": true,
+      "access": "auth",
+      "dash": {
+        "key": "crypto",
+        "title": "crypto",
+        "sub": "套利雷达",
+        "href": "https://crypto.ranzi.space",
+        "order": 1
+      }
+    },
+    {
+      "slug": "douyin-recorder",
+      "title": "ingest-system（rec）",
+      "tagline": "通用「URL → 落地 + 处理」基建",
+      "status": "active",
+      "tier": 2,
+      "github": "https://github.com/ranzi0000/douyin-recorder",
+      "live": "https://rec.ranzi.space",
+      "tags": [
+        "内容采集",
+        "ASR",
+        "Obsidian"
+      ],
+      "show_on_site": true,
+      "show_on_dashboard": true,
+      "access": "auth",
+      "dash": {
+        "key": "rec",
+        "title": "rec · 最新",
+        "href": "https://rec.ranzi.space",
+        "order": 4,
+        "items": true
+      }
+    },
+    {
+      "slug": "html-lab",
+      "title": "HTML Lab",
+      "tagline": "Claude 生成的所有 HTML 作品集",
+      "status": "active",
+      "tier": 1,
+      "github": "https://github.com/ranzi0000/html-lab",
+      "live": "https://lab.ranzi.space",
+      "tags": [
+        "作品集",
+        "CF Pages"
+      ],
+      "show_on_site": true,
+      "show_on_dashboard": false,
+      "access": "private",
+      "private": true
+    },
+    {
+      "slug": "xuanyi-fortune",
+      "title": "玄一先生",
+      "tagline": "AI 算命话术系统",
+      "status": "dormant",
+      "tier": 2,
+      "github": "https://github.com/ranzi0000/xuanyi-fortune",
+      "tags": [
+        "AI",
+        "话术"
+      ],
+      "show_on_site": true,
+      "show_on_dashboard": false
+    },
+    {
+      "slug": "nexus",
+      "title": "Nexus",
+      "tagline": "家庭设备 MCP 控制平台",
+      "status": "active",
+      "tier": 1,
+      "github": "https://github.com/ranzi0000/nexus",
+      "tags": [
+        "MCP",
+        "智能家居"
+      ],
+      "show_on_site": true,
+      "show_on_dashboard": false
+    },
+    {
+      "slug": "order-system",
+      "title": "订单流转系统",
+      "tagline": "Flask + MySQL 订单管理（2026-07 业务关停）",
+      "status": "archived",
+      "github": "https://github.com/ranzi0000/order-system",
+      "tags": [
+        "业务",
+        "Flask"
+      ],
+      "show_on_site": true,
+      "show_on_dashboard": false
+    },
+    {
+      "slug": "wht-community",
+      "title": "万花筒社区版",
+      "tagline": "反盗版桌面工具",
+      "status": "dormant",
+      "tier": 2,
+      "github": "https://github.com/ranzi0000/wht-community",
+      "tags": [
+        "桌面",
+        "Windows"
+      ],
+      "show_on_site": true,
+      "show_on_dashboard": false
+    },
+    {
+      "slug": "paiban-tool",
+      "title": "排版小工具",
+      "tagline": "PyQt6 拖框排版 + 导 PDF",
+      "status": "active",
+      "tier": 2,
+      "github": "https://github.com/ranzi0000/paiban-tool",
+      "tags": [
+        "桌面",
+        "PyQt6"
+      ],
+      "show_on_site": true,
+      "show_on_dashboard": false
+    },
+    {
+      "slug": "streambridge",
+      "title": "StreamBridge",
+      "tagline": "DFL 换脸机 → 直播伴侣机音视频中转",
+      "status": "active",
+      "tier": 2,
+      "github": "https://github.com/ranzi0000/streambridge",
+      "tags": [
+        "音视频",
+        "ffmpeg",
+        "tkinter"
+      ],
+      "show_on_site": true,
+      "show_on_dashboard": false
+    },
+    {
+      "slug": "notes-ocr",
+      "title": "Apple Notes OCR",
+      "tagline": "Apple Notes PDF OCR → Markdown",
+      "status": "dormant",
+      "tier": 3,
+      "github": "https://github.com/ranzi0000/notes-ocr",
+      "tags": [
+        "工具",
+        "OCR"
+      ],
+      "show_on_site": true,
+      "show_on_dashboard": false
+    },
+    {
+      "slug": "hub",
+      "title": "Hub",
+      "tagline": "项目导航中心 + heartbeat watchdog",
+      "status": "infra",
+      "tier": 3,
+      "github": "https://github.com/ranzi0000/hub",
+      "tags": [
+        "基建",
+        "watchdog"
+      ],
+      "show_on_site": false,
+      "show_on_dashboard": false
+    },
+    {
+      "slug": "skills",
+      "title": "Claude Skills",
+      "tagline": "个人 skill 收藏",
+      "status": "infra",
+      "tier": 3,
+      "github": "https://github.com/ranzi0000/skills",
+      "tags": [
+        "基建",
+        "Claude"
+      ],
+      "show_on_site": false,
+      "show_on_dashboard": false
+    },
+    {
+      "slug": "dotfiles-mac",
+      "title": "dotfiles-mac",
+      "tagline": "Mac mini LaunchAgent + 配置版本化",
+      "status": "infra",
+      "tier": 3,
+      "github": "https://github.com/ranzi0000/dotfiles-mac",
+      "tags": [
+        "基建",
+        "macOS"
+      ],
+      "show_on_site": false,
+      "show_on_dashboard": false
+    },
+    {
+      "slug": "dash-collector",
+      "title": "dash-collector",
+      "tagline": "ranzi.space 大屏数据采集器",
+      "status": "infra",
+      "tier": 3,
+      "github": "https://github.com/ranzi0000/dash-collector",
+      "tags": [
+        "基建",
+        "LaunchAgent"
+      ],
+      "show_on_site": false,
+      "show_on_dashboard": false
+    },
+    {
+      "slug": "claude-rc",
+      "title": "claude-rc",
+      "tagline": "一键启 Claude 远程会话",
+      "status": "infra",
+      "tier": 3,
+      "github": "https://github.com/ranzi0000/claude-rc",
+      "tags": [
+        "基建",
+        "LaunchAgent"
+      ],
+      "show_on_site": false,
+      "show_on_dashboard": false
+    },
+    {
+      "slug": "heartbeat",
+      "title": "heartbeat",
+      "tagline": "共享心跳客户端库（被 investment-scanner / nexus / crypto-radar / hub-watchdog 4 个项目 import）",
+      "status": "infra",
+      "tier": 3,
+      "github": "https://github.com/ranzi0000/heartbeat",
+      "tags": [
+        "基建",
+        "shared lib"
+      ],
+      "show_on_site": false,
+      "show_on_dashboard": false
+    },
+    {
+      "slug": "alpha-explorer",
+      "title": "alpha-explorer",
+      "tagline": "散户可执行正期望策略组合的文献综述+实证回测（2026-05-17 中断于 Phase 2）",
+      "status": "archived",
+      "tier": 3,
+      "github": "https://github.com/ranzi0000/alpha-explorer",
+      "tags": [
+        "投资",
+        "研究"
+      ],
+      "show_on_site": false,
+      "show_on_dashboard": false,
+      "local_path": "~/Projects/_archive/alpha-explorer"
+    },
+    {
+      "slug": "saki-backtest",
+      "title": "saki_backtest",
+      "tagline": "Saki 低位二板策略证伪研究（已完成）",
+      "status": "archived",
+      "tier": 3,
+      "github": "https://github.com/ranzi0000/saki-backtest",
+      "tags": [
+        "投资",
+        "回测"
+      ],
+      "show_on_site": false,
+      "show_on_dashboard": false,
+      "local_path": "~/Projects/_archive/saki_backtest"
+    },
+    {
+      "slug": "openclaw-workspace",
+      "title": "openclaw-workspace",
+      "tagline": "OpenClaw 服务器工作区",
+      "status": "infra",
+      "tier": 3,
+      "github": "https://github.com/ranzi0000/openclaw-workspace",
+      "tags": [
+        "基建"
+      ],
+      "show_on_site": false,
+      "show_on_dashboard": false
+    },
+    {
+      "slug": "lppls",
+      "title": "lppls",
+      "tagline": "LPPLS 模型拟合库（2021）",
+      "status": "archived",
+      "tier": 3,
+      "github": "https://github.com/ranzi0000/lppls",
+      "tags": [
+        "历史",
+        "投资"
+      ],
+      "show_on_site": false,
+      "show_on_dashboard": false
+    },
+    {
+      "slug": "market-breadth",
+      "title": "market-breadth",
+      "tagline": "美股 A 股市场宽度（2020）",
+      "status": "archived",
+      "tier": 3,
+      "github": "https://github.com/ranzi0000/market-breadth",
+      "tags": [
+        "历史",
+        "投资"
+      ],
+      "show_on_site": false,
+      "show_on_dashboard": false
+    },
+    {
+      "slug": "dreamtrader",
+      "title": "DreamTrader",
+      "tagline": "（2020）",
+      "status": "archived",
+      "tier": 3,
+      "github": "https://github.com/ranzi0000/DreamTrader",
+      "tags": [
+        "历史"
+      ],
+      "show_on_site": false,
+      "show_on_dashboard": false
+    },
+    {
+      "slug": "lonecapital-chart",
+      "title": "lonecapital-chart",
+      "tagline": "（2020）",
+      "status": "archived",
+      "tier": 3,
+      "github": "https://github.com/ranzi0000/lonecapital-chart",
+      "tags": [
+        "历史"
+      ],
+      "show_on_site": false,
+      "show_on_dashboard": false
+    },
+    {
+      "slug": "stream-relay",
+      "title": "直播推流中转（stream-relay）",
+      "tagline": "SRT/RTMP 直播流中转服务，自带 Web 管理后台（⏸ 项目停滞，服务器保留在线）；配套 [streambridge](https://github.com/ranzi0000/streambridge) 客户端",
+      "status": "dormant",
+      "tier": 2,
+      "github": "https://github.com/ranzi0000/stream-relay",
+      "live": "http://82.156.120.246:5556/",
+      "tags": [
+        "mediamtx",
+        "SRT",
+        "RTMP",
+        "Flask"
+      ],
+      "show_on_site": true,
+      "show_on_dashboard": false,
+      "access": "auth",
+      "dash": {
+        "key": "relay",
+        "title": "Stream Relay",
+        "sub": "直播推流 SRT/RTMP 中转",
+        "href": "https://relay.ranzi.space",
+        "order": 5
+      }
+    },
+    {
+      "github": "https://github.com/ranzi0000/auth-hub",
+      "live": "http://82.156.120.246:5557/admin",
+      "show_on_dashboard": false,
+      "access": "auth",
+      "dash": {
+        "title": "授权中控",
+        "sub": "加盟商授权 / 开户管理",
+        "href": "https://auth.ranzi.space/admin/login",
+        "order": 6
+      },
+      "show_on_site": true,
+      "slug": "auth-hub",
+      "status": "dormant",
+      "tagline": "通用授权系统：admin 给加盟商开户发激活码，工具启动找中控验签放行，可远程吊销（⏸ 随直播业务暂停）。Ed25519 签名凭证 + 48h 离线宽限",
+      "tags": [
+        "Flask",
+        "SQLite",
+        "Ed25519",
+        "JWT",
+        "授权"
+      ],
+      "tier": 2,
+      "title": "通用授权系统（auth-hub）"
+    },
+    {
+      "slug": "private-live",
+      "title": "私域直播后台（private-live）",
+      "tagline": "主播私域直播变现后台：限时卡密 + 第二视角直播 + 设备绑定（⏸ 停滞，等新备案域名）",
+      "status": "dormant",
+      "tier": 2,
+      "github": "https://github.com/ranzi0000/private-live",
+      "live": "http://82.156.120.246:8000/admin-ui/",
+      "tags": [
+        "Flask",
+        "Vue3",
+        "COS",
+        "直播",
+        "变现"
+      ],
+      "show_on_site": true,
+      "show_on_dashboard": false,
+      "access": "auth",
+      "dash": {
+        "title": "私域直播",
+        "sub": "主播私域直播变现",
+        "href": "http://82.156.120.246:8000/admin-ui/",
+        "order": 7
+      }
+    },
+    {
+      "slug": "listing-radar",
+      "title": "上下币雷达（listing-radar）",
+      "tagline": "Binance/OKX/HL 上下币公告聚合 → Bark 推送 + 看板",
+      "status": "active",
+      "github": "https://github.com/ranzi0000/listing-radar",
+      "live": "https://radar.ranzi.space",
+      "tags": [
+        "投资",
+        "Python",
+        "SQLite"
+      ],
+      "show_on_site": true,
+      "show_on_dashboard": true,
+      "access": "auth",
+      "dash": {
+        "key": "radar",
+        "title": "radar",
+        "sub": "上下币公告雷达",
+        "href": "https://radar.ranzi.space",
+        "order": 3
+      }
+    },
+    {
+      "slug": "baodan2",
+      "title": "报单中心 v2（baodan2）",
+      "tagline": "法事报单 + 视频交付：单服务器、无对象存储、SQLite",
+      "status": "active",
+      "tier": 2,
+      "github": "https://github.com/ranzi0000/baodan2",
+      "tags": [
+        "业务",
+        "Flask",
+        "SQLite",
+        "nginx"
+      ],
+      "show_on_site": true,
+      "show_on_dashboard": false
+    },
+    {
+      "slug": "duanju-studio",
+      "title": "duanju-studio",
+      "tagline": "短剧剧本工作台：红果热度雷达 + 框架赛马制知识库 + AI 剧本流水线",
+      "status": "active",
+      "tier": 2,
+      "github": "https://github.com/ranzi0000/duanju-studio",
+      "live": "https://duanju.ranzi.space",
+      "tags": [
+        "Python",
+        "SQLite",
+        "AI创作"
+      ],
+      "show_on_site": true,
+      "show_on_dashboard": true,
+      "dash": {
+        "title": "duanju",
+        "sub": "短剧剧本流水线",
+        "href": "https://duanju.ranzi.space",
+        "order": 9
+      }
+    },
+    {
+      "slug": "dontbesilent-corpus",
+      "title": "dontbesilent 知识底座",
+      "tagline": "dbs 博主全量内容：167 视频+7396 推文语料 + 605 单元知识网络 + 每日一卡推送",
+      "status": "active",
+      "tier": 2,
+      "github": "https://github.com/ranzi0000/dontbesilent-corpus",
+      "live": null,
+      "tags": [
+        "知识工程",
+        "Python",
+        "Obsidian"
+      ],
+      "show_on_site": true,
+      "show_on_dashboard": true,
+      "dash": {
+        "title": "dbs",
+        "sub": "抽一张卡自测",
+        "href": "/dbs/",
+        "order": 8
+      }
+    },
+    {
+      "slug": "kindle-dash",
+      "title": "Kindle 仪表盘（kindle-dash）",
+      "tagline": "日版 KPW2 改装 E-Ink 面板，业务/运维/项目多页速览",
+      "status": "active",
+      "tier": 2,
+      "github": "https://github.com/ranzi0000/kindle-dash",
+      "tags": [
+        "E-Ink",
+        "Python",
+        "看板"
+      ],
+      "show_on_site": true,
+      "show_on_dashboard": false
+    },
+    {
+      "slug": "dylive-monitor",
+      "title": "抖音聚合弹幕监控（dylive-monitor）",
+      "tagline": "多直播间弹幕/进场/送礼聚合到本地网页 + 话术提词",
+      "status": "active",
+      "tier": 2,
+      "github": "https://github.com/ranzi0000/dylive-monitor",
+      "tags": [
+        "抖音",
+        "弹幕",
+        "Python"
+      ],
+      "show_on_site": true,
+      "show_on_dashboard": false
+    },
+    {
+      "slug": "duanju-faceswap",
+      "title": "短剧换脸流水线（duanju-faceswap）",
+      "tagline": "短剧后期换脸：DFM/FaceFusion 双路线 + 判断-复核-渲染两段式",
+      "status": "active",
+      "tier": 3,
+      "github": "https://github.com/ranzi0000/duanju-faceswap",
+      "tags": [
+        "换脸",
+        "短剧",
+        "Python",
+        "DeepFaceLive"
+      ],
+      "show_on_site": true,
+      "show_on_dashboard": false
+    },
+    {
+      "slug": "duanju-reverse",
+      "title": "duanju-reverse",
+      "tagline": "短剧成片视频反拆——自动拆角色/分镜/台词资产，转绘出海的上半场（配套 duanju-studio）",
+      "status": "active",
+      "tier": 2,
+      "github": "https://github.com/ranzi0000/duanju-reverse",
+      "live": null,
+      "tags": [
+        "Python",
+        "Flask",
+        "CV"
+      ],
+      "show_on_site": true,
+      "show_on_dashboard": false
+    }
+  ],
+  "_archived_local": [
+    "bilibili_subtitles",
+    "bilibili_transcript",
+    "wecom-autobot",
+    "xuanyi-docs"
+  ],
+  "_archived_note": "已 mv 到 ~/Projects/_archive/，不再活跃。要彻底删可手动 rm -rf。"
 }
