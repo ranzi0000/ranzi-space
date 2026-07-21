@@ -139,6 +139,36 @@ header h1 .crumb a:hover {
   text-transform: uppercase;
 }
 
+/* ─── Census bar（状态构成一览：一条堆叠横条 + 图例） ─── */
+.census { margin: 0 0 20px; }
+.census[hidden] { display: none; }
+.census-bar {
+  display: flex;
+  height: 6px;
+  border-radius: 3px;
+  overflow: hidden;
+  gap: 2px;
+}
+.census-bar .seg { height: 100%; border-radius: 1px; }
+.census-bar .seg.active { background: var(--status-ok); }
+.census-bar .seg.infra { background: var(--status-infra); }
+.census-bar .seg.dormant { background: var(--status-dormant); }
+.census-bar .seg.archived { background: var(--status-archived); }
+.census-legend {
+  margin-top: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 16px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.03em;
+  color: var(--muted);
+}
+.census-legend .li { display: inline-flex; align-items: center; gap: 6px; }
+.census-legend .dot {
+  width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0;
+}
+
 /* ─── Filter chips ────────────────────────── */
 .chips {
   display: flex;
@@ -214,7 +244,7 @@ header h1 .crumb a:hover {
   grid-template-columns: 1fr auto;
   gap: 12px 16px;
   align-items: baseline;
-  padding: 12px 0;
+  padding: 9px 0;
   border-bottom: 1px solid var(--border);
 }
 .proj-row:last-child { border-bottom: none; }
@@ -252,7 +282,7 @@ header h1 .crumb a:hover {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
-  margin-top: 6px;
+  margin-top: 4px;
 }
 .proj-tags .t {
   font-family: var(--font-mono);
@@ -368,6 +398,11 @@ footer a:hover {
     <h1><span class="crumb"><a href="/">ranzi.space</a> /</span> projects</h1>
     <span class="meta-count" id="meta-count">—</span>
   </header>
+
+  <div class="census" id="census" hidden>
+    <div class="census-bar" id="census-bar"></div>
+    <div class="census-legend" id="census-legend"></div>
+  </div>
 
   <nav class="chips" id="chips" role="tablist" aria-label="filter">
     <button class="chip" data-filter="all" aria-pressed="true">全部 <span class="count" data-count-for="all"></span></button>
@@ -536,7 +571,41 @@ footer a:hover {
     Object.keys(counts).forEach(function(k) {
       var el = chipsEl.querySelector('[data-count-for="' + k + '"]');
       if (el) el.textContent = '· ' + counts[k];
+      // 计数为 0 的过滤 chip 藏掉（如 infra 全部 show_on_site=false 时）
+      if (k !== 'all' && el) {
+        el.closest('.chip').style.display = counts[k] ? '' : 'none';
+      }
     });
+
+    renderCensus(byStatus, total);
+  }
+
+  // ─── 状态构成条：占比一眼可见 ───
+  function renderCensus(byStatus, total) {
+    var census = document.getElementById('census');
+    var bar = document.getElementById('census-bar');
+    var legend = document.getElementById('census-legend');
+    if (!census || !total) return;
+    bar.innerHTML = '';
+    legend.innerHTML = '';
+    STATUS_GROUPS.forEach(function(g) {
+      var n = byStatus[g.key].length;
+      if (!n) return;
+      var seg = document.createElement('span');
+      seg.className = 'seg ' + g.key;
+      seg.style.flexGrow = n;
+      seg.title = g.label + ' ' + n;
+      bar.appendChild(seg);
+
+      var li = document.createElement('span');
+      li.className = 'li';
+      li.innerHTML = '<span class="dot"></span>';
+      li.querySelector('.dot').style.background =
+        'var(--status-' + (g.key === 'active' ? 'ok' : g.key) + ')';
+      li.appendChild(document.createTextNode(g.label + ' ' + n));
+      legend.appendChild(li);
+    });
+    census.hidden = false;
   }
 
   function applyFilter(filter) {

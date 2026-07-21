@@ -133,6 +133,7 @@ h1 {
 /* 数据陈旧时，所有卡片半透明 + 灰化，提示"这不是当前数据" */
 body.stale .card { opacity: 0.55; }
 body.stale .card-main { color: var(--muted); }
+body.stale .server-strip { opacity: 0.55; }
 
 /* ─── 项目登记漂移提醒（projects.json 真源 vs 本地实况对账） ── */
 .drift-banner {
@@ -202,7 +203,7 @@ body.stale .card-main { color: var(--muted); }
   /* 所有行等高 → 卡片高度统一，消除"某行换行变高、别行偏矮"的高度偏差 */
   grid-auto-rows: 1fr;
   gap: 12px;
-  margin-bottom: 32px;
+  margin-bottom: 12px;
 }
 @media (max-width: 380px) {
   /* 单列时是纵向列表，不强制等高（否则短卡片被拉高、留大片空白） */
@@ -340,62 +341,41 @@ section:last-of-type { margin-bottom: 0; }
   border-bottom: 1px solid var(--border);
 }
 
-/* ─── Project links (底部全项目) ─── */
-.proj-links {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-.proj-links li {
+/* ─── Server strip（云服务器状态条，数据来自 /api/summary.servers） ─── */
+.server-strip {
   display: grid;
-  grid-template-columns: 110px 1fr auto;
-  gap: 16px;
-  align-items: baseline;
-  padding: 12px 0;
-  border-bottom: 1px solid var(--border);
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px 4px;
+  padding: 12px 8px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
 }
-.proj-links li:last-child { border-bottom: none; }
-.proj-links .pname {
+.server-strip[hidden] { display: none; }
+.server-cell { text-align: center; min-width: 0; }
+.server-cell .s-name {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
   font-family: var(--font-mono);
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 600;
-}
-.proj-links .pname a {
   color: var(--fg);
-  text-decoration: none;
-  border-bottom: 1px solid transparent;
-  padding-bottom: 1px;
+  white-space: nowrap;
 }
-.proj-links .pname a:hover {
-  color: var(--accent);
-  border-bottom-color: var(--accent);
-}
-.proj-links .pdesc {
-  font-size: 13px;
-  color: var(--fg-soft);
-  line-height: 1.5;
-}
-.proj-links .ptag {
+.server-cell .s-sub {
+  margin-top: 2px;
   font-family: var(--font-mono);
   font-size: 10px;
-  letter-spacing: 0.05em;
-  color: var(--faint);
-  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  color: var(--muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
-.proj-links li.disabled .pname a { color: var(--muted); pointer-events: none; }
-.proj-links li.disabled .ptag { color: var(--accent); opacity: 0.85; }
-
-@media (max-width: 480px) {
-  .proj-links li {
-    grid-template-columns: 1fr auto;
-    grid-template-areas:
-      "name tag"
-      "desc desc";
-    gap: 4px 12px;
-  }
-  .proj-links .pname { grid-area: name; }
-  .proj-links .pdesc { grid-area: desc; margin-top: 2px; font-size: 12px; }
-  .proj-links .ptag { grid-area: tag; }
+@media (max-width: 420px) {
+  .server-strip { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px 4px; }
 }
 
 /* ─── Elsewhere ───────────────────────────────── */
@@ -497,12 +477,8 @@ footer .meta { text-transform: uppercase; }
     </button>
     <!-- 卡片由 JS 从 /projects.json 生成：show_on_dashboard=true + dash 元数据，按 dash.order 排 -->
     <div class="grid" id="grid"></div>
-  </section>
-
-  <section>
-    <p class="eyebrow">all projects</p>
-    <!-- 条目由 JS 从 /projects.json 生成，规则见脚本里 buildProjLinks 的注释 -->
-    <ul class="proj-links" id="proj-links"></ul>
+    <!-- 云服务器状态条：由 /api/summary.servers 渲染（IP/到期只在私库 dash-collector 维护） -->
+    <div class="server-strip" id="server-strip" hidden></div>
   </section>
 
   <section>
@@ -515,6 +491,10 @@ footer .meta { text-transform: uppercase; }
       <li>
         <span class="label">svc</span>
         <a href="/services/">Mac mini 服务列表 →</a>
+      </li>
+      <li>
+        <span class="label">lab</span>
+        <a href="https://lab.ranzi.space">HTML 作品集 →</a>
       </li>
       <li>
         <span class="label">github</span>
@@ -578,7 +558,7 @@ footer .meta { text-transform: uppercase; }
   var PROJ_CACHE_KEY = 'ranzi-projects-cache-v1';  // projects.json 缓存，保住 0ms 首屏
   var CACHE_KEY = 'ranzi-dash-cache-v2';  // 升 schema，v1 缓存里没有 items 字段
   var grid = document.getElementById('grid');
-  var projLinks = document.getElementById('proj-links');
+  var serverStrip = document.getElementById('server-strip');
   var meta = document.getElementById('refresh-meta');
 
   var lastSummary = null;     // 卡片重建后用它回填活数据
@@ -641,49 +621,27 @@ footer .meta { text-transform: uppercase; }
     });
   }
 
-  // ── 底部 all projects 列表 ──
-  // 规则：show_on_site !== false 且 status=active 且有可点链接（dash.href 优先，其次 live）。
-  // 名称：dash.key → *.ranzi.space 子域名 → slug；标签用 access 字段（不填=公开，留空）。
-  // 排序：带 dash 的按 dash.order（和卡片同序），其余按 tier 排在后面。
-  function shortName(p, href) {
-    if (p.dash && p.dash.key) return p.dash.key;
-    var m = /^https?:\/\/([a-z0-9-]+)\.ranzi\.space/.exec(href);
-    return m ? m[1] : p.slug;
-  }
-
-  function buildProjLinks(data) {
-    var rows = (data.projects || [])
-      .map(function(p) { return { p: p, href: (p.dash && p.dash.href) || p.live || '' }; })
-      .filter(function(r) {
-        return r.p.show_on_site !== false && r.p.status === 'active' && r.href;
-      })
-      .sort(function(a, b) {
-        var oa = a.p.dash ? (a.p.dash.order || 89) : 90 + (a.p.tier || 9);
-        var ob = b.p.dash ? (b.p.dash.order || 89) : 90 + (b.p.tier || 9);
-        return oa - ob;
-      });
-
-    projLinks.innerHTML = '';
-    rows.forEach(function(r) {
-      var li = document.createElement('li');
-      li.innerHTML =
-        '<span class="pname"><a></a></span>' +
-        '<span class="pdesc"></span>' +
-        '<span class="ptag"></span>';
-      var a = li.querySelector('a');
-      a.href = r.href;
-      a.textContent = shortName(r.p, r.href);
-      // tagline 里的 markdown 链接语法只留文字
-      li.querySelector('.pdesc').textContent =
-        String(r.p.tagline || '').replace(/\[([^\]]+)\]\([^)]*\)/g, '$1');
-      li.querySelector('.ptag').textContent = r.p.access || '';
-      projLinks.appendChild(li);
+  // ── 云服务器状态条（数据全部来自 summary.servers，页面本身不含服务器信息） ──
+  function renderServers(sv) {
+    if (!sv || !Array.isArray(sv.list) || !sv.list.length) return;
+    serverStrip.innerHTML = '';
+    sv.list.forEach(function(s) {
+      var cell = document.createElement('div');
+      cell.className = 'server-cell';
+      if (s.role) cell.title = s.role;
+      cell.innerHTML =
+        '<div class="s-name"><span class="status-dot"></span><span class="n"></span></div>' +
+        '<div class="s-sub"></div>';
+      cell.querySelector('.status-dot').className = 'status-dot ' + statusClass(s.status);
+      cell.querySelector('.n').textContent = s.name || '—';
+      cell.querySelector('.s-sub').textContent = s.sub || '';
+      serverStrip.appendChild(cell);
     });
+    serverStrip.hidden = false;
   }
 
   function renderProjects(data) {
     buildCards(data);
-    buildProjLinks(data);
     if (lastSummary) renderSummary(lastSummary);  // 卡片重建后回填活数据
   }
 
@@ -741,6 +699,7 @@ footer .meta { text-transform: uppercase; }
       applyStaleness(t);
     }
 
+    renderServers(data.servers);
     renderDrift(data.registry_drift);
   }
 
@@ -850,7 +809,6 @@ footer .meta { text-transform: uppercase; }
       err.className = 'grid-error';
       err.textContent = 'projects.json 加载失败：' + (e.message || 'unknown');
       grid.appendChild(err);
-      projLinks.innerHTML = '<li><span class="pname"></span><span class="pdesc">projects.json 加载失败</span><span class="ptag"></span></li>';
     });
 })();
 
