@@ -627,18 +627,24 @@
     {
       "slug": "duanju-reverse",
       "title": "duanju-reverse",
-      "tagline": "短剧成片视频反拆——自动拆角色/分镜/台词资产，转绘出海的上半场（配套 duanju-studio）",
+      "tagline": "短剧成片视频反拆——分享链接一键采集整剧，自动拆角色/分镜/台词资产（配套 duanju-studio）",
       "status": "active",
       "tier": 2,
       "github": "https://github.com/ranzi0000/duanju-reverse",
-      "live": null,
+      "live": "https://reverse.ranzi.space",
       "tags": [
         "Python",
         "Flask",
         "CV"
       ],
       "show_on_site": true,
-      "show_on_dashboard": false
+      "show_on_dashboard": true,
+      "dash": {
+        "title": "reverse",
+        "sub": "短剧采集 · 反拆",
+        "href": "https://reverse.ranzi.space",
+        "order": 10
+      }
     }
   ],
   "_archived_local": [
