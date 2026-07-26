@@ -647,15 +647,16 @@
       }
     },
     {
-      "slug": "wht-sale",
-      "title": "wht-sale",
-      "tagline": "万花筒系统售卖版——客户交付版代码、采购清单与部署 SOP",
+      "slug": "vforge",
+      "title": "vforge",
+      "tagline": "白标批量个性化视频生成系统——多买家售卖版",
       "status": "active",
       "tier": 2,
-      "github": "https://github.com/ranzi0000/wht-sale",
+      "github": "https://github.com/ranzi0000/vforge",
       "tags": [
         "Python",
         "Ubuntu",
+        "白标",
         "交付"
       ],
       "show_on_site": true,
