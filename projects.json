@@ -647,12 +647,12 @@
       }
     },
     {
-      "slug": "vforge",
-      "title": "vforge",
-      "tagline": "白标批量个性化视频生成系统——多买家售卖版",
+      "slug": "wht-oem",
+      "title": "wht-oem",
+      "tagline": "白标批量个性化视频生成系统——多买家 OEM 售卖版",
       "status": "active",
       "tier": 2,
-      "github": "https://github.com/ranzi0000/vforge",
+      "github": "https://github.com/ranzi0000/wht-oem",
       "tags": [
         "Python",
         "Ubuntu",
