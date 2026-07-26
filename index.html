@@ -181,6 +181,13 @@ body.stale .server-strip { opacity: 0.55; }
   transition: transform 0.1s ease, opacity 0.15s ease;
 }
 .launch-btn:active { transform: scale(0.985); }
+.launch-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+.launch-row .launch-btn { margin-bottom: 0; }
 .launch-btn:disabled {
   background: var(--muted);
   cursor: wait;
@@ -471,10 +478,16 @@ footer .meta { text-transform: uppercase; }
 
   <section>
     <p class="eyebrow">dashboard</p>
-    <button class="launch-btn" id="launch-claude" type="button">
-      启动新 Claude 会话
-      <span class="hint" id="launch-hint">点击在 Mac mini 桌面开新 iTerm 窗口</span>
-    </button>
+    <div class="launch-row">
+      <button class="launch-btn" id="launch-claude" type="button">
+        启动新 Claude 会话
+        <span class="hint" id="launch-hint">Mac mini 开新 iTerm 窗口</span>
+      </button>
+      <button class="launch-btn" id="launch-dbs" type="button">
+        dbs 诊断会话
+        <span class="hint" id="launch-dbs-hint">自动进入诊断模式 · claude.ai 接续</span>
+      </button>
+    </div>
     <!-- 卡片由 JS 从 /projects.json 生成：show_on_dashboard=true + dash 元数据，按 dash.order 排 -->
     <div class="grid" id="grid"></div>
     <!-- 云服务器状态条：由 /api/summary.servers 渲染（IP/到期只在私库 dash-collector 维护） -->
@@ -812,42 +825,52 @@ footer .meta { text-transform: uppercase; }
     });
 })();
 
-// ─── Launch Claude button ─────────────────────────────
+// ─── Launch Claude buttons ────────────────────────────
 (function() {
-  var btn = document.getElementById('launch-claude');
-  var hint = document.getElementById('launch-hint');
-  if (!btn) return;
+  function bindLaunch(btnId, hintId, mode) {
+    var btn = document.getElementById(btnId);
+    var hint = document.getElementById(hintId);
+    if (!btn) return;
 
-  btn.addEventListener('click', function() {
-    if (btn.disabled) return;
-    btn.disabled = true;
-    var origHint = hint.textContent;
-    hint.textContent = '触发中…';
+    btn.addEventListener('click', function() {
+      if (btn.disabled) return;
+      btn.disabled = true;
+      var origHint = hint.textContent;
+      hint.textContent = '触发中…';
 
-    fetch('/api/claude-launch', {
-      method: 'POST',
-      credentials: 'same-origin',
-      cache: 'no-store',
-    })
-      .then(function(r) {
-        if (!r.ok) throw new Error('HTTP ' + r.status);
-        return r.json();
-      })
-      .then(function(data) {
-        hint.textContent = '已触发 · ~25 秒后在 claude.ai 看到新 session';
-        setTimeout(function() {
-          hint.textContent = origHint;
-          btn.disabled = false;
-        }, 30000);
-      })
-      .catch(function(e) {
-        hint.textContent = '失败 · ' + (e.message || 'unknown') + '（再点试试）';
-        setTimeout(function() {
-          hint.textContent = origHint;
-          btn.disabled = false;
-        }, 5000);
-      });
-  });
+      var opts = {
+        method: 'POST',
+        credentials: 'same-origin',
+        cache: 'no-store',
+      };
+      if (mode) {
+        opts.headers = { 'Content-Type': 'application/json' };
+        opts.body = JSON.stringify({ mode: mode });
+      }
+      fetch('/api/claude-launch', opts)
+        .then(function(r) {
+          if (!r.ok) throw new Error('HTTP ' + r.status);
+          return r.json();
+        })
+        .then(function(data) {
+          hint.textContent = '已触发 · ~30 秒后在 claude.ai 看到新 session';
+          setTimeout(function() {
+            hint.textContent = origHint;
+            btn.disabled = false;
+          }, 30000);
+        })
+        .catch(function(e) {
+          hint.textContent = '失败 · ' + (e.message || 'unknown') + '（再点试试）';
+          setTimeout(function() {
+            hint.textContent = origHint;
+            btn.disabled = false;
+          }, 5000);
+        });
+    });
+  }
+
+  bindLaunch('launch-claude', 'launch-hint', null);
+  bindLaunch('launch-dbs', 'launch-dbs-hint', 'dbs');
 })();
 
 // ─── Service Worker ────────────────────────────────────
