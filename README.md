@@ -4,7 +4,7 @@ ranzi.space 主域名的源代码 — CF Pages 部署的密码保护 PWA。
 
 ## 用途
 
-- 📱 **iPhone 主屏 PWA 大屏** — 项目活数据卡片 + 纯入口卡（清单来自 projects.json，活数据来自 dash-collector）+ 云服务器状态条（summary.servers 渲染）+ 一键启动 Claude 远程会话按钮
+- 📱 **iPhone 主屏 PWA 大屏** — 项目活数据卡片 + 纯入口卡（清单来自 projects.json，活数据来自 dash-collector）+ 云服务器状态条（summary.servers 渲染）+ 双启动按钮（「启动新 Claude 会话」/「dbs 诊断会话」——后者 POST body `{mode:"dbs"}`，会话启动后自动发 `/dbs` 进入诊断模式，手机 claude.ai 接续对话）
 - 📋 **完整项目目录** `/projects/` — 数据驱动列表页（状态构成条 + filter chips + status 分组，清单见 projects.json）
 - 🔒 **密码门** — CF Pages Functions middleware，未登录看不到内容
 
@@ -19,7 +19,7 @@ ranzi.space 主域名的源代码 — CF Pages 部署的密码保护 PWA。
 ├── projects.json          # ⭐ 项目清单单一真源（手动维护，新项目走 /new-project skill 自动 append）
 ├── functions/             # CF Pages Functions
 │   ├── _middleware.js     # 密码门 + Bearer 白名单（push / claude-launch-request / dbs-deck / dbs-config-pull / kindle-control-request）
-│   └── api/               # /api/push /api/summary /api/claude-launch /api/claude-launch-request
+│   └── api/               # /api/push /api/summary /api/claude-launch（可选 body {mode:"dbs"}）/api/claude-launch-request
 │                          # /api/dbs-deck（Bearer，Mac 推抽卡牌堆进 KV）/api/dbs-draw（cookie，抽卡+推 Bark，?id= 回看）
 │                          # /api/dbs-config（cookie，读写推送时间）/api/dbs-config-pull（Bearer，Mac 闸门拉取）
 ├── dbs/index.html         # dbs 抽卡页 v2（问题先行 + md 阅读版式 + 本机抽卡历史 + 推送时间设置；牌堆来自 corpus/push_deck.py）
