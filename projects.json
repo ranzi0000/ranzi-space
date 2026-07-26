@@ -661,6 +661,22 @@
       ],
       "show_on_site": true,
       "show_on_dashboard": false
+    },
+    {
+      "slug": "biaoda-gym",
+      "title": "biaoda-gym",
+      "tagline": "表达健身房 — 每天 10 分钟 AI 教练陪练，练想清楚、说清楚、写清楚",
+      "status": "active",
+      "tier": 2,
+      "github": "https://github.com/ranzi0000/biaoda-gym",
+      "live": null,
+      "tags": [
+        "Python",
+        "Flask",
+        "SQLite"
+      ],
+      "show_on_site": true,
+      "show_on_dashboard": false
     }
   ],
   "_archived_local": [
