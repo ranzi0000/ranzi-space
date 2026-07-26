@@ -669,7 +669,7 @@
       "status": "active",
       "tier": 2,
       "github": "https://github.com/ranzi0000/biaoda-gym",
-      "live": null,
+      "live": "https://biaoda.ranzi.space",
       "tags": [
         "Python",
         "Flask",
