@@ -645,6 +645,21 @@
         "href": "https://reverse.ranzi.space",
         "order": 10
       }
+    },
+    {
+      "slug": "wht-sale",
+      "title": "wht-sale",
+      "tagline": "万花筒系统售卖版——客户交付版代码、采购清单与部署 SOP",
+      "status": "active",
+      "tier": 2,
+      "github": "https://github.com/ranzi0000/wht-sale",
+      "tags": [
+        "Python",
+        "Ubuntu",
+        "交付"
+      ],
+      "show_on_site": true,
+      "show_on_dashboard": false
     }
   ],
   "_archived_local": [
