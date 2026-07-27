@@ -427,7 +427,6 @@
       "status": "dormant",
       "tier": 2,
       "github": "https://github.com/ranzi0000/stream-relay",
-      "live": "http://82.156.120.246:5556/",
       "tags": [
         "mediamtx",
         "SRT",
@@ -447,7 +446,6 @@
     },
     {
       "github": "https://github.com/ranzi0000/auth-hub",
-      "live": "http://82.156.120.246:5557/admin",
       "show_on_dashboard": false,
       "access": "auth",
       "dash": {
@@ -477,7 +475,6 @@
       "status": "dormant",
       "tier": 2,
       "github": "https://github.com/ranzi0000/private-live",
-      "live": "http://82.156.120.246:8000/admin-ui/",
       "tags": [
         "Flask",
         "Vue3",
@@ -491,7 +488,7 @@
       "dash": {
         "title": "私域直播",
         "sub": "主播私域直播变现",
-        "href": "http://82.156.120.246:8000/admin-ui/",
+        "href": "https://pl.ranzi.space/",
         "order": 7
       }
     },
