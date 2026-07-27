@@ -673,7 +673,13 @@
         "SQLite"
       ],
       "show_on_site": true,
-      "show_on_dashboard": false
+      "show_on_dashboard": true,
+      "dash": {
+        "title": "表达健身房",
+        "sub": "每天 10 分钟练表达",
+        "href": "https://biaoda.ranzi.space",
+        "order": 10
+      }
     }
   ],
   "_archived_local": [
