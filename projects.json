@@ -684,13 +684,14 @@
     {
       "slug": "talk-to-anyone",
       "title": "talk-to-anyone",
-      "tagline": "把任意人物的公开语料炼成可对话人格的本地框架",
+      "tagline": "把任意人物的公开语料炼成可对话的人格（首个实例：月老鳌烨）",
       "status": "active",
       "tier": 2,
       "github": "https://github.com/ranzi0000/talk-to-anyone",
-      "live": null,
+      "live": "https://talk.ranzi.space",
       "tags": [
         "Python",
+        "Flask",
         "ASR",
         "LLM"
       ],
