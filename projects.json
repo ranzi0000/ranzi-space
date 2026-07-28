@@ -680,6 +680,22 @@
         "href": "https://biaoda.ranzi.space",
         "order": 10
       }
+    },
+    {
+      "slug": "talk-to-anyone",
+      "title": "talk-to-anyone",
+      "tagline": "把任意人物的公开语料炼成可对话人格的本地框架",
+      "status": "active",
+      "tier": 2,
+      "github": "https://github.com/ranzi0000/talk-to-anyone",
+      "live": null,
+      "tags": [
+        "Python",
+        "ASR",
+        "LLM"
+      ],
+      "show_on_site": true,
+      "show_on_dashboard": false
     }
   ],
   "_archived_local": [
