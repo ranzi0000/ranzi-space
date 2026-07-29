@@ -696,7 +696,34 @@
         "LLM"
       ],
       "show_on_site": true,
-      "show_on_dashboard": false
+      "show_on_dashboard": true,
+      "dash": {
+        "title": "talk",
+        "sub": "跟蒸馏出来的人格说话",
+        "href": "https://talk.ranzi.space",
+        "order": 11
+      }
+    },
+    {
+      "slug": "ranzi-admin",
+      "title": "ranzi-admin",
+      "tagline": "访问名单统一管理：谁能打开各个子域网页",
+      "status": "infra",
+      "tier": 3,
+      "github": "https://github.com/ranzi0000/talk-to-anyone",
+      "live": "https://admin.ranzi.space",
+      "tags": [
+        "Cloudflare",
+        "Access"
+      ],
+      "show_on_site": false,
+      "show_on_dashboard": true,
+      "dash": {
+        "title": "admin",
+        "sub": "网页访问名单",
+        "href": "https://admin.ranzi.space",
+        "order": 12
+      }
     }
   ],
   "_archived_local": [
