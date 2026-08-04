@@ -237,6 +237,51 @@ body.stale .server-strip { opacity: 0.55; }
 .card:hover { border-color: var(--muted); }
 .card.wide { grid-column: 1 / -1; }
 
+/* ─── Entry grid（纯入口卡：无 dash.key 的项目 + 系统页面） ───
+   与活数据大卡区分：两行文字、无状态点、高度约为大卡的一半，视觉分量收敛。 */
+.entry-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+@media (max-width: 380px) {
+  .entry-grid { grid-template-columns: 1fr; }
+}
+.entry {
+  display: block;
+  padding: 10px 12px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.1s ease, border-color 0.15s ease, background-color 0.15s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+.entry:hover { border-color: var(--muted); }
+.entry:active {
+  transform: scale(0.985);
+  background: var(--hover);
+}
+.entry-title {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  color: var(--fg);
+}
+.entry-sub {
+  display: block;
+  margin-top: 1px;
+  font-size: 12px;
+  line-height: 1.35;
+  color: var(--muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 /* projects.json 加载失败时的一行提示（不白屏） */
 .grid-error {
   grid-column: 1 / -1;
@@ -488,19 +533,27 @@ footer .meta { text-transform: uppercase; }
         <span class="hint" id="launch-dbs-hint">自动进入诊断模式 · claude.ai 接续</span>
       </button>
     </div>
-    <!-- 卡片由 JS 从 /projects.json 生成：show_on_dashboard=true + dash 元数据，按 dash.order 排 -->
+    <!-- 活数据卡（dash.key 存在）由 JS 从 /projects.json 生成，按 dash.order 排 -->
     <div class="grid" id="grid"></div>
     <!-- 云服务器状态条：由 /api/summary.servers 渲染（IP/到期只在私库 dash-collector 维护） -->
     <div class="server-strip" id="server-strip" hidden></div>
   </section>
 
   <section>
+    <p class="eyebrow">tools</p>
+    <!-- 第一项是系统页面（不在 projects.json 里），静态写死；
+         其余纯入口卡（dash 无 key）由 JS 追加，带 data-gen 标记便于重渲染时清理 -->
+    <div class="entry-grid" id="entry-grid">
+      <a class="entry" href="/maps">
+        <span class="entry-title">地图</span>
+        <span class="entry-sub">项目全景</span>
+      </a>
+    </div>
+  </section>
+
+  <section>
     <p class="eyebrow">elsewhere</p>
     <ul class="links">
-      <li>
-        <span class="label">map</span>
-        <a href="/maps">项目地图 →</a>
-      </li>
       <li>
         <span class="label">all</span>
         <a href="/projects/">完整项目目录 →</a>
@@ -575,6 +628,7 @@ footer .meta { text-transform: uppercase; }
   var PROJ_CACHE_KEY = 'ranzi-projects-cache-v1';  // projects.json 缓存，保住 0ms 首屏
   var CACHE_KEY = 'ranzi-dash-cache-v2';  // 升 schema，v1 缓存里没有 items 字段
   var grid = document.getElementById('grid');
+  var entryGrid = document.getElementById('entry-grid');
   var serverStrip = document.getElementById('server-strip');
   var meta = document.getElementById('refresh-meta');
 
@@ -609,20 +663,44 @@ footer .meta { text-transform: uppercase; }
     return (s === 'ok' || s === 'warn' || s === 'bad') ? s : '';
   }
 
+  // ── 纯入口行（dash 无 key）：只有标题 + 一句说明，进 tools 区 ──
+  function appendEntry(p) {
+    if (!entryGrid) return;
+    var d = p.dash;
+    var a = document.createElement('a');
+    a.className = 'entry';
+    a.setAttribute('data-gen', '1');
+    a.href = d.href || p.live || '#';
+    a.innerHTML = '<span class="entry-title"></span><span class="entry-sub"></span>';
+    a.querySelector('.entry-title').textContent = d.title || p.slug;
+    a.querySelector('.entry-sub').textContent = d.sub || '';
+    entryGrid.appendChild(a);
+  }
+
   // ── 卡片生成：show_on_dashboard=true 且带 dash 元数据的条目，按 dash.order 排 ──
+  //    有 dash.key = 活数据大卡（进 #grid）；无 key = 紧凑入口行（进 #entry-grid）
   function buildCards(data) {
     var entries = (data.projects || [])
       .filter(function(p) { return p.show_on_dashboard === true && p.dash; })
       .sort(function(a, b) { return (a.dash.order || 99) - (b.dash.order || 99); });
 
     grid.innerHTML = '';
+    // 只清 JS 生成的入口行，静态写死的「地图」保留在第一位
+    if (entryGrid) {
+      Array.prototype.forEach.call(
+        entryGrid.querySelectorAll('[data-gen]'),
+        function(el) { el.parentNode.removeChild(el); }
+      );
+    }
+
     entries.forEach(function(p) {
       var d = p.dash;
+      if (!d.key) { appendEntry(p); return; }
+
       var a = document.createElement('a');
       a.className = 'card';
       a.href = d.href || p.live || '#';
-      // 无 key = 纯入口卡，summary 数据不会往里填
-      if (d.key) a.setAttribute('data-project', d.key);
+      a.setAttribute('data-project', d.key);
       a.innerHTML =
         '<div class="card-head"><span class="card-name"></span><span class="status-dot"></span></div>' +
         (d.items
