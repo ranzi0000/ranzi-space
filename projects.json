@@ -761,6 +761,22 @@
         "href": "https://board.ranzi.space",
         "order": 13
       }
+    },
+    {
+      "slug": "paigong",
+      "title": "paigong",
+      "tagline": "Claude Code 原生任务看板：抢锁派工 + 人握 done 钥匙 + 灵感点火 + 地图挂钩",
+      "status": "active",
+      "tier": 2,
+      "github": "https://github.com/ranzi0000/paigong",
+      "live": null,
+      "tags": [
+        "Python",
+        "SQLite",
+        "基建"
+      ],
+      "show_on_site": true,
+      "show_on_dashboard": false
     }
   ],
   "_archived_local": [
