@@ -4,7 +4,7 @@
 // 行为：写时间戳到 KV "claude_launch_request"，Mac mini poller 看到后会跑 launch.sh
 
 const KV_KEY = "claude_launch_request";
-const MODES = new Set(["default", "dbs", "map-update"]);
+const MODES = new Set(["default", "dbs", "map-update", "task"]);
 const PROJECT_RE = /^[a-z0-9-]{1,64}$/;
 
 export async function onRequestPost(context) {
@@ -12,23 +12,34 @@ export async function onRequestPost(context) {
   const now = new Date().toISOString();
   let mode = "default";
   let project = "";
+  let prompt = "";
   try {
     const body = await request.json();
     if (body && MODES.has(body.mode)) mode = body.mode;
-    // map-update 模式必须带合法 project id（进 shell 前的第一道白名单）
+    // map-update/task 模式必须带合法 project id（进 shell 前的第一道白名单）
     if (body && typeof body.project === "string" && PROJECT_RE.test(body.project)) {
       project = body.project;
+    }
+    // task 模式的自由文本需求：去控制字符压单行 + 截断（Mac 端 poller 会再做一遍）
+    if (body && typeof body.prompt === "string") {
+      prompt = body.prompt.replace(/[\u0000-\u001F\u007F]+/g, " ").trim().slice(0, 2000);
     }
   } catch (e) {
     // 无 body / 非 JSON = default，兼容旧按钮
   }
-  if (mode === "map-update" && !project) {
-    return new Response(JSON.stringify({ error: "map-update requires a valid project id" }), {
+  if ((mode === "map-update" || mode === "task") && !project) {
+    return new Response(JSON.stringify({ error: mode + " requires a valid project id" }), {
       status: 400,
       headers: { "Content-Type": "application/json; charset=utf-8" },
     });
   }
-  await env.DASHBOARD.put(KV_KEY, JSON.stringify({ requested_at: now, mode, project }));
+  if (mode === "task" && !prompt) {
+    return new Response(JSON.stringify({ error: "task requires a non-empty prompt" }), {
+      status: 400,
+      headers: { "Content-Type": "application/json; charset=utf-8" },
+    });
+  }
+  await env.DASHBOARD.put(KV_KEY, JSON.stringify({ requested_at: now, mode, project, prompt }));
   return new Response(JSON.stringify({ ok: true, requested_at: now, mode, project }), {
     status: 200,
     headers: {
