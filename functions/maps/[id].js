@@ -15,20 +15,58 @@ export async function onRequestGet(context) {
       headers: htmlHeaders(),
     });
   }
-  return new Response(injectUpdateButton(html, id), { status: 200, headers: htmlHeaders() });
+  const mins = await heartbeatAgeMinutes(context.env);
+  return new Response(injectUpdateButton(html, id, mins), {
+    status: 200,
+    headers: htmlHeaders(),
+  });
+}
+
+// Mac mini 上次报「我在线」是几分钟前；没心跳或读不出来返回 null（按离线处理）
+// 两个路由文件各留一份（本仓库的 function 都是自包含的，htmlHeaders 也是这么处理的）
+async function heartbeatAgeMinutes(env) {
+  try {
+    const raw = await env.DASHBOARD.get("mac_heartbeat");
+    if (!raw) return null;
+    const t = Date.parse(JSON.parse(raw).at);
+    if (!t) return null;
+    return Math.max(0, Math.floor((Date.now() - t) / 60000));
+  } catch (e) {
+    return null;
+  }
+}
+
+// 一行小字：接单方在不在。绿点=在线，橙点=可能没人接（派活会假装成功，这是已知信任坑）
+function heartbeatLine(mins, font, style) {
+  const online = mins !== null && mins <= 12;
+  const dot = online ? "#3fb950" : "#e0913a";
+  const text = online ? "Mac mini 在线" : "Mac mini 可能离线，派活可能没人接";
+  return (
+    `<div style="${style}">` +
+    `<span style="width:7px;height:7px;border-radius:50%;background:${dot};` +
+    `display:inline-block;flex:0 0 auto"></span>` +
+    `<span style="font:12px/1.4 ${font}">${text}</span></div>`
+  );
 }
 
 // 右下角悬浮入口（注入发生在服务层，渲染器保持纯净）：
 // 「给这个项目派活」→ 输入需求 → 写 KV → Mac mini poller 在项目目录开 Claude 会话直接开工（地图=项目入口）
 // 「让 Agent 更新地图」→ 开会话核对并更新这张地图
-function injectUpdateButton(html, id) {
+function injectUpdateButton(html, id, heartbeatMins) {
   const FONT = "ui-sans-serif,system-ui,-apple-system,'PingFang SC',sans-serif";
+  const beat = heartbeatLine(
+    heartbeatMins,
+    FONT,
+    "display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:999px;" +
+      "color:#fff;background:rgba(24,24,27,.92);box-shadow:0 2px 10px rgba(0,0,0,.25)"
+  );
   const snippet = `
 <div id="pm-sync" style="position:fixed;right:16px;bottom:calc(16px + env(safe-area-inset-bottom));z-index:99;display:flex;flex-direction:column;align-items:flex-end;gap:8px">
   <div id="pm-task-panel" style="display:none;width:min(78vw,300px);padding:10px;border-radius:14px;background:rgba(24,24,27,.95);box-shadow:0 2px 14px rgba(0,0,0,.3)">
     <textarea id="pm-task-text" rows="3" placeholder="想做什么优化 / 加什么功能，用人话写一句" style="width:100%;box-sizing:border-box;font:14px/1.5 ${FONT};padding:8px;border:none;border-radius:8px;resize:vertical;background:#fff;color:#18181b"></textarea>
     <button onclick="pmTask()" style="margin-top:8px;width:100%;font:500 14px/1 ${FONT};padding:11px 0;border:none;border-radius:999px;cursor:pointer;color:#fff;background:#4f5fd6">开工：开新 Claude 会话</button>
   </div>
+  ${beat}
   <button onclick="pmTogglePanel()" style="font:500 14px/1 ${FONT};padding:11px 16px;border:none;border-radius:999px;cursor:pointer;color:#fff;background:#4f5fd6;box-shadow:0 2px 10px rgba(0,0,0,.25)">给这个项目派活</button>
   <button onclick="pmSync()" style="font:500 13px/1 ${FONT};padding:10px 14px;border:none;border-radius:999px;cursor:pointer;color:#fff;background:rgba(24,24,27,.92);box-shadow:0 2px 10px rgba(0,0,0,.25)">让 Agent 更新地图</button>
   <div id="pm-toast" style="display:none;max-width:260px;font:13px/1.5 ${FONT};padding:10px 12px;border-radius:10px;color:#fff;background:rgba(24,24,27,.92)"></div>

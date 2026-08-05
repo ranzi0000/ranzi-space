@@ -148,13 +148,15 @@ export async function onRequest(context) {
   // /api/dbs-config-pull       Mac 拉 dbs 推送时间设置
   // /api/kindle-control-request poller 拉 Kindle 控制命令
   // /api/maps-push             Mac 推项目地图页进 KV
+  // /api/agent-heartbeat       Mac poller 报「我在线」（地图页据此显示派活有没有人接）
   if (
     url.pathname === "/api/push" ||
     url.pathname === "/api/claude-launch-request" ||
     url.pathname === "/api/dbs-deck" ||
     url.pathname === "/api/dbs-config-pull" ||
     url.pathname === "/api/kindle-control-request" ||
-    url.pathname === "/api/maps-push"
+    url.pathname === "/api/maps-push" ||
+    url.pathname === "/api/agent-heartbeat"
   ) {
     return await next();
   }
