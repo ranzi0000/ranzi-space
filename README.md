@@ -6,6 +6,7 @@ ranzi.space 主域名的源代码 — CF Pages 部署的密码保护 PWA。
 
 - 📱 **iPhone 主屏 PWA 大屏** — 项目活数据卡片 + 纯入口卡（清单来自 projects.json，活数据来自 dash-collector）+ 云服务器状态条（summary.servers 渲染）+ 双启动按钮（「启动新 Claude 会话」/「dbs 诊断会话」——后者 POST body `{mode:"dbs"}`，会话启动后自动发 `/dbs` 进入诊断模式，手机 claude.ai 接续对话）
 - 📋 **完整项目目录** `/projects/` — 数据驱动列表页（状态构成条 + filter chips + status 分组，清单见 projects.json）
+- 🗺 **项目地图** `/maps` + `/maps/<id>`（2026-08-04 上线、08-05 升级为项目入口）— 内容由 Mac mini projectmap 管线渲染推 KV 现取现服务（**地图 HTML 不进本公开仓库**）；单项目页有「给这个项目派活」（自由文本开 Claude 会话）与「让 Agent 更新地图」按钮、「Mac mini 在线」心跳灯（/api/agent-heartbeat）
 - 🔒 **密码门** — CF Pages Functions middleware，未登录看不到内容
 
 线上：https://ranzi.space（密码 cookie 30 天）
