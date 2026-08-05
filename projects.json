@@ -744,7 +744,7 @@
       "slug": "dashi-taskboard",
       "title": "dashi-taskboard",
       "tagline": "本地任务看板（第三方 Codex Taskboard 私用部署）：多会话抢锁派工 + 人工验收闸门",
-      "status": "infra",
+      "status": "retired",
       "tier": 3,
       "github": "https://github.com/chuspeeism/dashi-taskboard",
       "live": "https://board.ranzi.space",
@@ -754,7 +754,7 @@
         "本地服务"
       ],
       "show_on_site": false,
-      "show_on_dashboard": true,
+      "show_on_dashboard": false,
       "dash": {
         "title": "看板",
         "sub": "任务派工 · 待评审验收",
