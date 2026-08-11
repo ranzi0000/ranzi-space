@@ -777,6 +777,46 @@
       ],
       "show_on_site": true,
       "show_on_dashboard": false
+    },
+    {
+      "slug": "reverse-skill",
+      "title": "reverse-skill",
+      "tagline": "逆向/安全技能路由包（第三方 zhaoxuya520/reverse-skill 私用）：APK/二进制/前端 JS/CTF 自动路由到对应方法论。首页卡片点击=在本机项目目录直接开会话待命",
+      "status": "infra",
+      "tier": 3,
+      "github": "https://github.com/zhaoxuya520/reverse-skill",
+      "live": null,
+      "tags": [
+        "第三方",
+        "逆向",
+        "安全",
+        "skill"
+      ],
+      "show_on_site": true,
+      "show_on_dashboard": true,
+      "dash": {
+        "title": "逆向技能",
+        "sub": "点击在本机启动会话",
+        "launch": "reverse-skill",
+        "order": 14
+      }
+    },
+    {
+      "slug": "mianxiang",
+      "title": "mianxiang",
+      "tagline": "面相测量与分析内核（本地自用研究）",
+      "status": "active",
+      "tier": 3,
+      "github": null,
+      "live": null,
+      "tags": [
+        "Python",
+        "CV",
+        "本地"
+      ],
+      "access": "private",
+      "show_on_site": true,
+      "show_on_dashboard": false
     }
   ],
   "_archived_local": [

@@ -663,17 +663,53 @@ footer .meta { text-transform: uppercase; }
     return (s === 'ok' || s === 'warn' || s === 'bad') ? s : '';
   }
 
+  // 启动型入口卡（dash.launch = 项目 id）：点击不跳转，而是让 Mac mini 在
+  // ~/Projects/<id> 目录开一个 Claude 会话待命（mode=project），状态回填到副标题行。
+  function bindEntryLaunch(el, subEl, project, origSub) {
+    var busy = false;
+    el.addEventListener('click', function(ev) {
+      ev.preventDefault();
+      if (busy) return;
+      busy = true;
+      subEl.textContent = '触发中…';
+      fetch('/api/claude-launch', {
+        method: 'POST',
+        credentials: 'same-origin',
+        cache: 'no-store',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ mode: 'project', project: project }),
+      })
+        .then(function(r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+        .then(function() {
+          subEl.textContent = '已启动 · ~30 秒后见 claude.ai';
+          setTimeout(function() { subEl.textContent = origSub; busy = false; }, 30000);
+        })
+        .catch(function(e) {
+          subEl.textContent = '失败 · ' + (e.message || 'unknown') + '（再点）';
+          setTimeout(function() { subEl.textContent = origSub; busy = false; }, 5000);
+        });
+    });
+  }
+
   // ── 纯入口行（dash 无 key）：只有标题 + 一句说明，进 tools 区 ──
+  //    dash.launch 存在 = 启动型（点击开会话）；否则 = 跳转型（href/live）
   function appendEntry(p) {
     if (!entryGrid) return;
     var d = p.dash;
     var a = document.createElement('a');
     a.className = 'entry';
     a.setAttribute('data-gen', '1');
-    a.href = d.href || p.live || '#';
     a.innerHTML = '<span class="entry-title"></span><span class="entry-sub"></span>';
+    var subEl = a.querySelector('.entry-sub');
     a.querySelector('.entry-title').textContent = d.title || p.slug;
-    a.querySelector('.entry-sub').textContent = d.sub || '';
+    subEl.textContent = d.sub || '';
+    if (d.launch) {
+      a.href = '#';
+      a.setAttribute('role', 'button');
+      bindEntryLaunch(a, subEl, d.launch, d.sub || '');
+    } else {
+      a.href = d.href || p.live || '#';
+    }
     entryGrid.appendChild(a);
   }
 

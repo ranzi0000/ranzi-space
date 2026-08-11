@@ -4,7 +4,8 @@
 // 行为：写时间戳到 KV "claude_launch_request"，Mac mini poller 看到后会跑 launch.sh
 
 const KV_KEY = "claude_launch_request";
-const MODES = new Set(["default", "dbs", "map-update", "task"]);
+// project = 进 ~/Projects/<project> 开会话待命（不派活，只发 /remote-control）；task = 带需求派活
+const MODES = new Set(["default", "dbs", "map-update", "task", "project"]);
 const PROJECT_RE = /^[a-z0-9-]{1,64}$/;
 
 export async function onRequestPost(context) {
@@ -16,7 +17,7 @@ export async function onRequestPost(context) {
   try {
     const body = await request.json();
     if (body && MODES.has(body.mode)) mode = body.mode;
-    // map-update/task 模式必须带合法 project id（进 shell 前的第一道白名单）
+    // map-update/task/project 模式必须带合法 project id（进 shell 前的第一道白名单）
     if (body && typeof body.project === "string" && PROJECT_RE.test(body.project)) {
       project = body.project;
     }
@@ -27,7 +28,7 @@ export async function onRequestPost(context) {
   } catch (e) {
     // 无 body / 非 JSON = default，兼容旧按钮
   }
-  if ((mode === "map-update" || mode === "task") && !project) {
+  if ((mode === "map-update" || mode === "task" || mode === "project") && !project) {
     return new Response(JSON.stringify({ error: mode + " requires a valid project id" }), {
       status: 400,
       headers: { "Content-Type": "application/json; charset=utf-8" },
