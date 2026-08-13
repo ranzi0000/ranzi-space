@@ -817,6 +817,30 @@
       "access": "private",
       "show_on_site": true,
       "show_on_dashboard": false
+    },
+    {
+      "slug": "wechat-analysis",
+      "title": "微信群投资情报（wechat-analysis）",
+      "tagline": "解密自己的微信群 → 以人为中心的投资画像/仓位/方向研判，图片与实时信号全走本地模型",
+      "status": "active",
+      "github": null,
+      "live": "https://wechat.ranzi.space",
+      "tags": [
+        "投资",
+        "Python",
+        "本地模型",
+        "隐私"
+      ],
+      "show_on_site": true,
+      "show_on_dashboard": true,
+      "access": "auth",
+      "dash": {
+        "key": "wechat",
+        "title": "wechat",
+        "sub": "微信群投资情报",
+        "href": "https://wechat.ranzi.space",
+        "order": 15
+      }
     }
   ],
   "_archived_local": [
