@@ -841,6 +841,22 @@
         "href": "https://wechat.ranzi.space",
         "order": 15
       }
+    },
+    {
+      "slug": "mindmap-kit",
+      "title": "mindmap-kit",
+      "tagline": "把大纲/JSON 一键渲染成可交互思维导图 HTML，markmap 本地打包，电脑手机通吃",
+      "status": "active",
+      "tier": 2,
+      "github": "https://github.com/ranzi0000/mindmap-kit",
+      "live": null,
+      "tags": [
+        "Python",
+        "markmap",
+        "HTML"
+      ],
+      "show_on_site": true,
+      "show_on_dashboard": false
     }
   ],
   "_archived_local": [
