@@ -873,6 +873,53 @@
       ],
       "show_on_site": true,
       "show_on_dashboard": false
+    },
+    {
+      "slug": "market-lens",
+      "title": "market-lens",
+      "tagline": "剧本六条体检·行情分析基建（回调多重支撑 + 多周期自上而下）",
+      "status": "active",
+      "tier": 2,
+      "github": "https://github.com/ranzi0000/market-lens",
+      "live": null,
+      "tags": [
+        "Python",
+        "行情",
+        "交易"
+      ],
+      "show_on_site": true,
+      "show_on_dashboard": false
+    },
+    {
+      "slug": "trading-coach",
+      "title": "trading-coach",
+      "tagline": "交易教练：无卡不开仓，六格开仓卡 + 复盘引擎 + 20 笔组考",
+      "status": "active",
+      "tier": 2,
+      "github": "https://github.com/ranzi0000/trading-coach",
+      "live": null,
+      "tags": [
+        "交易",
+        "教练",
+        "claude.ai"
+      ],
+      "show_on_site": true,
+      "show_on_dashboard": false
+    },
+    {
+      "slug": "dbs-offline-course",
+      "title": "dbs-offline-course",
+      "tagline": "dontbesilent 广州线下课读本（26.6.12-14）：读本 + 思维导图 + 概念批判",
+      "status": "active",
+      "tier": 2,
+      "github": "https://github.com/ranzi0000/dbs-offline-course",
+      "live": "https://lab.ranzi.space",
+      "tags": [
+        "dbs",
+        "读本"
+      ],
+      "show_on_site": true,
+      "show_on_dashboard": false
     }
   ],
   "_archived_local": [
