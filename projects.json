@@ -881,7 +881,7 @@
       "status": "active",
       "tier": 2,
       "github": "https://github.com/ranzi0000/market-lens",
-      "live": null,
+      "live": "https://lens.ranzi.space",
       "tags": [
         "Python",
         "行情",
@@ -893,7 +893,7 @@
         "title": "行情体检",
         "sub": "输代码一键六条体检",
         "href": "https://lens.ranzi.space",
-        "order": 11
+        "order": 16
       }
     },
     {
