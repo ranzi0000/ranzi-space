@@ -890,10 +890,11 @@
       "show_on_site": true,
       "show_on_dashboard": true,
       "dash": {
-        "title": "行情体检",
-        "sub": "输代码一键六条体检",
+        "key": "lens",
+        "title": "lens · 行情体检",
+        "sub": "输代码一键四流派体检",
         "href": "https://lens.ranzi.space",
-        "order": 16
+        "order": 3
       }
     },
     {
