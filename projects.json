@@ -857,6 +857,22 @@
       ],
       "show_on_site": true,
       "show_on_dashboard": false
+    },
+    {
+      "slug": "ai-ip-factory",
+      "title": "ai-ip-factory",
+      "tagline": "AI 虚拟 IP 短视频带货内容工厂：拆解爆款 → AI 生产 → 矩阵分发",
+      "status": "active",
+      "tier": 2,
+      "github": "https://github.com/ranzi0000/ai-ip-factory",
+      "live": null,
+      "tags": [
+        "AI数字人",
+        "电商带货",
+        "内容工厂"
+      ],
+      "show_on_site": true,
+      "show_on_dashboard": false
     }
   ],
   "_archived_local": [
