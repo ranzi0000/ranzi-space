@@ -888,7 +888,13 @@
         "交易"
       ],
       "show_on_site": true,
-      "show_on_dashboard": false
+      "show_on_dashboard": true,
+      "dash": {
+        "title": "行情体检",
+        "sub": "输代码一键六条体检",
+        "href": "https://lens.ranzi.space",
+        "order": 11
+      }
     },
     {
       "slug": "trading-coach",
