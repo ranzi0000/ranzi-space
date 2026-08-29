@@ -682,6 +682,28 @@
       }
     },
     {
+      "slug": "planning-wheel",
+      "title": "全行业策划转盘",
+      "tagline": "实体选题教具数字化：爆款元素 × 内容方向 × 你的行业，转一下出一条账号内容策划（页面在 html-lab 仓库 projects/planning-wheel）",
+      "status": "active",
+      "tier": 2,
+      "github": "https://github.com/ranzi0000/html-lab",
+      "live": "https://lab.ranzi.space/projects/planning-wheel/",
+      "tags": [
+        "短视频",
+        "选题",
+        "工具页"
+      ],
+      "show_on_site": true,
+      "show_on_dashboard": true,
+      "dash": {
+        "title": "策划转盘",
+        "sub": "转一下出一条选题",
+        "href": "https://lab.ranzi.space/projects/planning-wheel/",
+        "order": 13
+      }
+    },
+    {
       "slug": "talk-to-anyone",
       "title": "talk-to-anyone",
       "tagline": "把任意人物的公开语料炼成可对话的人格（首个实例：月老鳌烨）",
