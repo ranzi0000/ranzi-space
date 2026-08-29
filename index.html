@@ -714,7 +714,8 @@ footer .meta { text-transform: uppercase; }
   }
 
   // ── 卡片生成：show_on_dashboard=true 且带 dash 元数据的条目，按 dash.order 排 ──
-  //    有 dash.key = 活数据大卡（进 #grid）；无 key = 紧凑入口行（进 #entry-grid）
+  //    有 dash.key = 活数据大卡（进 #grid）；无 key 但 dash.big=true = 静态大卡
+  //    （进 #grid，main 显示 dash.main 固定文案、无状态点）；其余 = 紧凑入口行（进 #entry-grid）
   function buildCards(data) {
     var entries = (data.projects || [])
       .filter(function(p) { return p.show_on_dashboard === true && p.dash; })
@@ -731,12 +732,12 @@ footer .meta { text-transform: uppercase; }
 
     entries.forEach(function(p) {
       var d = p.dash;
-      if (!d.key) { appendEntry(p); return; }
+      if (!d.key && !d.big) { appendEntry(p); return; }
 
       var a = document.createElement('a');
       a.className = 'card';
       a.href = d.href || p.live || '#';
-      a.setAttribute('data-project', d.key);
+      if (d.key) a.setAttribute('data-project', d.key);
       a.innerHTML =
         '<div class="card-head"><span class="card-name"></span><span class="status-dot"></span></div>' +
         (d.items
@@ -748,6 +749,14 @@ footer .meta { text-transform: uppercase; }
       a.querySelector('.card-name').textContent = d.title || p.slug;
       var subEl = a.querySelector('.card-sub');
       if (subEl) subEl.textContent = d.sub || '';
+      if (!d.key) {
+        // 静态大卡：无 collector 数据，主文案固定，状态点整个摘掉
+        var mainEl = a.querySelector('.card-main');
+        mainEl.textContent = d.main || d.title || '';
+        mainEl.classList.remove('placeholder');
+        var dotEl = a.querySelector('.status-dot');
+        dotEl.parentNode.removeChild(dotEl);
+      }
       grid.appendChild(a);
     });
   }

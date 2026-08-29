@@ -5,7 +5,7 @@
     "status": "active=主线在做 | dormant=暂停未删 | archived=完结归档 | infra=基础设施(配套不主推)",
     "show_on_site": "true=进 /projects 列表页 | false=只记录不展示",
     "show_on_dashboard": "true=进首页大屏卡片（需配 dash 元数据）",
-    "dash": "首页卡片元数据 {key,title,sub,href,order,items}。key=对应 /api/summary 的数据 key（collector 在 dash-collector/collect.py 的 CARDS 表），纯入口卡不填；items=true 走列表卡结构",
+    "dash": "首页卡片元数据 {key,title,sub,href,order,items,big,main}。key=对应 /api/summary 的数据 key（collector 在 dash-collector/collect.py 的 CARDS 表），纯入口卡不填；items=true 走列表卡结构；无 key 但 big=true 渲染为静态大卡（main=固定主文案，无状态点）",
     "access": "首页 all projects 列表的访问标签（auth/private），不填=公开",
     "tier": "1=旗舰主推 | 2=工具/产品 | 3=配套/历史"
   },
@@ -684,23 +684,25 @@
     {
       "slug": "planning-wheel",
       "title": "全行业策划转盘",
-      "tagline": "实体选题教具数字化：爆款元素 × 内容方向 × 你的行业，转一下出一条账号内容策划（页面在 html-lab 仓库 projects/planning-wheel）",
+      "tagline": "实体选题教具数字化：爆款元素 × 内容方向 × 你的行业，转一下出一条账号内容策划（独立私库 + CF Pages 密码门）",
       "status": "active",
       "tier": 2,
-      "github": "https://github.com/ranzi0000/html-lab",
-      "live": "https://lab.ranzi.space/projects/planning-wheel/",
+      "github": "https://github.com/ranzi0000/planning-wheel",
+      "live": "https://wheel.ranzi.space",
       "tags": [
         "短视频",
         "选题",
-        "工具页"
+        "工具"
       ],
       "show_on_site": true,
       "show_on_dashboard": true,
       "dash": {
         "title": "策划转盘",
-        "sub": "转一下出一条选题",
-        "href": "https://lab.ranzi.space/projects/planning-wheel/",
-        "order": 13
+        "sub": "转一下，出一条账号选题",
+        "main": "爆款元素 × 内容方向",
+        "href": "https://wheel.ranzi.space",
+        "big": true,
+        "order": 5
       }
     },
     {
