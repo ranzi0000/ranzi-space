@@ -951,6 +951,22 @@
       ],
       "show_on_site": true,
       "show_on_dashboard": false
+    },
+    {
+      "slug": "azone-scanner",
+      "title": "azone-scanner",
+      "tagline": "「提前介入A段」六条件机器初筛扫描器（机器管棱角，人管圆润）",
+      "status": "active",
+      "tier": 2,
+      "github": "https://github.com/ranzi0000/azone-scanner",
+      "live": null,
+      "tags": [
+        "Python",
+        "交易",
+        "扫描器"
+      ],
+      "show_on_site": true,
+      "show_on_dashboard": false
     }
   ],
   "_archived_local": [
