@@ -959,14 +959,21 @@
       "status": "active",
       "tier": 2,
       "github": "https://github.com/ranzi0000/azone-scanner",
-      "live": null,
+      "live": "https://azone.ranzi.space",
       "tags": [
         "Python",
         "交易",
         "扫描器"
       ],
       "show_on_site": true,
-      "show_on_dashboard": false
+      "show_on_dashboard": true,
+      "dash": {
+        "key": "azone",
+        "title": "azone · A段扫描",
+        "sub": "六条件候选卡 · 人工终审",
+        "href": "https://azone.ranzi.space",
+        "order": 16
+      }
     },
     {
       "slug": "comfy-agent",
