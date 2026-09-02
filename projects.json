@@ -989,7 +989,13 @@
         "Agent"
       ],
       "show_on_site": true,
-      "show_on_dashboard": false
+      "show_on_dashboard": true,
+      "dash": {
+        "title": "ComfyUI 工作台",
+        "sub": "3090 咩咩整合包 · Tailscale 直连 8199",
+        "href": "http://100.126.170.50:8199",
+        "order": 17
+      }
     }
   ],
   "_archived_local": [
