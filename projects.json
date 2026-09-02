@@ -967,6 +967,22 @@
       ],
       "show_on_site": true,
       "show_on_dashboard": false
+    },
+    {
+      "slug": "comfy-agent",
+      "title": "comfy-agent",
+      "tagline": "ComfyUI 工作流清单 + 自动运行器（3090 咩咩整合包）",
+      "status": "active",
+      "tier": 2,
+      "github": "https://github.com/ranzi0000/comfy-agent",
+      "live": null,
+      "tags": [
+        "Python",
+        "ComfyUI",
+        "Agent"
+      ],
+      "show_on_site": true,
+      "show_on_dashboard": false
     }
   ],
   "_archived_local": [
