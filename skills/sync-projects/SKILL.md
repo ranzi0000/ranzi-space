@@ -79,10 +79,11 @@ dash-collector 的 collector）；有线上地址加 `"live": "..."`。
 
 对 stale / orphan，也是问用户"要不要转 dormant / 是不是删了"，不自动改。
 
-### 第四步：安全写入 projects.json（**indent=1 铁律**）
+### 第四步：安全写入 projects.json（**先探测缩进再写**）
 
-`projects.json` 用 **1 个空格缩进**，不是 2。用 `json.dump(..., indent=1)`，否则整文件
-会被重排、diff 爆炸、丢失原格式：
+缩进**不许写死**：先 `head -5 projects.json` 看磁盘现况（2026-08-04 实测已是 2 空格；
+更早是 1 空格，旧铁律写死 indent=1 反而导致 772 行重排）。最稳的做法是先做往返比对——
+读入后按候选 indent 原样 dump，与原文逐字相同才动手写；不同就换 indent 再试：
 
 ```python
 import json
@@ -93,12 +94,12 @@ for entry in NEW_ENTRIES:               # 幂等：已存在的 slug 跳过
     if entry["slug"] not in existing:
         d["projects"].append(entry)
 with open(path, "w", encoding="utf-8") as f:
-    json.dump(d, f, ensure_ascii=False, indent=1)
+    json.dump(d, f, ensure_ascii=False, indent=INDENT)   # INDENT = 往返比对探出的值
     f.write("\n")                       # 保留末尾换行
 ```
 
 写完**立刻 `git diff --stat projects.json`**：只该新增 ~14 行/条 + 1 处末尾加逗号。
-若 diff 是几百行的重排 → indent 错了，`git checkout projects.json` 重来。
+若 diff 是几百行的重排 → indent 探错了，`git checkout projects.json` 重来。
 
 ### 第五步：commit + 部署 + 独立验证
 
@@ -117,7 +118,7 @@ commit 会触发 `post-commit` → `deploy.sh` 自动部署到 CF Pages。然后
 
 - [ ] audit 列出的每个 **missing** 都处理了（登记 / 或明确跳过并说明原因）
 - [ ] 写入后 `python3 -c "import json;json.load(open('projects.json'))"` 不报错（JSON 合法）
-- [ ] `git diff --stat projects.json` 只新增预期行数（**没有整文件重排** → 证明 indent=1 生效）
+- [ ] `git diff --stat projects.json` 只新增预期行数（**没有整文件重排** → 证明缩进探对了）
 - [ ] commit 用**独立命令**验证过 HEAD 变化（不看 commit 命令自己的输出）
 - [ ] 线上 /projects 页确认出现新项目（浏览器/read_page，不是"应该好了"）
 - [ ] stale / orphan 已向用户复核（要不要转 dormant / 是否已删），没有自动改
@@ -128,7 +129,7 @@ commit 会触发 `post-commit` → `deploy.sh` 自动部署到 CF Pages。然后
 
 | 坑 | 后果 | 正解 |
 |----|------|------|
-| `json.dump` 用默认 `indent=2` | 整文件重排、diff 几百行、丢格式 | **必须 `indent=1`**，写完查 diff |
+| `json.dump` 的 indent 写死（不管 1 还是 2） | 整文件重排、diff 几百行、丢格式 | **先往返比对探出磁盘缩进**，写完查 diff |
 | 信任 `flagged during monitoring` 标记的命令结果 | 拿到假 commit hash / 假状态还当真 | 该结果作废，换浏览器 / Read 直接读文件 / CF API 复核 |
 | deploy 会把**工作树**文件推上线 | 没 commit 也上线了，误以为入库了 | 部署 ≠ 入库，改完必须 `git commit` 补齐历史 |
 | 用 `timeout` 命令 | macOS 没有,exit 127,命令没跑还以为"输出被吞" | 别用 `timeout`；长命令用 Bash 工具自带超时 |

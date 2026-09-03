@@ -996,6 +996,39 @@
         "href": "http://100.126.170.50:8199",
         "order": 17
       }
+    },
+    {
+      "slug": "anxs-course",
+      "title": "anxs-course",
+      "tagline": "安先生 5.0 自媒体课吸收工程：转写语料 → 重写成知识书（上 lab）→ 「学透」费曼式学习 + anxs 方法论技能族",
+      "status": "active",
+      "tier": 2,
+      "github": "https://github.com/ranzi0000/anxs-course",
+      "live": "https://lab.ranzi.space/tutorials/anxs-book/",
+      "tags": [
+        "读本",
+        "知识工程",
+        "skill"
+      ],
+      "show_on_site": true,
+      "show_on_dashboard": false
+    },
+    {
+      "slug": "emotion-track",
+      "title": "emotion-track",
+      "tagline": "情感赛道知识工程：10 门课程素材拆成赛道数据库 + 《情感赛道解剖读本》元课程（内部研究，不外传）",
+      "status": "active",
+      "tier": 2,
+      "github": null,
+      "live": "https://lab.ranzi.space/reports/emotion-track-meta-course/",
+      "tags": [
+        "知识工程",
+        "读本",
+        "研究"
+      ],
+      "access": "private",
+      "show_on_site": true,
+      "show_on_dashboard": false
     }
   ],
   "_archived_local": [
