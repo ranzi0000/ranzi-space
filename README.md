@@ -47,6 +47,8 @@ ranzi.space 主域名的源代码 — CF Pages 部署的密码保护 PWA。
 
 详细 skill 文档：`~/.claude/skills/new-project/SKILL.md`
 
+**登记漂移对账**：首页横幅报「N 个未登记」（dash-collector 每 5 分钟对账本地 git 仓库 vs projects.json）时，走本仓库 `skills/sync-projects/`（SKILL.md + audit_projects.py；全局 `~/.claude/skills/sync-projects` 软链已不存在，直接读仓库真身）。写 projects.json 前先「读入再原样吐出」比对探出磁盘缩进（当前 2 空格），diff 只该新增条目行。
+
 ## 部署链路
 
 ```
