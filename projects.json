@@ -1029,6 +1029,22 @@
       "access": "private",
       "show_on_site": true,
       "show_on_dashboard": false
+    },
+    {
+      "slug": "shouchuan-diy",
+      "title": "shouchuan-diy",
+      "tagline": "手串 DIY 微信小程序：圆环摆珠实时算价与手围，多租户加盟、总部统一供货",
+      "status": "active",
+      "tier": 2,
+      "github": "https://github.com/ranzi0000/shouchuan-diy",
+      "live": null,
+      "tags": [
+        "微信小程序",
+        "Flask",
+        "SQLite"
+      ],
+      "show_on_site": true,
+      "show_on_dashboard": false
     }
   ],
   "_archived_local": [
