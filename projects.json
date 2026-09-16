@@ -1052,6 +1052,22 @@
         "launch": "shouchuan-diy",
         "order": 18
       }
+    },
+    {
+      "slug": "madage-course",
+      "title": "madage-course",
+      "tagline": "马大个课程吸收工程：3090 ASR 转写 + 抽帧 OCR + 知识书重写上 lab",
+      "status": "active",
+      "tier": 2,
+      "github": "https://github.com/ranzi0000/madage-course",
+      "live": null,
+      "tags": [
+        "ASR",
+        "Qwen3-ASR",
+        "课程消化"
+      ],
+      "show_on_site": true,
+      "show_on_dashboard": false
     }
   ],
   "_archived_local": [
