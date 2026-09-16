@@ -1033,7 +1033,7 @@
     {
       "slug": "shouchuan-diy",
       "title": "shouchuan-diy",
-      "tagline": "手串 DIY 微信小程序：圆环摆珠实时算价与手围，多租户加盟、总部统一供货",
+      "tagline": "手串 DIY 微信小程序：一颗颗摆珠子设计手串、实时算价与手围，下单付款走微信支付；后台管材料模板订单与退款；支持加盟商各开各的店（总部统一供货、按期出结算单）；设计广场按心愿分类陈列搭配方案；推广归属按成交额给带客人的那位分佣",
       "status": "active",
       "tier": 2,
       "github": "https://github.com/ranzi0000/shouchuan-diy",
@@ -1041,10 +1041,17 @@
       "tags": [
         "微信小程序",
         "Flask",
-        "SQLite"
+        "SQLite",
+        "多租户"
       ],
       "show_on_site": true,
-      "show_on_dashboard": false
+      "show_on_dashboard": true,
+      "dash": {
+        "title": "手串 DIY",
+        "sub": "小程序开发中 · 点击启动会话",
+        "launch": "shouchuan-diy",
+        "order": 18
+      }
     }
   ],
   "_archived_local": [
