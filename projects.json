@@ -159,7 +159,7 @@
       "slug": "nexus",
       "title": "Nexus",
       "tagline": "家庭设备 MCP 控制平台",
-      "status": "active",
+      "status": "dormant",
       "tier": 1,
       "github": "https://github.com/ranzi0000/nexus",
       "tags": [
