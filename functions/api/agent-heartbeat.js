@@ -1,6 +1,6 @@
 // POST /api/agent-heartbeat
 // Mac mini 的 claude-rc poller 每 5 分钟报一次「我还活着」，写进 KV。
-// 地图页/总览页服务时读它，告诉人「派活现在有没有人接」——离线时点派活会假装成功，这行字就是防这个。
+// 地图页/总览页读取它，只显示 Mac mini 设备在线状态。
 // 鉴权：Authorization: Bearer <PUSH_TOKEN>（与 /api/maps-push 同一把 token，middleware 已放行此路径）
 //
 // KV: mac_heartbeat = {"at": "<ISO 时间>"}
