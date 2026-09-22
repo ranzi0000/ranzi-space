@@ -141,14 +141,14 @@ export async function onRequest(context) {
   const url = new URL(request.url);
   const password = env.SITE_PASSWORD;
 
-  // 这些路径走 Bearer token 不查 cookie，由各自的 function 校验
+  // 这些路径不查 cookie；活动接口由各自的 function 校验 Bearer token
   // /api/push                  collector 推数据
-  // /api/claude-launch-request poller 拉触发时间戳
+  // /api/claude-launch-request 历史地址直接返回 410，不读写 KV
   // /api/dbs-deck              Mac 推 dbs 抽卡牌堆
   // /api/dbs-config-pull       Mac 拉 dbs 推送时间设置
   // /api/kindle-control-request poller 拉 Kindle 控制命令
   // /api/maps-push             Mac 推项目地图页进 KV
-  // /api/agent-heartbeat       Mac poller 报「我在线」（地图页据此显示派活有没有人接）
+  // /api/agent-heartbeat       Mac poller 报「我在线」（地图页显示设备在线状态）
   if (
     url.pathname === "/api/push" ||
     url.pathname === "/api/claude-launch-request" ||
