@@ -1084,6 +1084,22 @@
       ],
       "show_on_site": true,
       "show_on_dashboard": false
+    },
+    {
+      "slug": "crypto-scout",
+      "title": "Crypto Scout · 加密市场观察",
+      "tagline": "全现货多周期相对 BTC 强弱榜，发现启动转强与强势回调的观察候选",
+      "status": "active",
+      "tier": 2,
+      "github": "https://github.com/ranzi0000/crypto-scout",
+      "live": null,
+      "tags": [
+        "Crypto",
+        "市场观察",
+        "相对强弱"
+      ],
+      "show_on_site": true,
+      "show_on_dashboard": false
     }
   ],
   "_archived_local": [
