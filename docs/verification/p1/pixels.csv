@@ -1,0 +1,17 @@
+image,different_pixels,total_pixels,difference_ratio,status
+home-390-light.png,0,703170,0.000000000000,identical
+home-390-dark.png,0,703170,0.000000000000,identical
+home-1280-light.png,52,2208000,0.000023550725,different
+home-1280-dark.png,68,2208000,0.000030797101,different
+projects-390-light.png,0,2821650,0.000000000000,identical
+projects-390-dark.png,0,2821650,0.000000000000,identical
+projects-1280-light.png,0,8186880,0.000000000000,identical
+projects-1280-dark.png,85,8186880,0.000010382466,different
+services-390-light.png,0,375570,0.000000000000,identical
+services-390-dark.png,0,375570,0.000000000000,identical
+services-1280-light.png,0,1152000,0.000000000000,identical
+services-1280-dark.png,0,1152000,0.000000000000,identical
+dbs-390-light.png,0,351000,0.000000000000,identical
+dbs-390-dark.png,0,351000,0.000000000000,identical
+dbs-1280-light.png,0,1152000,0.000000000000,identical
+dbs-1280-dark.png,0,1152000,0.000000000000,identical

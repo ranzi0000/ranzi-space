@@ -1,0 +1,39 @@
+{
+  "node --test tests/": {
+    "exit_code": 0,
+    "output": "node-test.tap"
+  },
+  "python3 scripts/dev_server.py --port 0": {
+    "exit_code": 1,
+    "error": "PermissionError: [Errno 1] Operation not permitted (socket.bind)"
+  },
+  "/opt/homebrew/opt/python@3.11/bin/python3.11 -B scripts/verify_p1.py": {
+    "exit_code": 1,
+    "error": "PermissionError: [Errno 1] Operation not permitted (socket.bind)"
+  },
+  "python3 scripts/compare_p1_pixels.py": {
+    "exit_code": 1,
+    "output": "pixels.csv; all 16 pairs missing screenshots"
+  },
+  "background variable grep": {
+    "grep_exit_code": 0,
+    "only_base_assertion_exit_code": 1,
+    "matches": [
+      "assets/base.css",
+      "functions/_middleware.js"
+    ]
+  },
+  "browser console": {
+    "exit_code": null,
+    "status": "not run; server binding denied"
+  },
+  "headless preflight": {
+    "exit_code": 1,
+    "error": "Playwright chromium_headless_shell-1208 executable missing"
+  },
+  "git add (explicit P1 files)": {
+    "exit_code": 128,
+    "error": "Unable to create worktree index.lock: Operation not permitted",
+    "commit_executed": false
+  }
+}

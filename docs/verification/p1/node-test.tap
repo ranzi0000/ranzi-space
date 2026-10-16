@@ -1,0 +1,58 @@
+TAP version 13
+# Subtest: 两个历史启动 URL 的所有方法都返回 410，完全不访问请求或 KV
+ok 1 - 两个历史启动 URL 的所有方法都返回 410，完全不访问请求或 KV
+  ---
+  duration_ms: 34.454625
+  type: 'test'
+  ...
+# Subtest: 旧入口经过密码门后返回 410，原拉取地址直接返回 410
+ok 2 - 旧入口经过密码门后返回 410，原拉取地址直接返回 410
+  ---
+  duration_ms: 8.098334
+  type: 'test'
+  ...
+# Subtest: 主页只保留一组地图与作品集链接，项目卡片不再发起会话
+ok 3 - 主页只保留一组地图与作品集链接，项目卡片不再发起会话
+  ---
+  duration_ms: 2.622916
+  type: 'test'
+  ...
+# Subtest: 地图正文保留，在线和离线只显示设备状态，不注入派活按钮或脚本
+ok 4 - 地图正文保留，在线和离线只显示设备状态，不注入派活按钮或脚本
+  ---
+  duration_ms: 9.303042
+  type: 'test'
+  ...
+# Subtest: 地图无内容与非法项目 id 的原有响应保留
+ok 5 - 地图无内容与非法项目 id 的原有响应保留
+  ---
+  duration_ms: 1.212
+  type: 'test'
+  ...
+# Subtest: 主题继续使用原存储键，auto 清除覆盖，存储不可用仍能切换
+ok 6 - 主题继续使用原存储键，auto 清除覆盖，存储不可用仍能切换
+  ---
+  duration_ms: 2.274792
+  type: 'test'
+  ...
+# Subtest: 首页保留缓存先绘、刷新周期、回前台刷新和离线提示
+ok 7 - 首页保留缓存先绘、刷新周期、回前台刷新和离线提示
+  ---
+  duration_ms: 1.312083
+  type: 'test'
+  ...
+# Subtest: 本地服务器的静态文件、真实登记和假 summary 路由（内存 HTTP，无端口）
+ok 8 - 本地服务器的静态文件、真实登记和假 summary 路由（内存 HTTP，无端口）
+  ---
+  duration_ms: 90.578416
+  type: 'test'
+  ...
+1..8
+# tests 8
+# suites 0
+# pass 8
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 223.33975

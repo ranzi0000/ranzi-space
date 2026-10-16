@@ -42,6 +42,8 @@ ranzi.space 主域名的源代码 — CF Pages 部署的密码保护 PWA。
 
 ## 项目清单单源（projects.json）
 
+本地离线验收：`python3 scripts/dev_server.py --port 8000`。四个内容页共享 `assets/base.css`；首页与项目页使用 `assets/theme.js`，首页数据与渲染分在 `assets/home/`（原生 ES modules，无构建步骤）。本地 `/projects.json` 读当前静态根目录真文件，`/api/summary` 读 `tests/fixtures/summary.json` 假数据；其余生产 API 不代理。测试：`node --test tests/*.test.mjs` 与 `python3 -B -m unittest tests/dev_server_test.py`。P1 验收状态和截图流程见 [验收记录](docs/verification/p1/README.md)。
+
 `projects.json` 是所有项目的元数据单一真源（schema v2）：slug / title / tagline / status / tier / github / live / tags / access + 首页卡片元数据 `dash`。站内两处消费，全部客户端 fetch 渲染，改 JSON 而不是 HTML：
 
 - **首页大屏卡片**：`show_on_dashboard: true` + `dash: {key, title, sub, href, order, items}` 的条目按 order 生成卡片。`dash.key` 对应 dash-collector push 的 summary key；纯入口卡（无活数据）不填 key；`items: true` 走列表卡结构（rec 用）

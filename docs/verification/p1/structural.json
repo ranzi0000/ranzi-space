@@ -1,0 +1,11 @@
+{
+  "index.html head anti-flash unchanged": true,
+  "projects/index.html head anti-flash unchanged": true,
+  "services/index.html scripts unchanged": true,
+  "dbs/index.html scripts unchanged": true,
+  "projects renderer unchanged": true,
+  "home rendering functions unchanged": true,
+  "sw only cache version changed": true,
+  "project registry unchanged": true,
+  "login middleware unchanged": true
+}

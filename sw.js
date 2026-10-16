@@ -2,7 +2,7 @@
 // 策略：
 // - HTML（document）和 /api/*：永远走网络（避免登录态被缓存的坑，参考 principle_sw_html_caching_login_trap）
 // - 静态资源（icons、manifest）：网络优先，失败回退缓存
-const CACHE_NAME = 'ranzi-space-v2';
+const CACHE_NAME = 'ranzi-space-v3';
 
 self.addEventListener('install', function(event) {
   self.skipWaiting();

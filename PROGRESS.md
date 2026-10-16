@@ -1,4 +1,15 @@
-# 当前状态（2026-10-16）
+# 当前状态（2026-10-16，P1 公共层隔离分支）
+
+- 范围：`refactor/p1-common-layer`，基线 `main@5783650`；仅 P1 第 1–6 条，四页公共 CSS/主题、首页 ES modules、SW v3、本地假数据验收服务器。
+- 已完成：抽取公共层，保留两页 head 防闪和 services/dbs 系统跟随；保留首页焦点与 services 字体差异；项目登记不变。
+- 验证：`node --test tests/*.test.mjs` 为 8 passed / 0 failed；结构核对 9 项通过，module 语法与 diff 空白检查通过。
+- 已验收（Claude 沙箱外执行）：32 张截图、四页控制台 0 报错；16 对像素对比 13 对一致、3 对仅文字抗锯齿抖动（最多 85 像素、色差 ≤16）。详见 `docs/verification/p1/README.md`。
+- 提交：Codex 沙箱内提交被拒，由 Claude 核验后以 `SKIP_DEPLOY=1` 代为提交到 `refactor/p1-common-layer`，未合入 main、未部署。
+- 证据与矛盾清单：`docs/verification/p1/README.md`。不得将离线通过当作视觉验收通过。
+- 下一步：用户确认后合入 main 并部署（提交钩子会自动部署，部署后以认证访问线上首页核验）；之后开始 P2（dash-collector 新增 alerts / activity / quota）。
+- 发布：未 push、merge、改 main 或部署。
+
+# 历史状态（2026-10-16）
 
 新增 binance-strength-monitor 项目条目及首页「强弱观察」纯入口卡，指向既有私人 Sites。项目目录也显示同一入口与 GitHub 私库链接。未添加实时采集器、改动其它项目顺序或恢复网页派活。
 

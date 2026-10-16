@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh-CN" data-page="projects">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
@@ -25,74 +25,8 @@
   })();
 </script>
 
+<link rel="stylesheet" href="/assets/base.css">
 <style>
-:root {
-  --bg: #fafaf8;
-  --fg: #18181b;
-  --fg-soft: #3f3f46;
-  --muted: #71717a;
-  --faint: #a8a29e;
-  --border: #ebe9e4;
-  --hover: #f2f0eb;
-  --card: #ffffff;
-  --accent: oklch(54% 0.13 38);
-  --accent-soft: oklch(54% 0.13 38 / 0.08);
-  --status-ok: oklch(64% 0.14 145);
-  --status-warn: oklch(72% 0.14 75);
-  --status-bad: oklch(60% 0.18 25);
-  --status-infra: oklch(60% 0.12 240);
-  --status-dormant: #a8a29e;
-  --status-archived: #71717a;
-  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", system-ui, sans-serif;
-  --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
-}
-
-:root[data-theme="dark"] {
-  --bg: #0c0c0c;
-  --fg: #ededec;
-  --fg-soft: #c4c4c0;
-  --muted: #8a8a87;
-  --faint: #5a5a57;
-  --border: #1c1c1a;
-  --hover: #161614;
-  --card: #131311;
-  --accent: oklch(72% 0.12 38);
-  --accent-soft: oklch(72% 0.12 38 / 0.10);
-  --status-dormant: #5a5a57;
-  --status-archived: #4a4a47;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --bg: #0c0c0c;
-    --fg: #ededec;
-    --fg-soft: #c4c4c0;
-    --muted: #8a8a87;
-    --faint: #5a5a57;
-    --border: #1c1c1a;
-    --hover: #161614;
-    --card: #131311;
-    --accent: oklch(72% 0.12 38);
-    --accent-soft: oklch(72% 0.12 38 / 0.10);
-    --status-dormant: #5a5a57;
-    --status-archived: #4a4a47;
-  }
-}
-
-* { box-sizing: border-box; }
-html { -webkit-text-size-adjust: 100%; }
-body {
-  margin: 0;
-  font-family: var(--font-sans);
-  font-size: 16px;
-  line-height: 1.6;
-  color: var(--fg);
-  background: var(--bg);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  transition: background-color 0.15s ease, color 0.15s ease;
-  padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
-}
 
 main {
   max-width: 720px;
@@ -367,22 +301,6 @@ footer a:hover {
   border-bottom-color: var(--accent);
 }
 
-.theme-toggle { display: inline-flex; align-items: center; gap: 4px; }
-.theme-toggle .seg {
-  background: none; border: none; padding: 4px 8px; margin: 0;
-  font: inherit; font-family: var(--font-mono); font-size: 11px;
-  letter-spacing: 0.04em; color: var(--faint); cursor: pointer;
-  border-radius: 3px; text-transform: uppercase;
-  transition: color 0.15s ease, background-color 0.15s ease;
-}
-.theme-toggle .seg:hover { color: var(--muted); }
-.theme-toggle .seg[aria-pressed="true"] {
-  color: var(--fg); background: var(--hover);
-}
-.theme-toggle .sep {
-  display: inline-block; width: 2px; height: 2px;
-  background: currentColor; border-radius: 50%; opacity: 0.5; margin: 0 2px;
-}
 
 @media (max-width: 480px) {
   footer { flex-direction: column; align-items: flex-start; gap: 16px; }
@@ -430,37 +348,8 @@ footer a:hover {
 
 </main>
 
+<script src="/assets/theme.js"></script>
 <script>
-// ─── Theme toggle (复用) ───────────────────
-(function() {
-  var STORAGE_KEY = 'ranzi-space-theme';
-  var root = document.documentElement;
-  var btns = document.querySelectorAll('.theme-toggle .seg');
-  function getMode() {
-    try {
-      var t = localStorage.getItem(STORAGE_KEY);
-      if (t === 'light' || t === 'dark') return t;
-    } catch (e) {}
-    return 'auto';
-  }
-  function applyMode(mode) {
-    if (mode === 'auto') {
-      root.removeAttribute('data-theme');
-      try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
-    } else {
-      root.setAttribute('data-theme', mode);
-      try { localStorage.setItem(STORAGE_KEY, mode); } catch (e) {}
-    }
-    btns.forEach(function(b) {
-      b.setAttribute('aria-pressed', b.dataset.theme === mode ? 'true' : 'false');
-    });
-  }
-  applyMode(getMode());
-  btns.forEach(function(b) {
-    b.addEventListener('click', function() { applyMode(b.dataset.theme); });
-  });
-})();
-
 // ─── Project list renderer ─────────────────
 (function() {
   var content = document.getElementById('content');

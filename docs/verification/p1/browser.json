@@ -1,0 +1,134 @@
+{
+  "before": [
+    {
+      "image": "home-390-light.png",
+      "errors": []
+    },
+    {
+      "image": "home-390-dark.png",
+      "errors": []
+    },
+    {
+      "image": "home-1280-light.png",
+      "errors": []
+    },
+    {
+      "image": "home-1280-dark.png",
+      "errors": []
+    },
+    {
+      "image": "projects-390-light.png",
+      "errors": []
+    },
+    {
+      "image": "projects-390-dark.png",
+      "errors": []
+    },
+    {
+      "image": "projects-1280-light.png",
+      "errors": []
+    },
+    {
+      "image": "projects-1280-dark.png",
+      "errors": []
+    },
+    {
+      "image": "services-390-light.png",
+      "errors": []
+    },
+    {
+      "image": "services-390-dark.png",
+      "errors": []
+    },
+    {
+      "image": "services-1280-light.png",
+      "errors": []
+    },
+    {
+      "image": "services-1280-dark.png",
+      "errors": []
+    },
+    {
+      "image": "dbs-390-light.png",
+      "errors": []
+    },
+    {
+      "image": "dbs-390-dark.png",
+      "errors": []
+    },
+    {
+      "image": "dbs-1280-light.png",
+      "errors": []
+    },
+    {
+      "image": "dbs-1280-dark.png",
+      "errors": []
+    }
+  ],
+  "after": [
+    {
+      "image": "home-390-light.png",
+      "errors": []
+    },
+    {
+      "image": "home-390-dark.png",
+      "errors": []
+    },
+    {
+      "image": "home-1280-light.png",
+      "errors": []
+    },
+    {
+      "image": "home-1280-dark.png",
+      "errors": []
+    },
+    {
+      "image": "projects-390-light.png",
+      "errors": []
+    },
+    {
+      "image": "projects-390-dark.png",
+      "errors": []
+    },
+    {
+      "image": "projects-1280-light.png",
+      "errors": []
+    },
+    {
+      "image": "projects-1280-dark.png",
+      "errors": []
+    },
+    {
+      "image": "services-390-light.png",
+      "errors": []
+    },
+    {
+      "image": "services-390-dark.png",
+      "errors": []
+    },
+    {
+      "image": "services-1280-light.png",
+      "errors": []
+    },
+    {
+      "image": "services-1280-dark.png",
+      "errors": []
+    },
+    {
+      "image": "dbs-390-light.png",
+      "errors": []
+    },
+    {
+      "image": "dbs-390-dark.png",
+      "errors": []
+    },
+    {
+      "image": "dbs-1280-light.png",
+      "errors": []
+    },
+    {
+      "image": "dbs-1280-dark.png",
+      "errors": []
+    }
+  ]
+}
