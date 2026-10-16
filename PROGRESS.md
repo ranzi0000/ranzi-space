@@ -1,11 +1,12 @@
-# 当前状态（2026-10-17，P3 首页 UI 已核验，待上线）
+# 当前状态（2026-10-17，P3 首页 UI 已上线）
 
 - 范围：`feat/p3-home-ui`，仅 P3；首页重排为今天 / 业务 / 工具 / 目录，主要入口位于今天与业务之间。业务保留 7 张活数据卡、1 张静态大卡及服务器状态条，10 个纯入口按投资 / 创作 / 工具分组。
 - 已完成：独立纯函数实现三态、异常排序及额度时效 / 本地重置时间；15 秒刷新复算状态，离线和来源缺失保留异常。18 个指定登记只增加 group，并改两处重复 order，其他字节有离线测试约束。
 - 样例与核验：新增四份全假数据，dev_server 用首页 `?fixture=` 写本地 cookie 选样例，页面不识别参数；新增独立无头截图脚本 verify_p3.py（16 组）。
 - 已验证：Node 15 passed / 0 failed；Python 5 tests OK；JS / Python 语法和 git diff 空白检查通过。
 - 已验收（Claude 沙箱外执行）：`P1_BROWSER_CHANNEL=chrome python3.11 -B scripts/verify_p3.py` 退出 0，四份样例 × 390/1280 × 深浅共 16 张截图，控制台、页面和断言错误 0；人工查看有异常和状态未知两种情况的截图无误。Claude 另修一处：额度新旧以采集器 state 为准，前端只在超过 1 小时或时钟超前 5 分钟以上时判过期（原先 10 分钟即标旧数据，正常情况下会频繁误标）。
-- 交付边界：仅修改指定 worktree；未 git add / commit / push，未部署、合并、修改 Cloudflare 或实施 P4。下一步由核验方检查工作区并补齐浏览器验收后提交。
+- 上线：2026-10-17 快进合入 main 并部署（`38ae903`，回滚点 `1dd00c4`）。登录态线上核验：「今天」显示 5 项异常（bad 在前）、今日提交动态与最近两条、Codex 周额度 69% 与本地重置时间；工具区分「投资 / 创作 / 工具」三组。部署刚完成时 `/api/summary` 有一次 503，随后连续 200，属瞬时抖动。
+- 已知问题（未解决）：浏览器会把 `/assets/` 下的 JS/CSS 缓存 4 小时，HTML 却每次重取，所以改版后老设备会出现新 HTML 配旧脚本（P3 上线时实测「今天」卡在“读取中”、工具不分组，强制刷新脚本后恢复）。`861ac6f` 新增 `_headers` 给 `/assets/*` 设 `no-cache`，部署后响应头由 `public, max-age=14400, must-revalidate` 变为 `max-age=14400`：`_headers` 已生效，但被 Cloudflare 域名级“浏览器缓存 TTL”（默认 4 小时）改写。现有 Pages 凭据读不到域名设置，此项为推断。根治需在 Cloudflare 后台把 ranzi.space 的 Caching → Browser Cache TTL 改为 Respect Existing Headers；或改用带版本号的资源地址。
 
 # 历史状态（2026-10-16，P1 公共层隔离分支）
 
