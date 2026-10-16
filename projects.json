@@ -1100,6 +1100,29 @@
       ],
       "show_on_site": true,
       "show_on_dashboard": false
+    },
+    {
+      "slug": "binance-strength-monitor",
+      "title": "强弱观察 · BTC 相对强势监控",
+      "tagline": "对比币种相对 BTC 强弱与反弹表现，固定名单和新强势币分别跟踪验证",
+      "status": "active",
+      "tier": 2,
+      "github": "https://github.com/ranzi0000/binance-strength-monitor",
+      "live": "https://btc-strength-watch-20261015.sacred-mole-0603.chatgpt.site",
+      "tags": [
+        "加密货币",
+        "相对强弱",
+        "市场观察"
+      ],
+      "access": "private",
+      "show_on_site": true,
+      "show_on_dashboard": true,
+      "dash": {
+        "title": "强弱观察",
+        "sub": "BTC 相对强势 · 24 小时验证",
+        "href": "https://btc-strength-watch-20261015.sacred-mole-0603.chatgpt.site",
+        "order": 19
+      }
     }
   ],
   "_archived_local": [
