@@ -3,8 +3,8 @@
 新增 binance-strength-monitor 项目条目及首页「强弱观察」纯入口卡，指向既有私人 Sites。项目目录也显示同一入口与 GitHub 私库链接。未添加实时采集器、改动其它项目顺序或恢复网页派活。
 
 - 修改范围：projects.json 仅新增这一项；原有条目逐项一致。
-- 代码备份：正式目录 /Users/chenguodong/Projects/binance-strength-monitor，GitHub 私库创建与同步本轮进行中。
-- 发布验收：本轮部署后以认证读取生产 projects.json 和首页渲染结果为准，待补实证。
+- 代码备份：正式目录 /Users/chenguodong/Projects/binance-strength-monitor，GitHub 私库已创建并推送代码，网页原始提交历史保留。
+- 发布验收：以认证读取生产 projects.json 和首页入口为准；本轮完整证据保存在 binance-strength-monitor 的 PROGRESS.md 与 docs/registration-verification.json，不能只用提交或推送成功代替发布验收。
 
 # Crypto Scout 项目登记
 
