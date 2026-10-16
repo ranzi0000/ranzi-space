@@ -6,7 +6,7 @@
 - 已验证：Node 15 passed / 0 failed；Python 5 tests OK；JS / Python 语法和 git diff 空白检查通过。
 - 已验收（Claude 沙箱外执行）：`P1_BROWSER_CHANNEL=chrome python3.11 -B scripts/verify_p3.py` 退出 0，四份样例 × 390/1280 × 深浅共 16 张截图，控制台、页面和断言错误 0；人工查看有异常和状态未知两种情况的截图无误。Claude 另修一处：额度新旧以采集器 state 为准，前端只在超过 1 小时或时钟超前 5 分钟以上时判过期（原先 10 分钟即标旧数据，正常情况下会频繁误标）。
 - 上线：2026-10-17 快进合入 main 并部署（`38ae903`，回滚点 `1dd00c4`）。登录态线上核验：「今天」显示 5 项异常（bad 在前）、今日提交动态与最近两条、Codex 周额度 69% 与本地重置时间；工具区分「投资 / 创作 / 工具」三组。部署刚完成时 `/api/summary` 有一次 503，随后连续 200，属瞬时抖动。
-- 已知问题（未解决）：浏览器会把 `/assets/` 下的 JS/CSS 缓存 4 小时，HTML 却每次重取，所以改版后老设备会出现新 HTML 配旧脚本（P3 上线时实测「今天」卡在“读取中”、工具不分组，强制刷新脚本后恢复）。`861ac6f` 新增 `_headers` 给 `/assets/*` 设 `no-cache`，部署后响应头由 `public, max-age=14400, must-revalidate` 变为 `max-age=14400`：`_headers` 已生效，但被 Cloudflare 域名级“浏览器缓存 TTL”（默认 4 小时）改写。现有 Pages 凭据读不到域名设置，此项为推断。根治需在 Cloudflare 后台把 ranzi.space 的 Caching → Browser Cache TTL 改为 Respect Existing Headers；或改用带版本号的资源地址。
+- 静态资源缓存（已解决，2026-10-17）：原先 `/assets/` 下 JS/CSS 被浏览器缓存 4 小时而 HTML 每次重取，改版后老设备会新 HTML 配旧脚本（P3 上线时实测「今天」卡在“读取中”）。根因是 Cloudflare 域名设置「浏览器缓存 TTL」为 4 小时，会改写 `_headers`（`861ac6f`）给出的 `no-cache`。经用户授权，Claude 在 Cloudflare 后台 ranzi.space → 缓存 → 配置 把它改为「遵循现有标头」（Respect Existing Headers）。核验：登录态请求 `/assets/` 下 5 个文件均返回 `Cache-Control: no-cache`，首页 HTML 仍为 `public, max-age=0, must-revalidate`，`/api/summary` 仍为 `no-store`。注意：该设置作用于整个 ranzi.space 域名，其他子站现在按各自源站的缓存头执行。
 
 # 历史状态（2026-10-16，P1 公共层隔离分支）
 
