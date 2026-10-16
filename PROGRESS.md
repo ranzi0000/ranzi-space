@@ -4,10 +4,10 @@
 - 已完成：抽取公共层，保留两页 head 防闪和 services/dbs 系统跟随；保留首页焦点与 services 字体差异；项目登记不变。
 - 验证：`node --test tests/*.test.mjs` 为 8 passed / 0 failed；结构核对 9 项通过，module 语法与 diff 空白检查通过。
 - 已验收（Claude 沙箱外执行）：32 张截图、四页控制台 0 报错；16 对像素对比 13 对一致、3 对仅文字抗锯齿抖动（最多 85 像素、色差 ≤16）。详见 `docs/verification/p1/README.md`。
-- 提交：Codex 沙箱内提交被拒，由 Claude 核验后以 `SKIP_DEPLOY=1` 代为提交到 `refactor/p1-common-layer`，未合入 main、未部署。
+- 提交：Codex 沙箱内提交被拒，由 Claude 核验后代为提交（`f31c9fb`、`b125dcb`），2026-10-17 经用户同意快进合入 main。
 - 证据与矛盾清单：`docs/verification/p1/README.md`。不得将离线通过当作视觉验收通过。
-- 下一步：用户确认后合入 main 并部署（提交钩子会自动部署，部署后以认证访问线上首页核验）；之后开始 P2（dash-collector 新增 alerts / activity / quota）。
-- 发布：未 push、merge、改 main 或部署。
+- 下一步：P3 首页新 UI（依赖 P2 的 summary 新字段先上线）。
+- 发布：2026-10-17 `deploy.sh` 部署，CF 回查确认线上 = `b125dcb`。登录态线上核验：首页加载 `/assets/base.css`、`theme.js`、`home/data.js`、`home/render.js` 均 200，8 张活数据卡与 10 个工具入口正常渲染；控制台仅有登录前 401 和 Cloudflare 访问统计脚本被网络拦截，均与本次改动无关。未 push GitHub。已知问题：`wrangler pages deploy` 不认 `.assetsignore`，验收截图（假数据、在密码门后）随部署上传。
 
 # 历史状态（2026-10-16）
 
