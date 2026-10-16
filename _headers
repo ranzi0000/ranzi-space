@@ -1,0 +1,5 @@
+# 公共样式和首页脚本每次加载都向服务器确认（ETag 未变只回 304）。
+# 原因：Cloudflare 默认让浏览器缓存 JS/CSS 4 小时，而 HTML 每次重取，
+# 改版后会出现新 HTML 配旧脚本（2026-10-17 P3 上线时实测）。
+/assets/*
+  Cache-Control: no-cache
