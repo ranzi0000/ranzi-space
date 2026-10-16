@@ -47,11 +47,11 @@ function startSummary() {
   setInterval(function() {
     try {
       var cached = localStorage.getItem(CACHE_KEY);
-      if (!cached) return;
+      if (!cached) { refreshTime(); return; }
       var data = JSON.parse(cached);
       var t = data.received_at || data.generated_at;
       refreshTime(t);
-    } catch (e) {}
+    } catch (e) { refreshTime(); }
   }, 15000);
 }
 

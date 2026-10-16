@@ -1,10 +1,12 @@
+import { STALE_SECONDS, classifyToday, quotaView } from './today.js';
+
 // DOM rendering and last-summary replay after a project-list rebuild.
 var grid = document.getElementById('grid');
 var entryGrid = document.getElementById('entry-grid');
 var serverStrip = document.getElementById('server-strip');
 var meta = document.getElementById('refresh-meta');
 var lastSummary = null;
-var STALE_SECONDS = 15 * 60;
+var summaryOffline = false;
 
 function fmtRelative(iso) {
   if (!iso) return '—';
@@ -31,8 +33,8 @@ function statusClass(s) {
 }
 
 // ── 纯入口行（dash 无 key）：只有标题 + 一句说明，进 tools 区 ──
-function appendEntry(p) {
-  if (!entryGrid) return;
+function appendEntry(p, target) {
+  if (!target) return;
   var d = p.dash;
   var a = document.createElement('a');
   a.className = 'entry';
@@ -42,29 +44,34 @@ function appendEntry(p) {
   a.querySelector('.entry-title').textContent = d.title || p.slug;
   subEl.textContent = d.sub || '';
   a.href = d.href || p.live || '#';
-  entryGrid.appendChild(a);
+  target.appendChild(a);
 }
 
 // ── 卡片生成：show_on_dashboard=true 且带 dash 元数据的条目，按 dash.order 排 ──
 //    有 dash.key = 活数据大卡（进 #grid）；无 key 但 dash.big=true = 静态大卡
-//    （进 #grid，main 显示 dash.main 固定文案、无状态点）；其余 = 紧凑入口行（进 #entry-grid）
+//    （进 #grid，main 显示 dash.main 固定文案、无状态点）；其余按组进入 #entry-grid
 function buildCards(data) {
   var entries = (data.projects || [])
     .filter(function(p) { return p.show_on_dashboard === true && p.dash; })
     .sort(function(a, b) { return (a.dash.order || 99) - (b.dash.order || 99); });
 
   grid.innerHTML = '';
-  // 只清 JS 生成的入口行，静态写死的「地图」保留在第一位
+  var groups = {};
   if (entryGrid) {
-    Array.prototype.forEach.call(
-      entryGrid.querySelectorAll('[data-gen]'),
-      function(el) { el.parentNode.removeChild(el); }
-    );
+    entryGrid.innerHTML = '';
+    [['invest', '投资'], ['create', '创作'], ['tool', '工具']].forEach(function(pair) {
+      var group = document.createElement('div');
+      group.className = 'tool-group';
+      group.innerHTML = '<h3 class="tool-heading"></h3><div class="entry-grid"></div>';
+      group.querySelector('h3').textContent = pair[1];
+      groups[pair[0]] = group.querySelector('.entry-grid');
+      entryGrid.appendChild(group);
+    });
   }
 
   entries.forEach(function(p) {
     var d = p.dash;
-    if (!d.key && !d.big) { appendEntry(p); return; }
+    if (!d.key && !d.big) { appendEntry(p, groups[d.group] || groups.tool); return; }
 
     var a = document.createElement('a');
     a.className = 'card';
@@ -114,7 +121,7 @@ function renderServers(sv) {
 
 export function renderProjects(data) {
   buildCards(data);
-  if (lastSummary) renderSummary(lastSummary);  // 卡片重建后回填活数据
+  if (lastSummary) renderSummary(lastSummary, true);  // 回填不清除网络失败状态
 }
 
 function renderStandardCard(card, p) {
@@ -150,10 +157,12 @@ function renderItemCard(card, p) {
   });
 }
 
-export function renderSummary(data) {
-  if (!data || !Array.isArray(data.projects)) return;
+export function renderSummary(data, replay = false) {
+  if (!data || typeof data !== 'object') return;
   lastSummary = data;
-  data.projects.forEach(function(p) {
+  if (!replay) summaryOffline = false;
+  renderToday(data);
+  (Array.isArray(data.projects) ? data.projects : []).forEach(function(p) {
     var card = grid.querySelector('[data-project="' + p.key + '"]');
     if (!card) return;
     if (p.href) card.setAttribute('href', p.href);
@@ -195,6 +204,7 @@ function renderDrift(rd) {
 }
 
 export function refreshTime(iso) {
+  renderToday(lastSummary);
   if (iso) {
     meta.textContent = fmtRelative(iso);
     applyStaleness(iso);
@@ -203,6 +213,8 @@ export function refreshTime(iso) {
 
 export function renderOffline() {
   meta.textContent = 'offline';
+  summaryOffline = true;
+  renderToday(lastSummary);
 }
 
 export function renderProjectsError(e) {
@@ -211,4 +223,46 @@ export function renderProjectsError(e) {
   err.className = 'grid-error';
   err.textContent = 'projects.json 加载失败：' + (e.message || 'unknown');
   grid.appendChild(err);
+}
+
+// New summary fields render independently of legacy business cards.
+function renderToday(data) {
+  var panel = document.getElementById('today-panel');
+  var view = classifyToday(data, Date.now(), summaryOffline);
+  panel.dataset.state = view.state;
+  document.getElementById('today-status').textContent = {
+    ok: '一切正常', alerts: view.items.length + ' 项异常', unknown: '状态未知',
+  }[view.state];
+  var list = document.getElementById('today-alerts');
+  list.innerHTML = '';
+  view.items.forEach(function(item) {
+    var li = document.createElement('li');
+    li.innerHTML = '<span class="status-dot" aria-hidden="true"></span><div><span class="alert-title"></span><span class="alert-detail"></span></div>';
+    li.querySelector('.status-dot').className = 'status-dot ' + statusClass(item.level);
+    li.querySelector('.alert-title').textContent = (item.level === 'bad' ? '异常 · ' : '注意 · ') + item.title;
+    li.querySelector('.alert-detail').textContent = item.detail || '';
+    list.appendChild(li);
+  });
+  var reason = document.getElementById('today-unknown');
+  reason.textContent = view.reasons.join('；');
+  reason.hidden = !view.reasons.length;
+  var activity = data?.activity;
+  var valid = activity && !('error' in activity) && Number.isFinite(activity.today_commits) && Number.isFinite(activity.repos);
+  document.getElementById('today-activity').textContent = valid
+    ? '今日 ' + activity.today_commits + ' 次提交 · ' + activity.repos + ' 个仓库' + (activity.most_active ? ' · 最活跃 ' + activity.most_active : '')
+    : '提交动态未读取到';
+  var latest = document.getElementById('today-latest');
+  latest.innerHTML = '';
+  if (valid && Array.isArray(activity.latest)) activity.latest.slice(0, 2).forEach(function(item) {
+    var li = document.createElement('li');
+    li.innerHTML = '<span class="commit-title"></span><time></time>';
+    li.querySelector('.commit-title').textContent = item.repo + ' · ' + item.title;
+    li.querySelector('time').textContent = fmtRelative(item.time);
+    if (item.time) li.querySelector('time').dateTime = item.time;
+    latest.appendChild(li);
+  });
+  var quota = quotaView(data?.quota);
+  document.getElementById('quota-value').textContent = quota.remaining === null ? '—' : quota.remaining + '%';
+  document.getElementById('quota-state').textContent = quota.label;
+  document.getElementById('quota-reset').textContent = quota.reset;
 }

@@ -1,0 +1,176 @@
+{
+  "generated_at": "2026-10-16T04:00:00+00:00",
+  "received_at": "2026-10-16T04:00:05+00:00",
+  "projects": [
+    {
+      "key": "invest",
+      "main": "示例观察 · 12 条",
+      "sub": "离线样例 · 每日更新",
+      "status": "ok"
+    },
+    {
+      "key": "crypto",
+      "main": "示例行情 · 3 项",
+      "sub": "离线样例 · 等待更新",
+      "status": "ok"
+    },
+    {
+      "key": "radar",
+      "main": "示例扫描 · 8 个信号",
+      "sub": "离线样例 · 数据正常",
+      "status": "ok"
+    },
+    {
+      "key": "rec",
+      "status": "ok",
+      "items": [
+        {
+          "title": "示例素材甲",
+          "time": "12:00",
+          "status": "ok"
+        },
+        {
+          "title": "示例素材乙",
+          "time": "11:50",
+          "status": "ok"
+        }
+      ]
+    },
+    {
+      "key": "wechat",
+      "main": "示例文章 · 4 篇",
+      "sub": "离线样例",
+      "status": "ok"
+    },
+    {
+      "key": "lens",
+      "main": "示例检索 · 6 项",
+      "sub": "离线样例",
+      "status": "ok"
+    },
+    {
+      "key": "azone",
+      "main": "示例任务 · 2 项",
+      "sub": "离线样例",
+      "status": "ok"
+    }
+  ],
+  "servers": {
+    "list": [
+      {
+        "name": "示例服务器甲",
+        "role": "示例服务",
+        "status": "bad",
+        "sub": "示例：失联"
+      },
+      {
+        "name": "示例服务器乙",
+        "role": "示例服务",
+        "status": "ok",
+        "sub": "运行正常"
+      }
+    ]
+  },
+  "registry_drift": {
+    "count": 0,
+    "missing": [],
+    "stale": []
+  },
+  "mac_services": [
+    {
+      "label": "example.worker",
+      "note": "示例常驻任务",
+      "cmd": "sample-worker",
+      "state": "run",
+      "pid": 12345,
+      "exit_code": 0,
+      "type": "常驻",
+      "sched": "持续运行",
+      "run_at_load": true
+    },
+    {
+      "label": "example.timer",
+      "note": "示例定时任务",
+      "cmd": "sample-timer",
+      "state": "idle",
+      "exit_code": 0,
+      "type": "定时",
+      "sched": "每 5 分钟",
+      "run_at_load": false
+    },
+    {
+      "label": "example.failed",
+      "note": "示例定时任务",
+      "cmd": "sample-failed",
+      "state": "idle",
+      "exit_code": 0,
+      "type": "定时",
+      "sched": "每小时",
+      "run_at_load": false
+    },
+    {
+      "label": "example.unloaded",
+      "cmd": "sample-unloaded",
+      "state": "unloaded",
+      "type": "手动",
+      "sched": "按需",
+      "run_at_load": false
+    }
+  ],
+  "alerts": {
+    "checked_at": "2026-10-16T04:00:00Z",
+    "items": [
+      {
+        "level": "warn",
+        "kind": "server_expiry",
+        "title": "示例服务器甲即将到期",
+        "detail": "示例：7 天后到期"
+      },
+      {
+        "level": "bad",
+        "kind": "server_down",
+        "title": "示例服务器甲失联",
+        "detail": "示例：连接未成功"
+      }
+    ],
+    "unavailable": []
+  },
+  "activity": {
+    "today_commits": 12,
+    "repos": 3,
+    "most_active": "crypto-radar",
+    "latest": [
+      {
+        "repo": "crypto-radar",
+        "title": "示例：完善离线样例",
+        "time": "2026-10-16T03:55:00Z"
+      },
+      {
+        "repo": "listing-radar",
+        "title": "示例：更新界面说明",
+        "time": "2026-10-16T03:45:00Z"
+      },
+      {
+        "repo": "market-lens",
+        "title": "示例：第三条不展示",
+        "time": "2026-10-16T03:35:00Z"
+      }
+    ]
+  },
+  "quota": {
+    "state": "fresh",
+    "windows": [
+      {
+        "minutes": 300,
+        "remaining": 83,
+        "resets_at": 1792128000
+      },
+      {
+        "minutes": 10080,
+        "remaining": 62,
+        "resets_at": 1792670640
+      }
+    ],
+    "sampled_at": 1792123200
+  }
+}

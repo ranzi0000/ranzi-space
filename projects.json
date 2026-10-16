@@ -70,6 +70,7 @@
       "show_on_site": true,
       "show_on_dashboard": true,
       "dash": {
+        "group": "invest",
         "key": "invest",
         "title": "invest",
         "sub": "美股 / A 股扫描",
@@ -93,6 +94,7 @@
       "show_on_dashboard": true,
       "access": "auth",
       "dash": {
+        "group": "invest",
         "key": "crypto",
         "title": "crypto",
         "sub": "套利雷达",
@@ -117,6 +119,7 @@
       "show_on_dashboard": true,
       "access": "auth",
       "dash": {
+        "group": "create",
         "key": "rec",
         "title": "rec · 最新",
         "href": "https://rec.ranzi.space",
@@ -508,6 +511,7 @@
       "show_on_dashboard": true,
       "access": "auth",
       "dash": {
+        "group": "invest",
         "key": "radar",
         "title": "radar",
         "sub": "上下币公告雷达",
@@ -547,6 +551,7 @@
       "show_on_site": true,
       "show_on_dashboard": true,
       "dash": {
+        "group": "create",
         "title": "duanju",
         "sub": "短剧剧本流水线",
         "href": "https://duanju.ranzi.space",
@@ -569,6 +574,7 @@
       "show_on_site": true,
       "show_on_dashboard": true,
       "dash": {
+        "group": "create",
         "title": "dbs",
         "sub": "抽一张卡自测",
         "href": "/dbs/",
@@ -637,6 +643,7 @@
       "show_on_site": true,
       "show_on_dashboard": true,
       "dash": {
+        "group": "create",
         "title": "reverse",
         "sub": "短剧采集 · 反拆",
         "href": "https://reverse.ranzi.space",
@@ -675,10 +682,11 @@
       "show_on_site": true,
       "show_on_dashboard": true,
       "dash": {
+        "group": "create",
         "title": "表达健身房",
         "sub": "每天 10 分钟练表达",
         "href": "https://biaoda.ranzi.space",
-        "order": 10
+        "order": 12
       }
     },
     {
@@ -697,6 +705,7 @@
       "show_on_site": true,
       "show_on_dashboard": true,
       "dash": {
+        "group": "create",
         "title": "策划转盘",
         "sub": "转一下，出一条账号选题",
         "main": "爆款元素 × 内容方向",
@@ -722,6 +731,7 @@
       "show_on_site": true,
       "show_on_dashboard": true,
       "dash": {
+        "group": "create",
         "title": "talk",
         "sub": "跟蒸馏出来的人格说话",
         "href": "https://talk.ranzi.space",
@@ -743,6 +753,7 @@
       "show_on_site": false,
       "show_on_dashboard": true,
       "dash": {
+        "group": "tool",
         "title": "admin",
         "sub": "网页访问名单",
         "href": "https://admin.ranzi.space",
@@ -819,6 +830,7 @@
       "show_on_site": true,
       "show_on_dashboard": true,
       "dash": {
+        "group": "tool",
         "title": "逆向技能",
         "sub": "查看逆向与安全技能资料",
         "href": "https://github.com/zhaoxuya520/reverse-skill",
@@ -859,6 +871,7 @@
       "show_on_dashboard": true,
       "access": "auth",
       "dash": {
+        "group": "invest",
         "key": "wechat",
         "title": "wechat",
         "sub": "微信群投资情报",
@@ -914,11 +927,12 @@
       "show_on_site": true,
       "show_on_dashboard": true,
       "dash": {
+        "group": "invest",
         "key": "lens",
         "title": "lens · 行情体检",
         "sub": "输代码一键四流派体检",
         "href": "https://lens.ranzi.space",
-        "order": 3
+        "order": 4
       }
     },
     {
@@ -968,6 +982,7 @@
       "show_on_site": true,
       "show_on_dashboard": true,
       "dash": {
+        "group": "invest",
         "key": "azone",
         "title": "azone · A段扫描",
         "sub": "六条件候选卡 · 人工终审",
@@ -991,6 +1006,7 @@
       "show_on_site": true,
       "show_on_dashboard": true,
       "dash": {
+        "group": "create",
         "title": "ComfyUI 工作台",
         "sub": "3090 咩咩整合包 · Tailscale 直连 8199",
         "href": "http://100.126.170.50:8199",
@@ -1047,6 +1063,7 @@
       "show_on_site": true,
       "show_on_dashboard": true,
       "dash": {
+        "group": "tool",
         "title": "手串 DIY",
         "sub": "小程序开发中 · 查看项目地图",
         "href": "/maps/shouchuan-diy",
@@ -1118,6 +1135,7 @@
       "show_on_site": true,
       "show_on_dashboard": true,
       "dash": {
+        "group": "invest",
         "title": "强弱观察",
         "sub": "BTC 相对强势 · 24 小时验证",
         "href": "https://btc-strength-watch-20261015.sacred-mole-0603.chatgpt.site",

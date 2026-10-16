@@ -1,0 +1,66 @@
+[
+  {
+    "image": "ok-390-light.png",
+    "errors": []
+  },
+  {
+    "image": "ok-390-dark.png",
+    "errors": []
+  },
+  {
+    "image": "ok-1280-light.png",
+    "errors": []
+  },
+  {
+    "image": "ok-1280-dark.png",
+    "errors": []
+  },
+  {
+    "image": "alerts-390-light.png",
+    "errors": []
+  },
+  {
+    "image": "alerts-390-dark.png",
+    "errors": []
+  },
+  {
+    "image": "alerts-1280-light.png",
+    "errors": []
+  },
+  {
+    "image": "alerts-1280-dark.png",
+    "errors": []
+  },
+  {
+    "image": "unknown-390-light.png",
+    "errors": []
+  },
+  {
+    "image": "unknown-390-dark.png",
+    "errors": []
+  },
+  {
+    "image": "unknown-1280-light.png",
+    "errors": []
+  },
+  {
+    "image": "unknown-1280-dark.png",
+    "errors": []
+  },
+  {
+    "image": "error-390-light.png",
+    "errors": []
+  },
+  {
+    "image": "error-390-dark.png",
+    "errors": []
+  },
+  {
+    "image": "error-1280-light.png",
+    "errors": []
+  },
+  {
+    "image": "error-1280-dark.png",
+    "errors": []
+  }
+]

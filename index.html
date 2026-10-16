@@ -101,6 +101,45 @@ body.stale .server-strip { opacity: 0.55; }
   word-break: break-word;
 }
 
+/* ─── 今天：异常用细边与状态点强调，文字保留语义 ─── */
+.today-panel {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 150px;
+  gap: 20px;
+  padding: 18px;
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--status-ok);
+  border-radius: 10px;
+  background: var(--card);
+}
+.today-panel[data-state="alerts"] { border-left-color: var(--status-bad); }
+.today-panel[data-state="unknown"] { border-left-color: var(--status-warn); }
+.today-copy { min-width: 0; }
+.today-status { margin: 0; font-size: 19px; font-weight: 600; color: var(--fg); }
+.today-alerts, .today-latest { list-style: none; padding: 0; margin: 0; }
+.today-alerts li { display: flex; gap: 9px; margin-top: 12px; line-height: 1.5; font-size: 13px; }
+.today-alerts .status-dot { margin-top: 6px; }
+.today-alerts li > div { min-width: 0; overflow-wrap: anywhere; }
+.alert-title { color: var(--fg); font-weight: 500; }
+.alert-detail { display: block; color: var(--muted); font-size: 12px; }
+.today-unknown { margin: 10px 0 0; color: var(--fg-soft); font-size: 12px; overflow-wrap: anywhere; }
+.today-activity { margin: 18px 0 6px; color: var(--fg-soft); font-size: 12px; overflow-wrap: anywhere; }
+.today-latest li { display: flex; gap: 10px; font-size: 12px; margin-top: 5px; color: var(--muted); }
+.commit-title { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+.today-latest time { flex-shrink: 0; font-family: var(--font-mono); font-size: 10px; padding-top: 2px; }
+.quota-block { border-left: 1px solid var(--border); padding-left: 18px; }
+.quota-label { margin: 0; font-family: var(--font-mono); color: var(--muted); font-size: 11px; }
+.quota-value { font-family: var(--font-mono); font-size: 30px; line-height: 1.3; margin: 7px 0 0; color: var(--fg); }
+.quota-state, .quota-reset { margin: 3px 0 0; font-size: 11px; color: var(--muted); }
+.tool-group + .tool-group { margin-top: 22px; }
+.tool-heading { font-family: var(--font-mono); font-size: 12px; font-weight: 500; color: var(--muted); margin: 0 0 9px; }
+@media (max-width: 540px) {
+  .today-panel { grid-template-columns: minmax(0, 1fr); gap: 16px; padding: 16px; }
+  .quota-block { border-left: 0; border-top: 1px solid var(--border); padding: 12px 0 0; }
+  .quota-value { display: inline-block; font-size: 25px; margin: 4px 8px 0 0; }
+  .quota-state { display: inline; }
+}
+
 /* ─── 主要入口 ──────────────────────────── */
 .primary-link {
   display: block;
@@ -438,37 +477,56 @@ footer .meta { text-transform: uppercase; }
     <span class="refresh-meta" id="refresh-meta">—</span>
   </header>
 
+  <section aria-labelledby="today-heading">
+    <h2 class="eyebrow" id="today-heading">今天</h2>
+    <div class="today-panel" id="today-panel" data-state="unknown" aria-live="polite">
+      <div class="today-copy">
+        <p class="today-status" id="today-status">状态未知</p>
+        <ul class="today-alerts" id="today-alerts"></ul>
+        <p class="today-unknown" id="today-unknown">正在读取汇总数据</p>
+        <p class="today-activity" id="today-activity">提交动态读取中</p>
+        <ul class="today-latest" id="today-latest"></ul>
+      </div>
+      <aside class="quota-block" aria-label="Codex 周额度">
+        <p class="quota-label">Codex · 周额度</p>
+        <p class="quota-value" id="quota-value">—</p>
+        <p class="quota-state" id="quota-state">读取中</p>
+        <p class="quota-reset" id="quota-reset"></p>
+      </aside>
+    </div>
+  </section>
+
+  <nav class="primary-links" aria-label="主要入口">
+    <a class="primary-link" href="/maps">
+      项目地图
+      <span class="hint">查看项目全景与进度</span>
+    </a>
+    <a class="primary-link" href="https://lab.ranzi.space">
+      知识作品集
+      <span class="hint">阅读知识读本与专题作品</span>
+    </a>
+  </nav>
+
+  <section aria-labelledby="business-heading">
+    <h2 class="eyebrow" id="business-heading">业务</h2>
   <div class="drift-banner" id="drift-banner" hidden>
     <span class="drift-title"></span>
     <span class="drift-detail"></span>
   </div>
-
-  <section>
-    <p class="eyebrow">dashboard</p>
-    <nav class="primary-links" aria-label="主要入口">
-      <a class="primary-link" href="/maps">
-        项目地图
-        <span class="hint">查看项目全景与进度</span>
-      </a>
-      <a class="primary-link" href="https://lab.ranzi.space">
-        知识作品集
-        <span class="hint">阅读知识读本与专题作品</span>
-      </a>
-    </nav>
     <!-- 活数据卡（dash.key 存在）由 JS 从 /projects.json 生成，按 dash.order 排 -->
     <div class="grid" id="grid"></div>
     <!-- 云服务器状态条：由 /api/summary.servers 渲染（IP/到期只在私库 dash-collector 维护） -->
     <div class="server-strip" id="server-strip" hidden></div>
   </section>
 
-  <section>
-    <p class="eyebrow">tools</p>
+  <section aria-labelledby="tools-heading">
+    <h2 class="eyebrow" id="tools-heading">工具</h2>
     <!-- 纯入口卡（dash 无 key）由 JS 从 /projects.json 生成 -->
-    <div class="entry-grid" id="entry-grid"></div>
+    <div id="entry-grid"></div>
   </section>
 
-  <section>
-    <p class="eyebrow">elsewhere</p>
+  <section aria-labelledby="directory-heading">
+    <h2 class="eyebrow" id="directory-heading">目录</h2>
     <ul class="links">
       <li>
         <span class="label">all</span>

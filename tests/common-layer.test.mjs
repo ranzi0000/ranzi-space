@@ -83,6 +83,9 @@ test('首页保留缓存先绘、刷新周期、回前台刷新和离线提示',
   timers[1].fn();
   assert.deepEqual(calls.at(-1), ['time', summary.received_at]);
   assert.equal(requests.length, initial + 2);
+  storage.delete('ranzi-dash-cache-v2');
+  timers[1].fn();
+  assert.deepEqual(calls.at(-1), ['time', undefined]);
   failSummary = true;
   listeners.visibilitychange();
   await flush();
