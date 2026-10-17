@@ -1,9 +1,9 @@
 // POST /api/agent-heartbeat
-// Mac mini 的 claude-rc poller 每 5 分钟报一次「我还活着」，写进 KV。
-// 地图页/总览页读取它，只显示 Mac mini 设备在线状态。
+// Mac mini 的 claude-rc poller 每 5 分钟报一次「我还活着」。
+// 2026-10-17 起不再写 KV：KV 免费写额度每天 1000 次，这里一天就占 288 次。
+// 地图页的「Mac mini 在线」改用 dash-collector 推送的 latest.received_at 判断。
+// 端点保留只为让 poller 不报错，鉴权照旧。
 // 鉴权：Authorization: Bearer <PUSH_TOKEN>（与 /api/maps-push 同一把 token，middleware 已放行此路径）
-//
-// KV: mac_heartbeat = {"at": "<ISO 时间>"}
 export async function onRequestPost(context) {
   const { request, env } = context;
 
@@ -17,7 +17,6 @@ export async function onRequestPost(context) {
   }
 
   const at = new Date().toISOString();
-  await env.DASHBOARD.put("mac_heartbeat", JSON.stringify({ at }));
 
   return jsonResponse({ ok: true, at }, 200);
 }

@@ -73,7 +73,7 @@ test('地图正文保留，在线和离线只显示设备状态，不注入派�
         params: { id: 'shouchuan-diy' },
         env: { DASHBOARD: { async get(key) {
           reads.push(key);
-          if (key === 'mac_heartbeat') return online ? JSON.stringify({ at: new Date().toISOString() }) : null;
+          if (key === 'latest') return online ? JSON.stringify({ received_at: new Date().toISOString() }) : null;
           return original;
         } } },
       });
@@ -82,7 +82,7 @@ test('地图正文保留，在线和离线只显示设备状态，不注入派�
       assert.ok(html.includes('<main>地图正文</main>'));
       assert.ok(html.includes(online ? 'Mac mini 在线' : 'Mac mini 可能离线'));
       assert.doesNotMatch(html, /<button|<script|<textarea|claude-launch|派活|派单|让 Agent/);
-      assert.deepEqual(reads, [route === 'index' ? 'map_html__overview' : 'map_html_shouchuan-diy', 'mac_heartbeat']);
+      assert.deepEqual(reads, [route === 'index' ? 'map_html__overview' : 'map_html_shouchuan-diy', 'latest']);
     }
   }
 });
@@ -94,4 +94,37 @@ test('地图无内容与非法项目 id 的原有响应保留', async () => {
   assert.equal((await detail({ params: { id: '../bad' }, env })).status, 400);
   assert.equal((await detail({ params: { id: 'missing' }, env })).status, 404);
   assert.equal((await overview({ env })).status, 503);
+});
+
+test('心跳端点只校验 token，不写 KV', async () => {
+  const { onRequestPost } = await load('functions/api/agent-heartbeat.js');
+  const DASHBOARD = new Proxy({}, { get() { throw new Error('心跳不应访问 KV'); } });
+  const env = { PUSH_TOKEN: 't', DASHBOARD };
+  const req = auth => new Request('https://x/api/agent-heartbeat', { method: 'POST', headers: { authorization: auth } });
+  assert.equal((await onRequestPost({ request: req('Bearer t'), env })).status, 200);
+  assert.equal((await onRequestPost({ request: req('Bearer bad'), env })).status, 401);
+});
+
+test('地图推送只重写内容变化的页面，并清掉下线页面', async () => {
+  const { onRequestPost } = await load('functions/api/maps-push.js');
+  const store = new Map([['map_html_a', 'A'], ['map_html_b', 'B-old'], ['map_html_gone', 'X']]);
+  const writes = [];
+  const DASHBOARD = {
+    async get(k) { return store.has(k) ? store.get(k) : null; },
+    async put(k, v) { writes.push('put:' + k); store.set(k, v); },
+    async delete(k) { writes.push('delete:' + k); store.delete(k); },
+    async list({ prefix }) { return { keys: [...store.keys()].filter(k => k.startsWith(prefix)).map(name => ({ name })) }; },
+  };
+  const request = new Request('https://x/api/maps-push', {
+    method: 'POST', headers: { authorization: 'Bearer t', 'content-type': 'application/json' },
+    body: JSON.stringify({ pages: { a: 'A', b: 'B-new', _overview: 'O' } }),
+  });
+  const res = await onRequestPost({ request, env: { PUSH_TOKEN: 't', DASHBOARD } });
+  const body = await res.json();
+  assert.equal(res.status, 200);
+  assert.deepEqual(writes, ['put:map_html_b', 'put:map_html__overview', 'delete:map_html_gone']);
+  assert.equal(body.stored, 2);
+  assert.equal(body.unchanged, 1);
+  assert.equal(body.pruned, 1);
+  assert.equal(store.get('map_html_b'), 'B-new');
 });

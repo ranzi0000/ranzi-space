@@ -22,13 +22,14 @@ export async function onRequestGet(context) {
   });
 }
 
-// Mac mini 上次报「我在线」是几分钟前；没心跳或读不出来返回 null（按离线处理）
+// Mac mini 上次推大屏数据是几分钟前；读不出来返回 null（按离线处理）
+// 在线判断借用 dash-collector 每 5 分钟写的 latest.received_at，不再单独写心跳 key（省 KV 免费写额度）
 // 两个路由文件各留一份（本仓库的 function 都是自包含的，htmlHeaders 也是这么处理的）
 async function heartbeatAgeMinutes(env) {
   try {
-    const raw = await env.DASHBOARD.get("mac_heartbeat");
+    const raw = await env.DASHBOARD.get("latest");
     if (!raw) return null;
-    const t = Date.parse(JSON.parse(raw).at);
+    const t = Date.parse(JSON.parse(raw).received_at);
     if (!t) return null;
     return Math.max(0, Math.floor((Date.now() - t) / 60000));
   } catch (e) {

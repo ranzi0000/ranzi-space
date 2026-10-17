@@ -6,6 +6,7 @@
 // body: { "pages": { "<id>": "<html>", "_overview": "<html>" } }
 // id 只允许 [a-z0-9-] 或 "_overview"；KV key = map_html_<id>。
 // 不在本次 pages 里的旧 map_html_* key 会被清掉，防止下线项目残留。
+// 内容与 KV 里一致的页面不重写，返回的 stored 只计真正写入的页数。
 const ID_RE = /^[a-z0-9-]+$|^_overview$/;
 
 export async function onRequestPost(context) {
@@ -41,9 +42,17 @@ export async function onRequestPost(context) {
     }
   }
 
+  // 只重写内容变了的页面：KV 免费写额度每天 1000 次，读额度 10 万次，先读后比很划算。
+  // 以前任一页变化就 22 页全写，一天能烧掉 400 次写。
   const received_at = new Date().toISOString();
+  let unchanged = 0;
   for (const id of ids) {
-    await env.DASHBOARD.put(`map_html_${id}`, pages[id]);
+    const key = `map_html_${id}`;
+    if ((await env.DASHBOARD.get(key)) === pages[id]) {
+      unchanged += 1;
+      continue;
+    }
+    await env.DASHBOARD.put(key, pages[id]);
   }
 
   // 清掉本次没推的旧页面（项目下线后不残留）
@@ -57,7 +66,7 @@ export async function onRequestPost(context) {
     }
   }
 
-  return jsonResponse({ ok: true, stored: ids.length, pruned, received_at }, 200);
+  return jsonResponse({ ok: true, stored: ids.length - unchanged, unchanged, pruned, received_at }, 200);
 }
 
 export async function onRequest(context) {
