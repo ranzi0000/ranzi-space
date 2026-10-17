@@ -1,4 +1,13 @@
-# 当前状态（2026-10-17，P3 首页 UI 已上线）
+# 当前状态（2026-10-17，T1 双来源额度待协调者集成）
+
+- 范围：仅第二轮计划 T1；在 `ranzi-space-r2` worktree 修改，未 add/commit/新建分支/push/部署，未操作浏览器、Kindle 或 LaunchAgent。
+- 已完成：首页额度区为 Codex / Claude 上下两行，`aria-label="额度"`；Claude 显示周剩余、5 小时剩余、状态和周重置时间，stale 显示本地快照时间，过期或不可用显示「— / 终端 Claude 未运行」。`quotaView` 可选窗口优先列表和可信年龄，默认 Codex 逻辑及原测试断言保留。手机断点从 540px 调整为 640px。
+- 锚点核对：today.js、render.js、index.html 位置和现有节点与计划相符；原 Codex 实际在年龄 >=3600 秒时过期，保留这一边界（计划写“超过 3600 秒”）。Claude 显式六小时上限包含边界。
+- 验证：指定 `node --test tests/*.test.mjs` 退出 0，20 passed / 0 failed；额外预览服务器离线测试 5 tests OK，截图脚本语法和 diff 空白检查通过。姊妹采集器指定 unittest 48 tests OK。fixture 仅新增假 Claude 数据。
+- 截图脚本：`scripts/verify_p3.py` 已扩充 Claude fresh/stale/expired/unavailable 文案、重置时间、双行纵向布局、深浅色对比度及原无横向滚动断言，仍为 390/1280px × 深浅 × 四种 fixture 共 16 组。
+- 未验收：dev_server 本地端口探测报 PermissionError（Errno 1 / Operation not permitted）；截图脚本未运行、未产出新截图、未证明实际浏览器视觉通过。协调者可在允许绑定端口的环境执行既有截图命令；真实数据及生产发布亦待协调者处理。
+
+# 历史状态（2026-10-17，P3 首页 UI 已上线）
 
 - 范围：`feat/p3-home-ui`，仅 P3；首页重排为今天 / 业务 / 工具 / 目录，主要入口位于今天与业务之间。业务保留 7 张活数据卡、1 张静态大卡及服务器状态条，10 个纯入口按投资 / 创作 / 工具分组。
 - 已完成：独立纯函数实现三态、异常排序及额度时效 / 本地重置时间；15 秒刷新复算状态，离线和来源缺失保留异常。18 个指定登记只增加 group，并改两处重复 order，其他字节有离线测试约束。

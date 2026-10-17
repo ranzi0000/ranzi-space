@@ -125,5 +125,9 @@
   },
   "quota": {
     "error": "example_unavailable"
+  },
+  "quota_claude": {
+    "state": "unavailable",
+    "windows": []
   }
 }

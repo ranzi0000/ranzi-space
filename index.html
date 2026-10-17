@@ -130,13 +130,14 @@ body.stale .server-strip { opacity: 0.55; }
 .today-latest li { display: flex; gap: 10px; font-size: 12px; margin-top: 5px; color: var(--muted); }
 .commit-title { flex: 1; min-width: 0; overflow-wrap: anywhere; }
 .today-latest time { flex-shrink: 0; font-family: var(--font-mono); font-size: 10px; padding-top: 2px; }
-.quota-block { border-left: 1px solid var(--border); padding-left: 18px; }
+.quota-block { min-width: 0; border-left: 1px solid var(--border); padding-left: 18px; }
+.quota-row + .quota-row { margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--border); }
 .quota-label { margin: 0; font-family: var(--font-mono); color: var(--muted); font-size: 11px; }
 .quota-value { font-family: var(--font-mono); font-size: 30px; line-height: 1.3; margin: 7px 0 0; color: var(--fg); }
-.quota-state, .quota-reset { margin: 3px 0 0; font-size: 11px; color: var(--muted); }
+.quota-state, .quota-reset, .quota-short { margin: 3px 0 0; font-size: 11px; color: var(--muted); overflow-wrap: anywhere; }
 .tool-group + .tool-group { margin-top: 22px; }
 .tool-heading { font-family: var(--font-mono); font-size: 12px; font-weight: 500; color: var(--muted); margin: 0 0 9px; }
-@media (max-width: 540px) {
+@media (max-width: 640px) {
   .today-panel { grid-template-columns: minmax(0, 1fr); gap: 16px; padding: 16px; }
   .quota-block { border-left: 0; border-top: 1px solid var(--border); padding: 12px 0 0; }
   .quota-value { display: inline-block; font-size: 25px; margin: 4px 8px 0 0; }
@@ -491,11 +492,20 @@ footer .meta { text-transform: uppercase; }
         <p class="today-activity" id="today-activity">提交动态读取中</p>
         <ul class="today-latest" id="today-latest"></ul>
       </div>
-      <aside class="quota-block" aria-label="Codex 周额度">
-        <p class="quota-label">Codex · 周额度</p>
-        <p class="quota-value" id="quota-value">—</p>
-        <p class="quota-state" id="quota-state">读取中</p>
-        <p class="quota-reset" id="quota-reset"></p>
+      <aside class="quota-block" aria-label="额度">
+        <div class="quota-row">
+          <p class="quota-label">Codex · 周额度</p>
+          <p class="quota-value" id="quota-value">—</p>
+          <p class="quota-state" id="quota-state">读取中</p>
+          <p class="quota-reset" id="quota-reset"></p>
+        </div>
+        <div class="quota-row">
+          <p class="quota-label">Claude · 周额度</p>
+          <p class="quota-value" id="quota-claude-value">—</p>
+          <p class="quota-short" id="quota-claude-short">5 小时剩余 —</p>
+          <p class="quota-state" id="quota-claude-state">读取中</p>
+          <p class="quota-reset" id="quota-claude-reset"></p>
+        </div>
       </aside>
     </div>
   </section>

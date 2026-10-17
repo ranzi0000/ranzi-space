@@ -175,5 +175,21 @@
       }
     ],
     "sampled_at": 1792122600
+  },
+  "quota_claude": {
+    "state": "expired",
+    "windows": [
+      {
+        "minutes": 300,
+        "remaining": 87,
+        "resets_at": 1792130705
+      },
+      {
+        "minutes": 10080,
+        "remaining": 74,
+        "resets_at": 1792670640
+      }
+    ],
+    "sampled_at": 1792101904
   }
 }

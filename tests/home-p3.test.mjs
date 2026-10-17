@@ -96,6 +96,34 @@ test('Unix 秒重置时间按本地时区格式化', () => {
   assert.equal(formatReset(NaN), '');
 });
 
+test('额度窗口优先列表与独立可信年龄：Claude 六小时边界仍可用', () => {
+  const quota = fixtures.ok.quota_claude;
+  assert.equal(quotaView(quota, now, [10080], 21600).remaining, 74);
+  assert.equal(quotaView(quota, now, [300], 21600).remaining, 87);
+  assert.equal(quotaView(quota, now, [123, 300, 10080], 21600).remaining, 87);
+  assert.equal(quotaView(quota, now, [10080, 300], 21600).remaining, 74);
+  const stale = { ...quota, state: 'stale', sampled_at: now / 1000 - 21600 };
+  assert.equal(quotaView(stale, now, [10080], 21600).remaining, 74);
+  assert.equal(quotaView(stale, now + 1, [10080], 21600).remaining, null);
+  assert.equal(quotaView(stale, now).remaining, null);
+  assert.equal(quotaView({ ...quota, sampled_at: now / 1000 + 300 }, now, [10080], 21600).remaining, 74);
+  assert.equal(quotaView({ ...quota, sampled_at: now / 1000 + 301 }, now, [10080], 21600).remaining, null);
+  assert.equal(quotaView({ ...quota, sampled_at: undefined }, now, [10080], 21600).remaining, null);
+  assert.equal(quotaView({ ...quota, windows: null }, now, [10080], 21600).remaining, null);
+  assert.equal(quotaView({ ...quota, windows: [quota.windows[0]] }, now, [10080], 21600).remaining, null);
+});
+
+test('额度两行有独立节点、语义标签与 640px 手机断点', async () => {
+  const html = await read('index.html');
+  assert.match(html, /<aside class="quota-block" aria-label="额度">/);
+  assert.equal((html.match(/class="quota-row"/g) || []).length, 2);
+  for (const label of ['Codex · 周额度', 'Claude · 周额度']) assert.ok(html.includes(label));
+  for (const suffix of ['value', 'short', 'state', 'reset']) {
+    assert.equal((html.match(new RegExp('id="quota-claude-' + suffix + '"', 'g')) || []).length, 1);
+  }
+  assert.match(html, /@media \(max-width: 640px\)/);
+});
+
 test('首页四段与主要入口的顺序；今天独立于旧 projects 字段渲染', async () => {
   const html = await read('index.html');
   const anchors = ['id="today-heading"', '<nav class="primary-links"', 'id="business-heading"', 'id="tools-heading"', 'id="directory-heading"'];
@@ -159,7 +187,7 @@ test('今天渲染未知保留异常、只列两条提交；离线状态在卡�
   const nodes = {};
   const get = id => nodes[id] ||= new Element();
   const context = {
-    STALE_SECONDS, classifyToday, quotaView: quota => quotaView(quota, now),
+    STALE_SECONDS, classifyToday, quotaView: (quota, _now, ...options) => quotaView(quota, now, ...options),
     document: { getElementById: get, createElement: () => new Element(), body: new Element() },
     Date: class extends Date { static now() { return now; } },
   };
@@ -179,6 +207,32 @@ test('今天渲染未知保留异常、只列两条提交；离线状态在卡�
   assert.equal(get('quota-state').textContent, '旧数据');
   context.renderSummary({ ...fixtures.ok, projects: [] });
   assert.equal(get('today-status').textContent, '一切正常');
+  assert.equal(get('quota-claude-value').textContent, '74%');
+  assert.equal(get('quota-claude-short').textContent, '5 小时剩余 87%');
+  assert.equal(get('quota-claude-state').textContent, '剩余');
+  assert.equal(get('quota-claude-reset').textContent, formatReset(fixtures.ok.quota_claude.windows[1].resets_at));
+  context.renderSummary({ ...fixtures.alerts, projects: [] });
+  const sampled = new Date(fixtures.alerts.quota_claude.sampled_at * 1000);
+  assert.equal(get('quota-claude-value').textContent, '74%');
+  assert.equal(get('quota-claude-state').textContent,
+    `数据 ${String(sampled.getHours()).padStart(2, '0')}:${String(sampled.getMinutes()).padStart(2, '0')}`);
+  for (const claude of [fixtures.unknown.quota_claude, undefined, { state: 'unavailable', windows: [] },
+    { error: 'fixture' }]) {
+    context.renderSummary({ ...fixtures.ok, projects: [], quota_claude: claude });
+    assert.equal(get('quota-claude-value').textContent, '—');
+    assert.equal(get('quota-claude-short').textContent, '5 小时剩余 —');
+    assert.equal(get('quota-claude-state').textContent, '终端 Claude 未运行');
+    assert.equal(get('quota-claude-reset').textContent, '');
+    assert.equal(get('quota-value').textContent, '62%');
+  }
+  const crossed = structuredClone(fixtures.ok.quota_claude);
+  crossed.windows[0].resets_at = now / 1000;
+  context.renderSummary({ ...fixtures.ok, projects: [], quota_claude: crossed });
+  assert.equal(get('quota-claude-value').textContent, '74%');
+  assert.equal(get('quota-claude-short').textContent, '5 小时剩余 —');
+  crossed.windows[1].resets_at = now / 1000;
+  context.renderSummary({ ...fixtures.ok, projects: [], quota_claude: crossed });
+  assert.equal(get('quota-claude-value').textContent, '—');
   context.renderOffline();
   context.renderProjects({ projects: [] });
   assert.equal(get('today-panel').dataset.state, 'unknown');

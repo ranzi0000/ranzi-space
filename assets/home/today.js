@@ -41,18 +41,22 @@ export function formatReset(seconds) {
   return `${d.getMonth() + 1}/${d.getDate()} 周${'日一二三四五六'[d.getDay()]} ${pad(d.getHours())}:${pad(d.getMinutes())} 重置`;
 }
 
-export function quotaView(quota, now = Date.now()) {
+// An explicit maximum age is inclusive; omitted retains Codex's legacy 1h cutoff.
+export function quotaView(quota, now = Date.now(), minutes = [10080], maxAgeSeconds = null) {
   const labels = { stale: '旧数据', expired: '已过期', unavailable: '未读取到' };
   let state = quota?.state;
   if (!quota || 'error' in quota || !['fresh', 'stale', 'expired', 'unavailable'].includes(state)) {
     return { label: '未读取到', remaining: null, reset: '' };
   }
-  const window = quota.windows?.find(w => w.minutes === 10080);
+  const windows = Array.isArray(quota.windows) ? quota.windows : [];
+  const window = minutes.map(duration => windows.find(w => w?.minutes === duration)).find(Boolean);
   const age = now / 1000 - quota.sampled_at;
+  if (maxAgeSeconds !== null && !Number.isFinite(quota.sampled_at)) state = 'expired';
   if (['fresh', 'stale'].includes(state) && Number.isFinite(quota.sampled_at)) {
     // 新鲜度以采集器给的 state 为准（它每 10 分钟才真读一次，summary 又 5 分钟一推，采样常有 10–15 分钟旧）；
-    // 这里只兜底：超过 1 小时或比本机时钟超前 5 分钟以上（时钟异常）一律视为过期。
-    if (age < -300 || age >= 3600) state = 'expired';
+    // Codex 保留原有 >= 1 小时边界；其他来源可指定包含边界的最大可信年龄。
+    const tooOld = maxAgeSeconds === null ? age >= 3600 : age > maxAgeSeconds;
+    if (age < -300 || tooOld) state = 'expired';
   }
   if (['fresh', 'stale'].includes(state) && window?.resets_at && window.resets_at <= now / 1000) state = 'expired';
   const remaining = ['fresh', 'stale'].includes(state) && Number.isFinite(window?.remaining)

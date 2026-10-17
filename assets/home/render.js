@@ -276,4 +276,14 @@ function renderToday(data) {
   document.getElementById('quota-value').textContent = quota.remaining === null ? '—' : quota.remaining + '%';
   document.getElementById('quota-state').textContent = quota.label;
   document.getElementById('quota-reset').textContent = quota.reset;
+  var claude = quotaView(data?.quota_claude, Date.now(), [10080], 21600);
+  var short = quotaView(data?.quota_claude, Date.now(), [300], 21600);
+  var available = claude.remaining !== null;
+  var sampled = new Date(data?.quota_claude?.sampled_at * 1000);
+  var sampleTime = String(sampled.getHours()).padStart(2, '0') + ':' + String(sampled.getMinutes()).padStart(2, '0');
+  document.getElementById('quota-claude-value').textContent = available ? claude.remaining + '%' : '—';
+  document.getElementById('quota-claude-short').textContent = '5 小时剩余 ' + (short.remaining === null ? '—' : short.remaining + '%');
+  document.getElementById('quota-claude-state').textContent = !available ? '终端 Claude 未运行'
+    : claude.label === '旧数据' ? '数据 ' + sampleTime : claude.label;
+  document.getElementById('quota-claude-reset').textContent = available ? claude.reset : '';
 }
