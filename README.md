@@ -6,7 +6,7 @@ ranzi.space 主域名的源代码 — CF Pages 部署的密码保护 PWA。
 
 - 📱 **iPhone 主屏 PWA 大屏**（2026-10-17 重构）— 从上到下四段：**今天**（异常三态：一切正常 / N 项异常 / 状态未知，今日提交动态，Codex 周额度）→「项目地图 / 知识作品集」双入口 → **业务**（活数据大卡 + 云服务器状态条）→ **工具**（纯入口卡按投资 / 创作 / 工具分组）→ **目录**。卡片清单来自 projects.json，活数据与「今天」来自 dash-collector 推送的 `/api/summary`。原 Kindle 四页看板的异常 / 到期 / 动态内容由「今天」区块承接
 - 📋 **完整项目目录** `/projects/` — 数据驱动列表页（状态构成条 + filter chips + status 分组，清单见 projects.json）
-- 🗺 **项目地图** `/maps` + `/maps/<id>`（2026-08-04 上线）— 内容由 Mac mini projectmap 管线渲染推 KV 现取现服务（**地图 HTML 不进本公开仓库**）；总览与单项目页只读展示地图和「Mac mini 在线」心跳灯（/api/agent-heartbeat）
+- 🗺 **项目地图** `/maps` + `/maps/<id>`（2026-08-04 上线）— 内容由 Mac mini projectmap 管线渲染推 KV 现取现服务（**地图 HTML 不进本公开仓库**）；总览与单项目页只读展示地图和「Mac mini 在线」灯（2026-10-17 起按 dash-collector 推送的 `latest.received_at` 判断；`/api/agent-heartbeat` 只校验不写 KV；`/api/maps-push` 只重写内容变化的页面——都是为守住 KV 免费写额度每天 1000 次）
 - 🔒 **密码门** — CF Pages Functions middleware，未登录看不到内容
 
 线上：https://ranzi.space（密码 cookie 30 天）
