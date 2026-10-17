@@ -122,6 +122,9 @@ body.stale .server-strip { opacity: 0.55; }
 .today-alerts li > div { min-width: 0; overflow-wrap: anywhere; }
 .alert-title { color: var(--fg); font-weight: 500; }
 .alert-detail { display: block; color: var(--muted); font-size: 12px; }
+.today-ai { margin-top: 12px; color: var(--muted); font-size: 12px; }
+.today-ai summary { cursor: pointer; }
+.today-ai ul { margin: 6px 0 0; padding-left: 18px; line-height: 1.6; overflow-wrap: anywhere; }
 .today-unknown { margin: 10px 0 0; color: var(--fg-soft); font-size: 12px; overflow-wrap: anywhere; }
 .today-activity { margin: 18px 0 6px; color: var(--fg-soft); font-size: 12px; overflow-wrap: anywhere; }
 .today-latest li { display: flex; gap: 10px; font-size: 12px; margin-top: 5px; color: var(--muted); }
@@ -483,6 +486,7 @@ footer .meta { text-transform: uppercase; }
       <div class="today-copy">
         <p class="today-status" id="today-status">状态未知</p>
         <ul class="today-alerts" id="today-alerts"></ul>
+        <details class="today-ai" id="today-ai" hidden><summary></summary><ul></ul></details>
         <p class="today-unknown" id="today-unknown">正在读取汇总数据</p>
         <p class="today-activity" id="today-activity">提交动态读取中</p>
         <ul class="today-latest" id="today-latest"></ul>

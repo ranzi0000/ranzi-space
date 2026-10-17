@@ -5,16 +5,24 @@ const SOURCE_LABELS = {
   server_expiry: '服务器到期', disk: '磁盘', stale: '到期数据时效', due: '提醒事项',
 };
 
+// 只有这两类要用户亲手处理（提醒事项、服务器续费付款）；其余是排查修复类，归「AI 侧」收起。
+// 未读取到的来源同理：只有影响用户这两类的来源缺失才算「状态未知」。
+export const USER_KINDS = new Set(['due', 'server_expiry']);
+const USER_SOURCES = new Set(['due', 'stale', 'server_expiry']);
+
 export function classifyToday(summary, now = Date.now(), offline = false) {
   const alerts = summary?.alerts;
-  const items = Array.isArray(alerts?.items) ? [...alerts.items] : [];
-  items.sort((a, b) => (a.level === 'bad' ? 0 : 1) - (b.level === 'bad' ? 0 : 1));
+  const all = Array.isArray(alerts?.items) ? [...alerts.items] : [];
+  all.sort((a, b) => (a.level === 'bad' ? 0 : 1) - (b.level === 'bad' ? 0 : 1));
+  const items = all.filter(item => USER_KINDS.has(item.kind));
+  const aiItems = all.filter(item => !USER_KINDS.has(item.kind));
   const reasons = [];
   if (!alerts || typeof alerts !== 'object' || 'error' in alerts || !Array.isArray(alerts.items)) {
     reasons.push('异常数据未读取到');
   }
-  if (Array.isArray(alerts?.unavailable) && alerts.unavailable.length) {
-    reasons.push('未读取到：' + alerts.unavailable.map(key => SOURCE_LABELS[key] || key).join('、'));
+  const missing = Array.isArray(alerts?.unavailable) ? alerts.unavailable.filter(key => USER_SOURCES.has(key)) : [];
+  if (missing.length) {
+    reasons.push('未读取到：' + missing.map(key => SOURCE_LABELS[key] || key).join('、'));
   } else if (alerts?.unavailable != null && !Array.isArray(alerts.unavailable)) {
     reasons.push('异常来源不完整');
   }
@@ -22,7 +30,7 @@ export function classifyToday(summary, now = Date.now(), offline = false) {
   if (!Number.isFinite(stamp)) reasons.push('更新时间未知');
   else if ((now - stamp) / 1000 > STALE_SECONDS) reasons.push('汇总数据已超过 15 分钟未更新');
   if (offline) reasons.push('暂时无法连接，等待更新');
-  return { state: reasons.length ? 'unknown' : items.length ? 'alerts' : 'ok', items, reasons };
+  return { state: reasons.length ? 'unknown' : items.length ? 'alerts' : 'ok', items, aiItems, reasons };
 }
 
 export function formatReset(seconds) {

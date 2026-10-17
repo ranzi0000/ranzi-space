@@ -231,7 +231,7 @@ function renderToday(data) {
   var view = classifyToday(data, Date.now(), summaryOffline);
   panel.dataset.state = view.state;
   document.getElementById('today-status').textContent = {
-    ok: '一切正常', alerts: view.items.length + ' 项异常', unknown: '状态未知',
+    ok: view.aiItems.length ? '无需你处理' : '一切正常', alerts: view.items.length + ' 项待你处理', unknown: '状态未知',
   }[view.state];
   var list = document.getElementById('today-alerts');
   list.innerHTML = '';
@@ -242,6 +242,17 @@ function renderToday(data) {
     li.querySelector('.alert-title').textContent = (item.level === 'bad' ? '异常 · ' : '注意 · ') + item.title;
     li.querySelector('.alert-detail').textContent = item.detail || '';
     list.appendChild(li);
+  });
+  // AI 侧异常默认收起，只露一行计数；展开看明细
+  var ai = document.getElementById('today-ai');
+  ai.hidden = !view.aiItems.length;
+  ai.querySelector('summary').textContent = 'AI 侧 ' + view.aiItems.length + ' 项（无需你处理）';
+  var aiList = ai.querySelector('ul');
+  aiList.innerHTML = '';
+  view.aiItems.forEach(function(item) {
+    var li = document.createElement('li');
+    li.textContent = item.title + (item.detail && item.detail !== item.title ? ' · ' + item.detail : '');
+    aiList.appendChild(li);
   });
   var reason = document.getElementById('today-unknown');
   reason.textContent = view.reasons.join('；');

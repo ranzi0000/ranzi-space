@@ -19,7 +19,7 @@ test('三态：完整新鲜且无异常才正常；缺字段、失败、缺来�
   for (const summary of [undefined, {}, { alerts: { items: [] } },
     { ...fixtures.ok, alerts: undefined }, { ...fixtures.ok, alerts: { error: '' } },
     { ...fixtures.ok, alerts: { unavailable: [] } }, { ...fixtures.ok, received_at: 'invalid' },
-    { ...fixtures.ok, alerts: { items: [], unavailable: ['disk'] } },
+    { ...fixtures.ok, alerts: { items: [], unavailable: ['due'] } },
     { ...fixtures.ok, alerts: { items: [], unavailable: 'disk' } }]) {
     assert.equal(classifyToday(summary, now).state, 'unknown');
   }
@@ -36,16 +36,35 @@ test('三态：完整新鲜且无异常才正常；缺字段、失败、缺来�
 test('异常 bad 在前且不修改输入；未知或过期时仍保留异常与缺失来源', () => {
   const original = structuredClone(fixtures.unknown);
   const result = classifyToday(original, now);
-  assert.deepEqual(result.items.map(item => item.level), ['bad', 'warn']);
+  assert.deepEqual(result.items.map(item => item.kind), ['server_expiry']);
+  assert.deepEqual(result.aiItems.map(item => item.kind), ['server_down']);
   assert.deepEqual(original, fixtures.unknown);
-  assert.match(result.reasons.join(' '), /项目心跳、提醒事项/);
+  assert.match(result.reasons.join(' '), /未读取到：提醒事项/);
+  assert.doesNotMatch(result.reasons.join(' '), /项目心跳/);
   const expired = classifyToday(original, now + 16 * 60 * 1000);
   assert.equal(expired.state, 'unknown');
-  assert.equal(expired.items.length, 2);
+  assert.equal(expired.items.length, 1);
   assert.match(expired.reasons.join(' '), /超过 15 分钟/);
   const failed = classifyToday({ ...fixtures.alerts, alerts: { ...fixtures.alerts.alerts, error: 'example' } }, now);
   assert.equal(failed.state, 'unknown');
-  assert.equal(failed.items.length, 2);
+  assert.equal(failed.items.length, 1);
+});
+
+test('只有 AI 类异常时不打扰：状态正常，AI 侧单独计数；AI 来源缺失不算未知', () => {
+  const summary = { ...fixtures.ok, alerts: { items: [
+    { level: 'bad', kind: 'heartbeat', title: '示例机 心跳丢失', detail: '示例机' },
+    { level: 'bad', kind: 'service', title: '示例服务 退出异常', detail: '退出码 1' },
+    { level: 'warn', kind: 'due', title: '示例提醒', detail: '7 天后' },
+  ], unavailable: ['heartbeat', 'disk'] } };
+  const mixed = classifyToday(summary, now);
+  assert.equal(mixed.state, 'alerts');
+  assert.deepEqual(mixed.items.map(item => item.kind), ['due']);
+  assert.equal(mixed.aiItems.length, 2);
+  assert.deepEqual(mixed.reasons, []);
+  const aiOnly = classifyToday({ ...summary, alerts: { ...summary.alerts, items: summary.alerts.items.slice(0, 2) } }, now);
+  assert.equal(aiOnly.state, 'ok');
+  assert.equal(aiOnly.items.length, 0);
+  assert.equal(aiOnly.aiItems.length, 2);
 });
 
 test('周额度按 minutes 识别；旧数据标注；过期、失败或跨重置隐藏百分比', () => {
@@ -151,9 +170,11 @@ test('今天渲染未知保留异常、只列两条提交；离线状态在卡�
   context.renderSummary(summary);
   assert.equal(get('today-panel').dataset.state, 'unknown');
   assert.equal(get('today-status').textContent, '状态未知');
-  assert.match(get('today-unknown').textContent, /项目心跳、提醒事项/);
-  assert.equal(get('today-alerts').children.length, 2);
-  assert.equal(get('today-alerts').children[0].querySelector('.status-dot').className, 'status-dot bad');
+  assert.match(get('today-unknown').textContent, /未读取到：提醒事项/);
+  assert.equal(get('today-alerts').children.length, 1);
+  assert.equal(get('today-ai').hidden, false);
+  assert.match(get('today-ai').querySelector('summary').textContent, /AI 侧 1 项/);
+  assert.equal(get('today-ai').querySelector('ul').children.length, 1);
   assert.equal(get('today-latest').children.length, 2);
   assert.equal(get('quota-state').textContent, '旧数据');
   context.renderSummary({ ...fixtures.ok, projects: [] });
