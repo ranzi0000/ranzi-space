@@ -81,14 +81,15 @@
     {
       "slug": "crypto-radar",
       "title": "CryptoRadar",
-      "tagline": "加密货币跨所套利监控",
+      "tagline": "加密市场情报台：相对强弱 · 机会 · 传统资产 · 公告",
       "status": "active",
       "tier": 2,
       "github": "https://github.com/ranzi0000/crypto-radar",
       "live": "https://crypto.ranzi.space",
       "tags": [
         "加密货币",
-        "套利"
+        "情报",
+        "传统资产"
       ],
       "show_on_site": true,
       "show_on_dashboard": true,
@@ -97,7 +98,7 @@
         "group": "invest",
         "key": "crypto",
         "title": "crypto",
-        "sub": "套利雷达",
+        "sub": "情报台",
         "href": "https://crypto.ranzi.space",
         "order": 1
       }
@@ -497,11 +498,10 @@
     },
     {
       "slug": "listing-radar",
-      "title": "上下币雷达（listing-radar）",
-      "tagline": "Binance/OKX/HL 上下币公告聚合 → Bark 推送 + 看板",
-      "status": "active",
+      "title": "上下币雷达（已并入 CryptoRadar）",
+      "tagline": "Binance/OKX/HL 上下币公告聚合（2026-10-20 并入 CryptoRadar「公告」页，采集与 Bark 推送改在服务器上）",
+      "status": "archived",
       "github": "https://github.com/ranzi0000/listing-radar",
-      "live": "https://radar.ranzi.space",
       "tags": [
         "投资",
         "Python",
@@ -514,8 +514,8 @@
         "group": "invest",
         "key": "radar",
         "title": "radar",
-        "sub": "上下币公告雷达",
-        "href": "https://radar.ranzi.space",
+        "sub": "公告（Radar）",
+        "href": "https://crypto.ranzi.space/#/listings",
         "order": 3
       }
     },
