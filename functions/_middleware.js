@@ -22,10 +22,28 @@ function parseCookies(request) {
   return out;
 }
 
-function loginPage(error, redirect) {
-  const safeRedirect = redirect && redirect.startsWith("/") ? redirect : "/";
+export function escapeHtml(text) {
+  return String(text).replace(/[&<>"']/g, (ch) => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#39;",
+  }[ch]));
+}
+
+// 只留站内路径。// 与反斜杠会在浏览器里跳出本站；控制字符和空白会被 URL 解析器吃掉，折成同样的协议相对地址。
+export function safeRedirect(redirect) {
+  if (typeof redirect !== "string" || redirect.charAt(0) !== "/") return "/";
+  if (redirect.includes("//") || redirect.includes("\\")) return "/";
+  if (/[\u0000-\u001F\u007F-\u009F\s]/.test(redirect)) return "/";
+  return redirect;
+}
+
+export function loginPage(error, redirect) {
+  const target = safeRedirect(redirect);
   const errorBlock = error
-    ? `<p class="error">${error}</p>`
+    ? `<p class="error">${escapeHtml(error)}</p>`
     : "";
   return `<!DOCTYPE html>
 <html lang="zh-CN">
@@ -115,7 +133,7 @@ button:hover { opacity: 0.88; }
   <h1>ranzi.space</h1>
   <p class="hint">需要密码</p>
   <form method="POST" action="/__login">
-    <input type="hidden" name="redirect" value="${safeRedirect}">
+    <input type="hidden" name="redirect" value="${escapeHtml(target)}">
     <input type="password" name="password" autofocus required autocomplete="current-password">
     <button type="submit">进入</button>
     ${errorBlock}
@@ -174,7 +192,7 @@ export async function onRequest(context) {
     const form = await request.formData();
     const submitted = form.get("password") || "";
     const redirect = form.get("redirect") || "/";
-    const target = typeof redirect === "string" && redirect.startsWith("/") ? redirect : "/";
+    const target = safeRedirect(redirect);
     if (submitted === password) {
       return new Response(null, {
         status: 302,
