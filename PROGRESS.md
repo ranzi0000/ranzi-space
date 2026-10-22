@@ -1,3 +1,9 @@
+# 2026-10-22 登录页反射型 XSS 与开放重定向已修复上线
+
+- 提交 `92b9b67`（grok 实施、Claude 核验）：`functions/_middleware.js` 的登录跳转只接受站内路径（拒绝 `//`、`/\`、控制字符与空白），写入 HTML 前属性转义，error 同样转义；新增 `tests/login-redirect.test.mjs`，`node --test tests/*.test.mjs` 27 passed。
+- 上线：`bash deploy.sh` 退出 0，「线上 = 本地 HEAD 92b9b67」。线上复测：错误密码 + `redirect=/x"><b id=pwn>` 修复前标签原样输出，修复后 value 退回 `/`、注入标签 0 次。
+- 同一段中间件代码在 planning-wheel 也有，已同步修复上线。
+
 # 当前状态（2026-10-17，T1 双来源额度待协调者集成）
 
 - 范围：仅第二轮计划 T1；在 `ranzi-space-r2` worktree 修改，未 add/commit/新建分支/push/部署，未操作浏览器、Kindle 或 LaunchAgent。
