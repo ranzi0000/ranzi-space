@@ -1141,6 +1141,18 @@
         "href": "https://btc-strength-watch-20261015.sacred-mole-0603.chatgpt.site",
         "order": 19
       }
+    },
+    {
+      "slug": "cinematic-storytelling",
+      "title": "cinematic-storytelling",
+      "tagline": "Wild Faith Photo 电影感叙事摄影课 2.0 中文化吸收工程",
+      "status": "active",
+      "tier": 2,
+      "github": "https://github.com/ranzi0000/cinematic-storytelling",
+      "live": null,
+      "tags": [],
+      "show_on_site": true,
+      "show_on_dashboard": false
     }
   ],
   "_archived_local": [
