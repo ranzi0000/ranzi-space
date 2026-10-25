@@ -1,3 +1,10 @@
+# 2026-10-25 登记清理与服务器到期
+
+- 提交 `773936d`：补登 biandao-hub（编导总入口，live 指向 lab 地图页，不上首页）；paiban-tool、streambridge 150 天无提交，status 改 dormant；手串 DIY 不是工具而是已开发完成的小程序，移入新增的「产品」分组（`GROUP_KEYS` 加 product），简介改「微信小程序 · 查看项目地图」；「工具」分组为空，连同快捷标签自动隐藏。
+- dash-collector `c818f14`：baodan2 续费，到期日 2026-11-13 → 2027-05-13（腾讯云轻量 API `DescribeInstances` 实查，已开自动续费）。
+- 验证：`node --test` 27 passed、`verify_p3.py` 16 张 0 错、dash-collector pytest 135 passed；本地 `collect.py --dry-run`：baodan2「到期 27-05」ok，registry_drift count 0。
+- 教训：写 PROGRESS 别用 SKIP_DEPLOY 单独提交——HEAD 领先线上会让每日 repo-drift 巡检报「没部署」（10-25 10:30 已触发一次）。
+
 # 2026-10-25 额度区精简
 
 - 提交 `2a26f60`：撤下 Codex 周额度行（会员 10-21 到期；采集器 `quota` 字段未动，续费后可从 git 历史恢复前端）。Claude 行只在有数据时显示，无数据整块隐藏、「今天」面板变单栏，不再常驻「终端 Claude 未运行」。
