@@ -1,8 +1,7 @@
 import { STALE_SECONDS, classifyToday, quotaView } from './today.js';
 
 // DOM rendering and last-summary replay after a project-list rebuild.
-var grid = document.getElementById('grid');
-var entryGrid = document.getElementById('entry-grid');
+var GROUP_KEYS = ['invest', 'create', 'tool'];
 var serverStrip = document.getElementById('server-strip');
 var meta = document.getElementById('refresh-meta');
 var lastSummary = null;
@@ -47,31 +46,29 @@ function appendEntry(p, target) {
   target.appendChild(a);
 }
 
-// ── 卡片生成：show_on_dashboard=true 且带 dash 元数据的条目，按 dash.order 排 ──
-//    有 dash.key = 活数据大卡（进 #grid）；无 key 但 dash.big=true = 静态大卡
-//    （进 #grid，main 显示 dash.main 固定文案、无状态点）；其余按组进入 #entry-grid
+// ── 卡片生成：show_on_dashboard=true 且带 dash 元数据的条目，按 dash.group 分区、dash.order 排 ──
+//    有 dash.key = 活数据大卡；无 key 但 dash.big=true = 静态大卡（main 显示 dash.main 固定文案、
+//    无状态点）；两者进分区的 .grid，其余纯入口进分区的 .entry-grid。没有内容的分区连同快捷标签一起隐藏。
 function buildCards(data) {
   var entries = (data.projects || [])
     .filter(function(p) { return p.show_on_dashboard === true && p.dash; })
     .sort(function(a, b) { return (a.dash.order || 99) - (b.dash.order || 99); });
 
-  grid.innerHTML = '';
   var groups = {};
-  if (entryGrid) {
-    entryGrid.innerHTML = '';
-    [['invest', '投资'], ['create', '创作'], ['tool', '工具']].forEach(function(pair) {
-      var group = document.createElement('div');
-      group.className = 'tool-group';
-      group.innerHTML = '<h3 class="tool-heading"></h3><div class="entry-grid"></div>';
-      group.querySelector('h3').textContent = pair[1];
-      groups[pair[0]] = group.querySelector('.entry-grid');
-      entryGrid.appendChild(group);
-    });
-  }
+  GROUP_KEYS.forEach(function(key) {
+    var cards = document.querySelector('[data-cards="' + key + '"]');
+    var list = document.querySelector('[data-entries="' + key + '"]');
+    cards.innerHTML = '';
+    list.innerHTML = '';
+    groups[key] = { cards: cards, entries: list, count: 0 };
+  });
 
   entries.forEach(function(p) {
     var d = p.dash;
-    if (!d.key && !d.big) { appendEntry(p, groups[d.group] || groups.tool); return; }
+    var g = groups[d.group] || groups.tool;
+    g.count += 1;
+    if (!d.key && !d.big) { appendEntry(p, g.entries); return; }
+    var grid = g.cards;
 
     var a = document.createElement('a');
     a.className = 'card';
@@ -98,6 +95,15 @@ function buildCards(data) {
     }
     grid.appendChild(a);
   });
+
+  GROUP_KEYS.forEach(function(key) {
+    var empty = groups[key].count === 0;
+    document.getElementById(key).hidden = empty;
+    var tag = document.querySelector('#quick-tags [data-tag="' + key + '"]');
+    if (!tag) return;
+    tag.hidden = empty;
+    tag.querySelector('.tag-count').textContent = empty ? '' : String(groups[key].count);
+  });
 }
 
 // ── 云服务器状态条（数据全部来自 summary.servers，页面本身不含服务器信息） ──
@@ -117,6 +123,7 @@ function renderServers(sv) {
     serverStrip.appendChild(cell);
   });
   serverStrip.hidden = false;
+  document.getElementById('server-empty').hidden = true;
 }
 
 export function renderProjects(data) {
@@ -163,7 +170,7 @@ export function renderSummary(data, replay = false) {
   if (!replay) summaryOffline = false;
   renderToday(data);
   (Array.isArray(data.projects) ? data.projects : []).forEach(function(p) {
-    var card = grid.querySelector('[data-project="' + p.key + '"]');
+    var card = document.querySelector('.grid [data-project="' + p.key + '"]');
     if (!card) return;
     if (p.href) card.setAttribute('href', p.href);
 
@@ -218,6 +225,8 @@ export function renderOffline() {
 }
 
 export function renderProjectsError(e) {
+  var grid = document.querySelector('[data-cards="invest"]');
+  document.getElementById('invest').hidden = false;
   grid.innerHTML = '';
   var err = document.createElement('div');
   err.className = 'grid-error';
@@ -230,6 +239,7 @@ function renderToday(data) {
   var panel = document.getElementById('today-panel');
   var view = classifyToday(data, Date.now(), summaryOffline);
   panel.dataset.state = view.state;
+  document.getElementById('tag-today-dot').dataset.state = view.state;
   document.getElementById('today-status').textContent = {
     ok: view.aiItems.length ? '无需你处理' : '一切正常', alerts: view.items.length + ' 项待你处理', unknown: '状态未知',
   }[view.state];

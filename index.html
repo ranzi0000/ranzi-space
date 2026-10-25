@@ -42,7 +42,7 @@ main {
 
 /* ─── Header ───────────────────────────────── */
 header {
-  margin-bottom: 32px;
+  margin-bottom: 16px;
   display: flex;
   align-items: baseline;
   justify-content: space-between;
@@ -87,6 +87,7 @@ body.stale .server-strip { opacity: 0.55; }
   background: var(--card);
   font-size: 13px;
   line-height: 1.5;
+  color: inherit;
   text-decoration: none;
 }
 .drift-banner[hidden] { display: none; }
@@ -135,8 +136,6 @@ body.stale .server-strip { opacity: 0.55; }
 .quota-label { margin: 0; font-family: var(--font-mono); color: var(--muted); font-size: 11px; }
 .quota-value { font-family: var(--font-mono); font-size: 30px; line-height: 1.3; margin: 7px 0 0; color: var(--fg); }
 .quota-state, .quota-reset, .quota-short { margin: 3px 0 0; font-size: 11px; color: var(--muted); overflow-wrap: anywhere; }
-.tool-group + .tool-group { margin-top: 22px; }
-.tool-heading { font-family: var(--font-mono); font-size: 12px; font-weight: 500; color: var(--muted); margin: 0 0 9px; }
 @media (max-width: 640px) {
   .today-panel { grid-template-columns: minmax(0, 1fr); gap: 16px; padding: 16px; }
   .quota-block { border-left: 0; border-top: 1px solid var(--border); padding: 12px 0 0; }
@@ -359,19 +358,84 @@ body.stale .server-strip { opacity: 0.55; }
 }
 
 /* ─── Section ───────────────────────────────── */
-section { margin-bottom: 40px; }
+section { margin-bottom: 40px; scroll-margin-top: 64px; }
 section:last-of-type { margin-bottom: 0; }
+section[hidden] { display: none; }
 
 .eyebrow {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--accent);
+  margin: 0 0 14px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+}
+.group-section .grid:empty { display: none; }
+.section-empty { margin: 0; font-size: 12px; color: var(--faint); }
+.section-empty[hidden] { display: none; }
+
+/* ─── 快捷标签：吸顶，点击跳分区，滚动时高亮当前分区 ─── */
+.quick-tags {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  gap: 6px;
+  margin: -8px -24px 24px;
+  padding: calc(8px + env(safe-area-inset-top)) 24px 10px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  background: color-mix(in srgb, var(--bg) 88%, transparent);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.15s ease;
+}
+.quick-tags::-webkit-scrollbar { display: none; }
+.quick-tags.stuck { border-bottom-color: var(--border); }
+.quick-tags a {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 12px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--card);
+  color: var(--fg-soft);
+  font-size: 13px;
+  line-height: 1.4;
+  text-decoration: none;
+  -webkit-tap-highlight-color: transparent;
+  transition: color 0.15s ease, border-color 0.15s ease, background-color 0.15s ease;
+}
+.quick-tags a:hover { border-color: var(--muted); }
+.quick-tags a[aria-current="true"] {
+  color: var(--accent);
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+.quick-tags a[hidden] { display: none; }
+.quick-tags .tag-count {
   font-family: var(--font-mono);
   font-size: 11px;
-  font-weight: 500;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
   color: var(--faint);
-  margin: 0 0 16px;
-  padding-bottom: 10px;
-  border-bottom: 1px solid var(--border);
+}
+.quick-tags .tag-count:empty { display: none; }
+.quick-tags .tag-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--status-warn);
+}
+.quick-tags .tag-dot[data-state="ok"] { background: var(--status-ok); }
+.quick-tags .tag-dot[data-state="alerts"] { background: var(--status-bad); }
+@media (max-width: 640px) {
+  .quick-tags { margin: -8px -16px 20px; padding-left: 16px; padding-right: 16px; }
 }
 
 /* ─── Server strip（云服务器状态条，数据来自 /api/summary.servers） ─── */
@@ -481,7 +545,17 @@ footer .meta { text-transform: uppercase; }
     <span class="refresh-meta" id="refresh-meta">—</span>
   </header>
 
-  <section aria-labelledby="today-heading">
+  <!-- 快捷标签：点击跳到对应分区，滚动时高亮当前分区；分区为空时连同标签一起隐藏 -->
+  <nav class="quick-tags" id="quick-tags" aria-label="快速定位">
+    <a href="#today" data-tag="today">今天<span class="tag-dot" id="tag-today-dot" aria-hidden="true"></span></a>
+    <a href="#invest" data-tag="invest">投资<span class="tag-count"></span></a>
+    <a href="#create" data-tag="create">创作<span class="tag-count"></span></a>
+    <a href="#tool" data-tag="tool">工具<span class="tag-count"></span></a>
+    <a href="#infra" data-tag="infra">服务器</a>
+    <a href="#directory" data-tag="directory">目录</a>
+  </nav>
+
+  <section id="today" aria-labelledby="today-heading">
     <h2 class="eyebrow" id="today-heading">今天</h2>
     <div class="today-panel" id="today-panel" data-state="unknown" aria-live="polite">
       <div class="today-copy">
@@ -521,26 +595,39 @@ footer .meta { text-transform: uppercase; }
     </a>
   </nav>
 
-  <section aria-labelledby="business-heading">
-    <h2 class="eyebrow" id="business-heading">业务</h2>
-  <div class="drift-banner" id="drift-banner" hidden>
-    <span class="drift-title"></span>
-    <span class="drift-detail"></span>
-  </div>
-    <!-- 活数据卡（dash.key 存在）由 JS 从 /projects.json 生成，按 dash.order 排 -->
-    <div class="grid" id="grid"></div>
+  <!-- 三个分组由 JS 从 /projects.json 按 dash.group 填充，组内按 dash.order 排：
+       活数据卡 / 大卡进 .grid，纯入口进 .entry-grid -->
+  <section id="invest" class="group-section" aria-labelledby="invest-heading">
+    <h2 class="eyebrow" id="invest-heading">投资</h2>
+    <div class="grid" data-cards="invest"></div>
+    <div class="entry-grid" data-entries="invest"></div>
+  </section>
+
+  <section id="create" class="group-section" aria-labelledby="create-heading">
+    <h2 class="eyebrow" id="create-heading">创作</h2>
+    <div class="grid" data-cards="create"></div>
+    <div class="entry-grid" data-entries="create"></div>
+  </section>
+
+  <section id="tool" class="group-section" aria-labelledby="tool-heading">
+    <h2 class="eyebrow" id="tool-heading">工具</h2>
+    <div class="grid" data-cards="tool"></div>
+    <div class="entry-grid" data-entries="tool"></div>
+  </section>
+
+  <section id="infra" aria-labelledby="infra-heading">
+    <h2 class="eyebrow" id="infra-heading">服务器</h2>
     <!-- 云服务器状态条：由 /api/summary.servers 渲染（IP/到期只在私库 dash-collector 维护） -->
     <div class="server-strip" id="server-strip" hidden></div>
+    <p class="section-empty" id="server-empty">等待采集数据</p>
   </section>
 
-  <section aria-labelledby="tools-heading">
-    <h2 class="eyebrow" id="tools-heading">工具</h2>
-    <!-- 纯入口卡（dash 无 key）由 JS 从 /projects.json 生成 -->
-    <div id="entry-grid"></div>
-  </section>
-
-  <section aria-labelledby="directory-heading">
+  <section id="directory" aria-labelledby="directory-heading">
     <h2 class="eyebrow" id="directory-heading">目录</h2>
+    <a class="drift-banner" id="drift-banner" href="/projects/" hidden>
+      <span class="drift-title"></span>
+      <span class="drift-detail"></span>
+    </a>
     <ul class="links">
       <li>
         <span class="label">all</span>
@@ -576,5 +663,6 @@ footer .meta { text-transform: uppercase; }
 
 <script src="/assets/theme.js"></script>
 <script type="module" src="/assets/home/data.js"></script>
+<script type="module" src="/assets/home/tags.js"></script>
 </body>
 </html>

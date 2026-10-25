@@ -1,6 +1,5 @@
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
-import { execFileSync } from 'node:child_process';
 import test from 'node:test';
 import vm from 'node:vm';
 
@@ -124,13 +123,17 @@ test('额度两行有独立节点、语义标签与 640px 手机断点', async (
   assert.match(html, /@media \(max-width: 640px\)/);
 });
 
-test('首页四段与主要入口的顺序；今天独立于旧 projects 字段渲染', async () => {
+test('首页分区与主要入口的顺序；今天独立于旧 projects 字段渲染', async () => {
   const html = await read('index.html');
-  const anchors = ['id="today-heading"', '<nav class="primary-links"', 'id="business-heading"', 'id="tools-heading"', 'id="directory-heading"'];
+  const anchors = ['<nav class="quick-tags"', 'id="today-heading"', '<nav class="primary-links"', 'id="invest-heading"',
+    'id="create-heading"', 'id="tool-heading"', 'id="infra-heading"', 'id="directory-heading"'];
   const positions = anchors.map(anchor => html.indexOf(anchor));
   assert.ok(positions.every(position => position >= 0));
   assert.deepEqual(positions, [...positions].sort((a, b) => a - b));
-  assert.equal((html.match(/<section\b/g) || []).length, 4);
+  assert.equal((html.match(/<section\b/g) || []).length, 6);
+  // 每个快捷标签都指向一个真实存在的分区
+  for (const [, key] of html.matchAll(/<a href="#(\w+)" data-tag="\1"/g)) assert.ok(html.includes(`<section id="${key}"`), key);
+  assert.equal((html.match(/data-tag="/g) || []).length, 6);
   assert.match(html, /id="today-panel"[\s\S]*aria-live="polite"/);
   const script = await read('assets/home/render.js');
   assert.doesNotMatch(script, /if \(!data \|\| !Array\.isArray\(data\.projects\)\) return/);
@@ -140,40 +143,15 @@ test('首页四段与主要入口的顺序；今天独立于旧 projects 字段�
   assert.doesNotMatch(await read('assets/home/data.js'), /fixture|URLSearchParams/);
 });
 
-test('projects.json 仅指定 18 项的 dash.group/order 变化，其他字节全部保留', async () => {
-  const original = execFileSync('git', ['show', 'HEAD:projects.json'], { encoding: 'utf8', cwd: new URL('../', import.meta.url) });
-  const current = await read('projects.json');
-  const before = JSON.parse(original), after = JSON.parse(current);
-  const groups = {
-    invest: 'investment-scanner crypto-radar listing-radar wechat-analysis market-lens azone-scanner binance-strength-monitor'.split(' '),
-    create: 'douyin-recorder planning-wheel duanju-studio dontbesilent-corpus duanju-reverse biaoda-gym talk-to-anyone comfy-agent'.split(' '),
-    tool: 'ranzi-admin reverse-skill shouchuan-diy'.split(' '),
-  };
-  const allSlugs = Object.values(groups).flat();
-  for (const [group, slugs] of Object.entries(groups)) {
-    const projects = after.projects.filter(project => slugs.includes(project.slug));
-    assert.equal(projects.length, slugs.length);
-    assert.ok(projects.every(project => project.dash.group === group));
-    assert.equal(new Set(projects.map(project => project.dash.order)).size, projects.length);
+test('上屏项目都有合法分组，组内排序号不重复', async () => {
+  const { projects } = JSON.parse(await read('projects.json'));
+  const shown = projects.filter(project => project.show_on_dashboard === true && project.dash);
+  assert.ok(shown.length > 0);
+  for (const project of shown) assert.ok(['invest', 'create', 'tool'].includes(project.dash.group), project.slug);
+  for (const group of ['invest', 'create', 'tool']) {
+    const orders = projects.filter(project => project.dash?.group === group).map(project => project.dash.order);
+    assert.equal(new Set(orders).size, orders.length, group);
   }
-  // Restore only allowed values to prove every other value and every byte unchanged.
-  let restored = current;
-  for (const project of after.projects) {
-    if (!allSlugs.includes(project.slug)) continue;
-    const old = before.projects.find(item => item.slug === project.slug);
-    let start = restored.indexOf('"slug": "' + project.slug + '"');
-    start = restored.indexOf('"dash": {', start);
-    const end = restored.indexOf('\n      }', start);
-    let chunk = restored.slice(start, end).replace(/\n        "group": "(?:invest|create|tool)",/,
-      'group' in old.dash ? '\n        "group": "' + old.dash.group + '",' : '');
-    chunk = chunk.replace(/"order": \d+/, '"order": ' + old.dash.order);
-    restored = restored.slice(0, start) + chunk + restored.slice(end);
-    project.dash.order = old.dash.order;
-    if ('group' in old.dash) project.dash.group = old.dash.group;
-    else delete project.dash.group;
-  }
-  assert.equal(restored, original);
-  assert.deepEqual(after, before);
 });
 
 // Small DOM stand-in checks render/replay transitions without a browser process.
@@ -188,7 +166,7 @@ test('今天渲染未知保留异常、只列两条提交；离线状态在卡�
   const get = id => nodes[id] ||= new Element();
   const context = {
     STALE_SECONDS, classifyToday, quotaView: (quota, _now, ...options) => quotaView(quota, now, ...options),
-    document: { getElementById: get, createElement: () => new Element(), body: new Element() },
+    document: { getElementById: get, querySelector: selector => get('query:' + selector), createElement: () => new Element(), body: new Element() },
     Date: class extends Date { static now() { return now; } },
   };
   const script = (await read('assets/home/render.js')).replace(/^import .*;\n/, '').replace(/export /g, '');

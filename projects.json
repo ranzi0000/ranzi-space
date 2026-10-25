@@ -508,7 +508,7 @@
         "SQLite"
       ],
       "show_on_site": true,
-      "show_on_dashboard": true,
+      "show_on_dashboard": false,
       "access": "auth",
       "dash": {
         "group": "invest",
@@ -549,7 +549,7 @@
         "AI创作"
       ],
       "show_on_site": true,
-      "show_on_dashboard": true,
+      "show_on_dashboard": false,
       "dash": {
         "group": "create",
         "title": "duanju",
@@ -578,7 +578,7 @@
         "title": "dbs",
         "sub": "抽一张卡自测",
         "href": "/dbs/",
-        "order": 8
+        "order": 6
       }
     },
     {
@@ -641,7 +641,7 @@
         "CV"
       ],
       "show_on_site": true,
-      "show_on_dashboard": true,
+      "show_on_dashboard": false,
       "dash": {
         "group": "create",
         "title": "reverse",
@@ -680,7 +680,7 @@
         "SQLite"
       ],
       "show_on_site": true,
-      "show_on_dashboard": true,
+      "show_on_dashboard": false,
       "dash": {
         "group": "create",
         "title": "表达健身房",
@@ -729,7 +729,7 @@
         "LLM"
       ],
       "show_on_site": true,
-      "show_on_dashboard": true,
+      "show_on_dashboard": false,
       "dash": {
         "group": "create",
         "title": "talk",
@@ -751,7 +751,7 @@
         "Access"
       ],
       "show_on_site": false,
-      "show_on_dashboard": true,
+      "show_on_dashboard": false,
       "dash": {
         "group": "tool",
         "title": "admin",
@@ -828,7 +828,7 @@
         "skill"
       ],
       "show_on_site": true,
-      "show_on_dashboard": true,
+      "show_on_dashboard": false,
       "dash": {
         "group": "tool",
         "title": "逆向技能",
@@ -876,7 +876,7 @@
         "title": "wechat",
         "sub": "微信群投资情报",
         "href": "https://wechat.ranzi.space",
-        "order": 15
+        "order": 5
       }
     },
     {
@@ -932,7 +932,7 @@
         "title": "lens · 行情体检",
         "sub": "输代码一键四流派体检",
         "href": "https://lens.ranzi.space",
-        "order": 4
+        "order": 6
       }
     },
     {
@@ -987,7 +987,7 @@
         "title": "azone · A段扫描",
         "sub": "六条件候选卡 · 人工终审",
         "href": "https://azone.ranzi.space",
-        "order": 16
+        "order": 4
       }
     },
     {
@@ -1010,7 +1010,7 @@
         "title": "ComfyUI 工作台",
         "sub": "3090 咩咩整合包 · Tailscale 直连 8199",
         "href": "http://100.126.170.50:8199",
-        "order": 17
+        "order": 7
       }
     },
     {
@@ -1133,7 +1133,7 @@
       ],
       "access": "private",
       "show_on_site": true,
-      "show_on_dashboard": true,
+      "show_on_dashboard": false,
       "dash": {
         "group": "invest",
         "title": "强弱观察",
