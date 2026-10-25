@@ -1,3 +1,11 @@
+# 2026-10-25 首页改版：分区 + 快捷标签，下线过期入口
+
+- 提交 `a311fd6`（Claude 直接实施：设计类改动需边改边看效果，强依赖本会话上下文）。
+- 结构：今天 → 项目地图/知识作品集 → 投资 → 创作 → 工具 → 服务器 → 目录。顶部吸顶快捷标签（`assets/home/tags.js`）点击跳转、滚动高亮，点击后锁定高亮直到用户自己滑动（尾部分区短，否则「滚到底」规则会抢走高亮）；标签带分组条目数，「今天」带状态色点；空分组连同标签自动隐藏。分区标题改强调色。
+- 登记表：8 项 `show_on_dashboard` 改 false（项目目录仍保留，恢复只需改回 true）——radar（与 crypto 卡重复）、duanju、reverse、talk、表达健身房（均已暂停停服）、admin（线上 502）、逆向技能（他人仓库）、强弱观察（已被情报台强弱页取代）。组内顺序：投资 crypto/invest/azone/wechat/lens，创作 rec/策划转盘/dbs/ComfyUI，工具 手串 DIY。
+- 测试：`node --test tests/*.test.mjs` 27 passed；原「projects.json 只许 group/order 变化」的一次性迁移测试改为长期约束（上屏项目分组合法、组内序号不重复）。`verify_p3.py` 断言改新结构，16 张截图错误 0。
+- 上线：提交钩子部署，`deploy.sh --check` 线上 = `a311fd6`；登录态页面待用户真机确认。
+
 # 2026-10-22 登录页反射型 XSS 与开放重定向已修复上线
 
 - 提交 `92b9b67`（grok 实施、Claude 核验）：`functions/_middleware.js` 的登录跳转只接受站内路径（拒绝 `//`、`/\`、控制字符与空白），写入 HTML 前属性转义，error 同样转义；新增 `tests/login-redirect.test.mjs`，`node --test tests/*.test.mjs` 27 passed。
