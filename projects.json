@@ -204,7 +204,7 @@
       "slug": "paiban-tool",
       "title": "排版小工具",
       "tagline": "PyQt6 拖框排版 + 导 PDF",
-      "status": "active",
+      "status": "dormant",
       "tier": 2,
       "github": "https://github.com/ranzi0000/paiban-tool",
       "tags": [
@@ -218,7 +218,7 @@
       "slug": "streambridge",
       "title": "StreamBridge",
       "tagline": "DFL 换脸机 → 直播伴侣机音视频中转",
-      "status": "active",
+      "status": "dormant",
       "tier": 2,
       "github": "https://github.com/ranzi0000/streambridge",
       "tags": [
@@ -1063,11 +1063,11 @@
       "show_on_site": true,
       "show_on_dashboard": true,
       "dash": {
-        "group": "tool",
+        "group": "product",
         "title": "手串 DIY",
-        "sub": "小程序开发中 · 查看项目地图",
+        "sub": "微信小程序 · 查看项目地图",
         "href": "/maps/shouchuan-diy",
-        "order": 18
+        "order": 1
       }
     },
     {
@@ -1151,6 +1151,21 @@
       "github": "https://github.com/ranzi0000/cinematic-storytelling",
       "live": null,
       "tags": [],
+      "show_on_site": true,
+      "show_on_dashboard": false
+    },
+    {
+      "slug": "biandao-hub",
+      "title": "编导总入口",
+      "tagline": "短视频编导六站流水线：把薛辉、安先生、马大个、dontbesilent 的方法统一成定位→选题→结构→开头→拍剪→复盘，每站一个默认做法",
+      "status": "active",
+      "tier": 2,
+      "github": "https://github.com/ranzi0000/biandao-hub",
+      "live": "https://lab.ranzi.space/tutorials/biandao-map/",
+      "tags": [
+        "短视频",
+        "编导"
+      ],
       "show_on_site": true,
       "show_on_dashboard": false
     }

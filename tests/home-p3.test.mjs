@@ -128,14 +128,14 @@ test('额度只剩 Claude 一行，默认隐藏，有独立节点、语义标签
 test('首页分区与主要入口的顺序；今天独立于旧 projects 字段渲染', async () => {
   const html = await read('index.html');
   const anchors = ['<nav class="quick-tags"', 'id="today-heading"', '<nav class="primary-links"', 'id="invest-heading"',
-    'id="create-heading"', 'id="tool-heading"', 'id="infra-heading"', 'id="directory-heading"'];
+    'id="create-heading"', 'id="product-heading"', 'id="tool-heading"', 'id="infra-heading"', 'id="directory-heading"'];
   const positions = anchors.map(anchor => html.indexOf(anchor));
   assert.ok(positions.every(position => position >= 0));
   assert.deepEqual(positions, [...positions].sort((a, b) => a - b));
-  assert.equal((html.match(/<section\b/g) || []).length, 6);
+  assert.equal((html.match(/<section\b/g) || []).length, 7);
   // 每个快捷标签都指向一个真实存在的分区
   for (const [, key] of html.matchAll(/<a href="#(\w+)" data-tag="\1"/g)) assert.ok(html.includes(`<section id="${key}"`), key);
-  assert.equal((html.match(/data-tag="/g) || []).length, 6);
+  assert.equal((html.match(/data-tag="/g) || []).length, 7);
   assert.match(html, /id="today-panel"[\s\S]*aria-live="polite"/);
   const script = await read('assets/home/render.js');
   assert.doesNotMatch(script, /if \(!data \|\| !Array\.isArray\(data\.projects\)\) return/);
@@ -149,8 +149,8 @@ test('上屏项目都有合法分组，组内排序号不重复', async () => {
   const { projects } = JSON.parse(await read('projects.json'));
   const shown = projects.filter(project => project.show_on_dashboard === true && project.dash);
   assert.ok(shown.length > 0);
-  for (const project of shown) assert.ok(['invest', 'create', 'tool'].includes(project.dash.group), project.slug);
-  for (const group of ['invest', 'create', 'tool']) {
+  for (const project of shown) assert.ok(['invest', 'create', 'product', 'tool'].includes(project.dash.group), project.slug);
+  for (const group of ['invest', 'create', 'product', 'tool']) {
     const orders = projects.filter(project => project.dash?.group === group).map(project => project.dash.order);
     assert.equal(new Set(orders).size, orders.length, group);
   }

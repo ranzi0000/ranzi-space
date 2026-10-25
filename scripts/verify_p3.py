@@ -44,8 +44,8 @@ def main():
                             assert page.locator('#today-panel').get_attribute('data-state') == state
                             assert page.locator('.grid .card').count() == 7
                             assert page.locator('.entry-grid .entry').count() == 3
-                            assert page.locator('.group-section:visible .eyebrow').all_text_contents() == ['投资', '创作', '工具']
-                            assert page.locator('#quick-tags a:visible').all_text_contents() == ['今天', '投资5', '创作4', '工具1', '服务器', '目录']
+                            assert page.locator('.group-section:visible .eyebrow').all_text_contents() == ['投资', '创作', '产品']
+                            assert page.locator('#quick-tags a:visible').all_text_contents() == ['今天', '投资5', '创作4', '产品1', '服务器', '目录']
                             assert page.locator('#today-latest li').count() == (0 if fixture == 'error' else 2)
                             value, short, label = CLAUDE[fixture]
                             assert page.locator('#quota-claude-value').inner_text() == value

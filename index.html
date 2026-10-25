@@ -552,6 +552,7 @@ footer .meta { text-transform: uppercase; }
     <a href="#today" data-tag="today">今天<span class="tag-dot" id="tag-today-dot" aria-hidden="true"></span></a>
     <a href="#invest" data-tag="invest">投资<span class="tag-count"></span></a>
     <a href="#create" data-tag="create">创作<span class="tag-count"></span></a>
+    <a href="#product" data-tag="product">产品<span class="tag-count"></span></a>
     <a href="#tool" data-tag="tool">工具<span class="tag-count"></span></a>
     <a href="#infra" data-tag="infra">服务器</a>
     <a href="#directory" data-tag="directory">目录</a>
@@ -592,7 +593,7 @@ footer .meta { text-transform: uppercase; }
     </a>
   </nav>
 
-  <!-- 三个分组由 JS 从 /projects.json 按 dash.group 填充，组内按 dash.order 排：
+  <!-- 四个分组由 JS 从 /projects.json 按 dash.group 填充，组内按 dash.order 排：
        活数据卡 / 大卡进 .grid，纯入口进 .entry-grid -->
   <section id="invest" class="group-section" aria-labelledby="invest-heading">
     <h2 class="eyebrow" id="invest-heading">投资</h2>
@@ -604,6 +605,12 @@ footer .meta { text-transform: uppercase; }
     <h2 class="eyebrow" id="create-heading">创作</h2>
     <div class="grid" data-cards="create"></div>
     <div class="entry-grid" data-entries="create"></div>
+  </section>
+
+  <section id="product" class="group-section" aria-labelledby="product-heading">
+    <h2 class="eyebrow" id="product-heading">产品</h2>
+    <div class="grid" data-cards="product"></div>
+    <div class="entry-grid" data-entries="product"></div>
   </section>
 
   <section id="tool" class="group-section" aria-labelledby="tool-heading">

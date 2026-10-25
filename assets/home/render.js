@@ -1,7 +1,7 @@
 import { STALE_SECONDS, classifyToday, quotaView } from './today.js';
 
 // DOM rendering and last-summary replay after a project-list rebuild.
-var GROUP_KEYS = ['invest', 'create', 'tool'];
+var GROUP_KEYS = ['invest', 'create', 'product', 'tool'];
 var serverStrip = document.getElementById('server-strip');
 var meta = document.getElementById('refresh-meta');
 var lastSummary = null;
