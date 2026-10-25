@@ -112,11 +112,13 @@ test('额度窗口优先列表与独立可信年龄：Claude 六小时边界仍�
   assert.equal(quotaView({ ...quota, windows: [quota.windows[0]] }, now, [10080], 21600).remaining, null);
 });
 
-test('额度两行有独立节点、语义标签与 640px 手机断点', async () => {
+test('额度只剩 Claude 一行，默认隐藏，有独立节点、语义标签与 640px 手机断点', async () => {
   const html = await read('index.html');
-  assert.match(html, /<aside class="quota-block" aria-label="额度">/);
-  assert.equal((html.match(/class="quota-row"/g) || []).length, 2);
-  for (const label of ['Codex · 周额度', 'Claude · 周额度']) assert.ok(html.includes(label));
+  assert.match(html, /<aside class="quota-block" id="quota-block" aria-label="额度" hidden>/);
+  assert.equal((html.match(/class="quota-row"/g) || []).length, 1);
+  assert.ok(html.includes('Claude · 周额度'));
+  assert.ok(!html.includes('Codex · 周额度'));
+  assert.ok(!/id="quota-(value|state|reset)"/.test(html));
   for (const suffix of ['value', 'short', 'state', 'reset']) {
     assert.equal((html.match(new RegExp('id="quota-claude-' + suffix + '"', 'g')) || []).length, 1);
   }
@@ -182,9 +184,10 @@ test('今天渲染未知保留异常、只列两条提交；离线状态在卡�
   assert.match(get('today-ai').querySelector('summary').textContent, /AI 侧 1 项/);
   assert.equal(get('today-ai').querySelector('ul').children.length, 1);
   assert.equal(get('today-latest').children.length, 2);
-  assert.equal(get('quota-state').textContent, '旧数据');
+  assert.equal(get('quota-block').hidden, true);
   context.renderSummary({ ...fixtures.ok, projects: [] });
   assert.equal(get('today-status').textContent, '一切正常');
+  assert.equal(get('quota-block').hidden, false);
   assert.equal(get('quota-claude-value').textContent, '74%');
   assert.equal(get('quota-claude-short').textContent, '5 小时剩余 87%');
   assert.equal(get('quota-claude-state').textContent, '剩余');
@@ -201,7 +204,7 @@ test('今天渲染未知保留异常、只列两条提交；离线状态在卡�
     assert.equal(get('quota-claude-short').textContent, '5 小时剩余 —');
     assert.equal(get('quota-claude-state').textContent, '终端 Claude 未运行');
     assert.equal(get('quota-claude-reset').textContent, '');
-    assert.equal(get('quota-value').textContent, '62%');
+    assert.equal(get('quota-block').hidden, true);
   }
   const crossed = structuredClone(fixtures.ok.quota_claude);
   crossed.windows[0].resets_at = now / 1000;
@@ -220,5 +223,5 @@ test('今天渲染未知保留异常、只列两条提交；离线状态在卡�
   context.renderSummary({ alerts: { error: 'example' }, activity: { error: 'example' }, quota: { error: 'example' } });
   assert.equal(get('today-activity').textContent, '提交动态未读取到');
   assert.equal(get('today-latest').children.length, 0);
-  assert.equal(get('quota-value').textContent, '—');
+  assert.equal(get('quota-block').hidden, true);
 });

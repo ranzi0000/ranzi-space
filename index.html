@@ -115,6 +115,8 @@ body.stale .server-strip { opacity: 0.55; }
 }
 .today-panel[data-state="alerts"] { border-left-color: var(--status-bad); }
 .today-panel[data-state="unknown"] { border-left-color: var(--status-warn); }
+.today-panel.no-quota { grid-template-columns: minmax(0, 1fr); }
+.quota-block[hidden] { display: none; }
 .today-copy { min-width: 0; }
 .today-status { margin: 0; font-size: 19px; font-weight: 600; color: var(--fg); }
 .today-alerts, .today-latest { list-style: none; padding: 0; margin: 0; }
@@ -566,13 +568,8 @@ footer .meta { text-transform: uppercase; }
         <p class="today-activity" id="today-activity">提交动态读取中</p>
         <ul class="today-latest" id="today-latest"></ul>
       </div>
-      <aside class="quota-block" aria-label="额度">
-        <div class="quota-row">
-          <p class="quota-label">Codex · 周额度</p>
-          <p class="quota-value" id="quota-value">—</p>
-          <p class="quota-state" id="quota-state">读取中</p>
-          <p class="quota-reset" id="quota-reset"></p>
-        </div>
+      <!-- 只剩 Claude 一行（Codex 会员 2026-10-21 到期后撤下）；没有数据时整块隐藏，面板变单栏 -->
+      <aside class="quota-block" id="quota-block" aria-label="额度" hidden>
         <div class="quota-row">
           <p class="quota-label">Claude · 周额度</p>
           <p class="quota-value" id="quota-claude-value">—</p>

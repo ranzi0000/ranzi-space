@@ -47,10 +47,6 @@ def main():
                             assert page.locator('.group-section:visible .eyebrow').all_text_contents() == ['投资', '创作', '工具']
                             assert page.locator('#quick-tags a:visible').all_text_contents() == ['今天', '投资5', '创作4', '工具1', '服务器', '目录']
                             assert page.locator('#today-latest li').count() == (0 if fixture == 'error' else 2)
-                            assert page.locator('#quota-value').inner_text() == ('—' if fixture == 'error' else '62%')
-                            assert page.locator('#quota-state').inner_text() == ({'unknown': '旧数据', 'error': '未读取到'}.get(fixture, '剩余'))
-                            if fixture != 'error':
-                                assert page.locator('#quota-reset').inner_text() == '10/22 周四 20:04 重置'
                             value, short, label = CLAUDE[fixture]
                             assert page.locator('#quota-claude-value').inner_text() == value
                             assert page.locator('#quota-claude-short').inner_text() == short
@@ -58,14 +54,12 @@ def main():
                             assert page.locator('#quota-claude-reset').inner_text() == (
                                 '10/22 周四 20:04 重置' if fixture in ('ok', 'alerts') else '')
                             assert page.locator('.quota-block').get_attribute('aria-label') == '额度'
-                            rows = page.locator('.quota-row')
-                            assert rows.count() == 2
-                            assert rows.nth(0).is_visible() and rows.nth(1).is_visible()
-                            codex_box, claude_box = rows.nth(0).bounding_box(), rows.nth(1).bounding_box()
-                            assert claude_box['y'] >= codex_box['y'] + codex_box['height']
-                            for selector in ('#quota-value', '#quota-state', '#quota-reset',
-                                             '#quota-claude-value', '#quota-claude-short',
-                                             '#quota-claude-state', '#quota-claude-reset'):
+                            has_quota = fixture in ('ok', 'alerts')
+                            # 没有 Claude 额度数据时整块隐藏，面板变单栏
+                            assert page.locator('#quota-block').is_visible() == has_quota
+                            assert page.locator('.quota-row').count() == 1
+                            for selector in (() if not has_quota else ('#quota-claude-value', '#quota-claude-short',
+                                             '#quota-claude-state', '#quota-claude-reset')):
                                 # Both palettes must keep the text legible against the card.
                                 contrast = page.locator(selector).evaluate("""el => {
                                     const rgb = color => color.match(/[\\d.]+/g).slice(0, 3).map(Number);
@@ -85,11 +79,15 @@ def main():
                                 assert page.locator('#today-ai').is_visible()
                             assert page.evaluate('document.documentElement.scrollWidth <= innerWidth')
                             copy = page.locator('.today-copy').bounding_box()
-                            quota = page.locator('.quota-block').bounding_box()
-                            if width == 390:
-                                assert quota['y'] >= copy['y'] + copy['height']
+                            if has_quota:
+                                quota = page.locator('.quota-block').bounding_box()
+                                if width == 390:
+                                    assert quota['y'] >= copy['y'] + copy['height']
+                                else:
+                                    assert quota['x'] > copy['x']
                             else:
-                                assert quota['x'] > copy['x']
+                                panel = page.locator('.today-panel').bounding_box()
+                                assert copy['width'] > panel['width'] - 60
                             page.screenshot(path=str(output / result['image']), full_page=True)
                         except Exception as error:
                             result['errors'].append(str(error))

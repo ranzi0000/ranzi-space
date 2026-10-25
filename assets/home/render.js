@@ -282,13 +282,12 @@ function renderToday(data) {
     if (item.time) li.querySelector('time').dateTime = item.time;
     latest.appendChild(li);
   });
-  var quota = quotaView(data?.quota);
-  document.getElementById('quota-value').textContent = quota.remaining === null ? '—' : quota.remaining + '%';
-  document.getElementById('quota-state').textContent = quota.label;
-  document.getElementById('quota-reset').textContent = quota.reset;
   var claude = quotaView(data?.quota_claude, Date.now(), [10080], 21600);
   var short = quotaView(data?.quota_claude, Date.now(), [300], 21600);
   var available = claude.remaining !== null;
+  // 额度只有终端 Claude 运行时才会写入；没有数据时整块隐藏，不常驻一行「未运行」
+  document.getElementById('quota-block').hidden = !available;
+  panel.classList.toggle('no-quota', !available);
   var sampled = new Date(data?.quota_claude?.sampled_at * 1000);
   var sampleTime = String(sampled.getHours()).padStart(2, '0') + ':' + String(sampled.getMinutes()).padStart(2, '0');
   document.getElementById('quota-claude-value').textContent = available ? claude.remaining + '%' : '—';
