@@ -1,3 +1,8 @@
+# 2026-10-25 额度区精简
+
+- 提交 `2a26f60`：撤下 Codex 周额度行（会员 10-21 到期；采集器 `quota` 字段未动，续费后可从 git 历史恢复前端）。Claude 行只在有数据时显示，无数据整块隐藏、「今天」面板变单栏，不再常驻「终端 Claude 未运行」。
+- 验证：`node --test tests/*.test.mjs` 27 passed；`verify_p3.py` 16 张截图错误 0（ok/alerts 显示 Claude 行，unknown/error 整块隐藏且面板单栏）；`deploy.sh --check` 线上 = `2a26f60`。
+
 # 2026-10-25 首页改版：分区 + 快捷标签，下线过期入口
 
 - 提交 `a311fd6`（Claude 直接实施：设计类改动需边改边看效果，强依赖本会话上下文）。
