@@ -37,7 +37,7 @@ ranzi.space 主域名的源代码 — CF Pages 部署的密码保护 PWA。
 │                          # /api/dbs-deck（Bearer，Mac 推抽卡牌堆进 KV）/api/dbs-draw（cookie，抽卡+推 Bark，?id= 回看）
 │                          # /api/dbs-config（cookie，读写推送时间）/api/dbs-config-pull（Bearer，Mac 闸门拉取）
 ├── dbs/index.html         # dbs 抽卡页 v2（问题先行 + md 阅读版式 + 本机抽卡历史 + 推送时间设置；牌堆来自 corpus/push_deck.py）
-├── services/index.html    # Mac mini 服务列表页
+├── services/index.html    # Mac mini 服务列表页 + 执行按钮（Kindle 控制、GCP 换 IP，POST /api/kindle-control）
 ├── manifest.json + sw.js  # PWA
 ├── icons/                 # PWA + favicon
 ├── deploy.sh              # wrangler 部署封装（nvm PATH fallback + 重试 + 自我验证 + --check）
@@ -126,7 +126,7 @@ git config core.hooksPath hooks
 | 子系统 | repo | 作用 |
 |---|---|---|
 | dash-collector | https://github.com/ranzi0000/dash-collector | Mac mini LaunchAgent，每 5 分钟采集各项目活数据、服务器状态，以及首页「今天」用的 `alerts` / `activity` / `quota`，push 到 CF KV；同一份写本地镜像给 Kindle 复习屏 |
-| claude-rc | https://github.com/ranzi0000/claude-rc | Mac mini LaunchAgent，每 3 秒处理 Kindle 控制，每 5 分钟报告设备心跳 |
+| claude-rc | https://github.com/ranzi0000/claude-rc | Mac mini LaunchAgent，每 3 秒处理 /services/ 页按钮指令（Kindle 控制、GCP 换 IP，后者调 dotfiles-mac 的 `bin/gcp-rotate-ip.sh`），每 5 分钟报告设备心跳 |
 | heartbeat | https://github.com/ranzi0000/heartbeat | 共享心跳客户端库（dash-collector 不直接用，是其他业务项目用的） |
 
 部署 plist 在 https://github.com/ranzi0000/dotfiles-mac

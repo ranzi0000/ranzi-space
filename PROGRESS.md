@@ -1,3 +1,9 @@
+# 2026-10-26 /services/ 新增「GCP 换 IP」按钮
+
+- 提交 `4e81663`：`services/index.html` 新增「GCP 节点 → GCP 换 IP」按钮（带 confirm），`functions/api/kindle-control.js` 的 ACTIONS 加 `gcp_rotate`（借 Kindle 控制同一条 KV 通道）；claude-rc poller 收到后执行 dotfiles-mac `bin/gcp-rotate-ip.sh`。
+- 验证：`deploy.sh` 验证线上 = 本地 HEAD `4e81663`；未登录 POST `/api/kindle-control` 返回 401；真实点击一次，GCP 换 IP `35.212.144.164 → 34.3.106.64` 成功（脚本日志 `~/Library/Logs/gcp-rotate-ip.log`）。
+- 教训：脚本首次被按钮触发时静默退出，因为后台无 UTF-8 locale，`"$old，"` 的变量名吞了中文字节、`set -u` 判未定义；终端里复现不了，要按 poller 的 `Popen` 方式测（已修，dotfiles-mac `ef379da`）。
+
 # 2026-10-25 登记清理与服务器到期
 
 - 提交 `773936d`：补登 biandao-hub（编导总入口，live 指向 lab 地图页，不上首页）；paiban-tool、streambridge 150 天无提交，status 改 dormant；手串 DIY 不是工具而是已开发完成的小程序，移入新增的「产品」分组（`GROUP_KEYS` 加 product），简介改「微信小程序 · 查看项目地图」；「工具」分组为空，连同快捷标签自动隐藏。
