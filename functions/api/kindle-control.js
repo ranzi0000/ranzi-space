@@ -4,7 +4,8 @@
 // 行为：写 {action, requested_at} 到 KV "kindle_control"，Mac mini poller 看到后跑 kindle_ctl.sh
 
 const KV_KEY = "kindle_control";
-const ACTIONS = ["pause", "resume", "reboot"];
+// gcp_rotate 借同一通道：poller 收到后跑 dotfiles-mac/bin/gcp-rotate-ip.sh（GCP IP 被墙时换 IP）
+const ACTIONS = ["pause", "resume", "reboot", "gcp_rotate"];
 
 export async function onRequestPost(context) {
   const { request, env } = context;

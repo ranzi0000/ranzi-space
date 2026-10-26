@@ -89,6 +89,10 @@ footer { margin-top: 36px; font-size: 12px; color: var(--faint); }
   <button data-action="reboot">重启 Kindle</button>
   <span class="ctl-msg" id="ctl-msg"></span>
 </div>
+<div class="ctl">
+  <span class="ctl-label">GCP 节点</span>
+  <button data-action="gcp_rotate">GCP 换 IP</button>
+</div>
 <input id="filter" type="search" placeholder="过滤：名称 / 备注 / 命令（如 kindle）" autocomplete="off">
 <div id="list"></div>
 <footer>数据来自 dash-collector（每 5 分钟采集 ~/Library/LaunchAgents + launchctl）。<br>
@@ -181,11 +185,12 @@ async function load() {
 }
 document.getElementById("filter").addEventListener("input", render);
 
-const CTL_TEXT = { pause: "退出看板", resume: "打开看板", reboot: "重启 Kindle" };
+const CTL_TEXT = { pause: "退出看板", resume: "打开看板", reboot: "重启 Kindle", gcp_rotate: "GCP 换 IP" };
 document.querySelectorAll(".ctl button").forEach(btn => {
   btn.addEventListener("click", async () => {
     const action = btn.dataset.action;
     if (action === "reboot" && !confirm("确认重启 Kindle？重启约需 1 分钟，之后 Mac 会自动蹲守恢复看板。")) return;
+    if (action === "gcp_rotate" && !confirm("确认给 GCP 换 IP？会停机重开（约 2–6 分钟，期间 GCP 断开），新 IP 实测能直连才采用，最多试 3 次。结果和小火箭新链接推 Bark。")) return;
     const msg = document.getElementById("ctl-msg");
     document.querySelectorAll(".ctl button").forEach(b => b.disabled = true);
     msg.textContent = "发送中…";
