@@ -1168,6 +1168,21 @@
       ],
       "show_on_site": true,
       "show_on_dashboard": false
+    },
+    {
+      "slug": "gaibian-studio",
+      "title": "gaibian-studio",
+      "tagline": "长篇网文改编短剧工作台：AI 读薄几百万字，编剧逐集把关",
+      "status": "active",
+      "tier": 2,
+      "github": "https://github.com/ranzi0000/gaibian-studio",
+      "live": null,
+      "tags": [
+        "Python",
+        "AI创作"
+      ],
+      "show_on_site": true,
+      "show_on_dashboard": false
     }
   ],
   "_archived_local": [
