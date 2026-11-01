@@ -1183,6 +1183,21 @@
       ],
       "show_on_site": true,
       "show_on_dashboard": false
+    },
+    {
+      "slug": "mac-speaker",
+      "title": "mac-speaker",
+      "tagline": "3090 借用 Mac mini 的扬声器和麦克风（局域网音频转发）",
+      "status": "active",
+      "tier": 2,
+      "github": "https://github.com/ranzi0000/mac-speaker",
+      "live": null,
+      "tags": [
+        "Python",
+        "音频"
+      ],
+      "show_on_site": true,
+      "show_on_dashboard": false
     }
   ],
   "_archived_local": [
