@@ -1241,6 +1241,22 @@
       "tags": [],
       "show_on_site": true,
       "show_on_dashboard": false
+    },
+    {
+      "slug": "xuehui-biandao-online",
+      "title": "xuehui-biandao-online",
+      "tagline": "薛辉编导班配套线上视频课 64 节吸收工程",
+      "status": "active",
+      "tier": 2,
+      "github": "https://github.com/ranzi0000/xuehui-biandao-online",
+      "live": null,
+      "tags": [
+        "ASR",
+        "Qwen3-ASR",
+        "课程消化"
+      ],
+      "show_on_site": true,
+      "show_on_dashboard": false
     }
   ],
   "_archived_local": [
