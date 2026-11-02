@@ -1198,6 +1198,30 @@
       ],
       "show_on_site": true,
       "show_on_dashboard": false
+    },
+    {
+      "slug": "artex",
+      "title": "ARTEX（自主渗透）",
+      "tagline": "AI 自主渗透测试系统，fork 自 lanmerry/ARTEX（百度 agent+ 攻防赛冠军项目）。LLM 多 agent + 双图架构，自动跑资产探索与漏洞发现；本机 Docker（Colima）部署，仅在隔离靶机学习研究用。",
+      "status": "active",
+      "tier": 2,
+      "github": "https://github.com/ranzi0000/artex",
+      "live": null,
+      "tags": [
+        "渗透测试",
+        "AI Agent",
+        "Go",
+        "Docker"
+      ],
+      "show_on_site": true,
+      "show_on_dashboard": true,
+      "dash": {
+        "group": "tool",
+        "title": "ARTEX",
+        "sub": "AI 自主渗透 · 本机 :8787",
+        "href": "http://localhost:8787",
+        "order": 1
+      }
     }
   ],
   "_archived_local": [
