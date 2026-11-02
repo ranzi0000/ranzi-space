@@ -38,6 +38,7 @@ ranzi.space 主域名的源代码 — CF Pages 部署的密码保护 PWA。
 │                          # /api/dbs-config（cookie，读写推送时间）/api/dbs-config-pull（Bearer，Mac 闸门拉取）
 ├── dbs/index.html         # dbs 抽卡页 v2（问题先行 + md 阅读版式 + 本机抽卡历史 + 推送时间设置；牌堆来自 corpus/push_deck.py）
 ├── services/index.html    # Mac mini 服务列表页 + 执行按钮（Kindle 控制、GCP 换 IP，POST /api/kindle-control）
+├── kindle/index.html      # Kindle 复习屏后台：换批间隔、卡片库比例、日历卡、收藏（/api/kindle-config|status，Mac 侧走 -pull / -status-push Bearer 接口）
 ├── manifest.json + sw.js  # PWA
 ├── icons/                 # PWA + favicon
 ├── deploy.sh              # wrangler 部署封装（nvm PATH fallback + 重试 + 自我验证 + --check）
