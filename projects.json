@@ -1222,6 +1222,18 @@
         "href": "http://localhost:8787",
         "order": 1
       }
+    },
+    {
+      "slug": "edmond-course",
+      "title": "edmond-course",
+      "tagline": "埃德蒙抖音文案课吸收工程（小圈陪跑 + 夜草18期 + 文案课19期 + 28天带练）",
+      "status": "active",
+      "tier": 2,
+      "github": "https://github.com/ranzi0000/edmond-course",
+      "live": null,
+      "tags": [],
+      "show_on_site": true,
+      "show_on_dashboard": false
     }
   ],
   "_archived_local": [
