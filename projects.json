@@ -594,7 +594,14 @@
         "看板"
       ],
       "show_on_site": true,
-      "show_on_dashboard": false
+      "show_on_dashboard": true,
+      "dash": {
+        "group": "tool",
+        "title": "Kindle 后台",
+        "sub": "复习屏换批频率 · 卡片库 · 收藏",
+        "href": "/kindle/",
+        "order": 2
+      }
     },
     {
       "slug": "dylive-monitor",

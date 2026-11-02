@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-page="kindle">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Kindle 后台</title>
+<link rel="stylesheet" href="/assets/base.css">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: var(--font-sans);
+  background: var(--bg); color: var(--fg);
+  max-width: 680px; margin: 0 auto;
+  padding: 24px 16px calc(96px + env(safe-area-inset-bottom));
+  -webkit-font-smoothing: antialiased;
+  font-size: 16px;
+}
+header { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 18px; }
+h1 { font-size: 1.15rem; font-weight: 650; }
+header a { color: var(--muted); text-decoration: none; font-size: 0.85rem; }
+
+section { margin-top: 26px; }
+section > h2 { font-size: 0.85rem; font-weight: 650; color: var(--muted);
+               letter-spacing: 0.08em; margin-bottom: 10px; }
+.box { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 4px 16px; }
+.row { display: flex; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--border);
+       font-size: 0.92rem; color: var(--fg-soft); flex-wrap: wrap; }
+.row:last-child { border-bottom: none; }
+.row .name { flex: 1; min-width: 7em; color: var(--fg); }
+.row .sub { color: var(--muted); font-size: 0.78rem; }
+.note { color: var(--muted); font-size: 0.8rem; line-height: 1.6; margin-top: 8px; }
+
+/* 状态 */
+.status { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; }
+.stat { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 12px 14px; }
+.stat .k { color: var(--muted); font-size: 0.75rem; }
+.stat .v { font-size: 1.02rem; font-weight: 650; margin-top: 4px; }
+.stat .v.ok { color: var(--status-ok); }
+.stat .v.warn { color: var(--status-warn); }
+.stat .v.bad { color: var(--status-bad); }
+.stat .s { color: var(--muted); font-size: 0.75rem; margin-top: 2px; }
+
+/* 控件 */
+.seg { display: inline-flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+.seg button { font: inherit; font-size: 0.85rem; padding: 6px 12px; background: none; color: var(--fg-soft);
+              border: none; border-right: 1px solid var(--border); cursor: pointer; }
+.seg button:last-child { border-right: none; }
+.seg button.on { background: var(--accent); color: #fff; }
+.sw { position: relative; width: 40px; height: 24px; flex: none; }
+.sw input { opacity: 0; width: 0; height: 0; }
+.sw span { position: absolute; inset: 0; background: var(--border); border-radius: 12px; cursor: pointer; transition: .15s; }
+.sw span::before { content: ""; position: absolute; left: 3px; top: 3px; width: 18px; height: 18px;
+                   background: #fff; border-radius: 50%; transition: .15s; }
+.sw input:checked + span { background: var(--accent); }
+.sw input:checked + span::before { transform: translateX(16px); }
+select, input[type="date"] { font: inherit; font-size: 0.88rem; padding: 5px 8px; background: var(--card);
+  color: var(--fg); border: 1px solid var(--border); border-radius: 8px; }
+input[type="range"] { flex: 1; min-width: 120px; accent-color: var(--accent); }
+.pct { width: 3.2em; text-align: right; font-variant-numeric: tabular-nums; color: var(--fg); }
+.btn { font: inherit; font-size: 0.85rem; font-weight: 550; padding: 6px 12px; color: var(--accent);
+       background: none; border: 1px solid var(--accent); border-radius: 8px; cursor: pointer; }
+.btn.soft { color: var(--muted); border-color: var(--border); }
+.off { opacity: 0.45; }
+/* 手机宽度：开关留在标题同一行，其余控件换到下一行 */
+@media (max-width: 520px) {
+  .row .name { flex-basis: calc(100% - 56px); }
+  .row .sw { order: 1; }
+  .row > :not(.name):not(.sw) { order: 2; }
+  .row .pct { width: auto; }
+}
+
+/* 收藏 */
+.fav { padding: 12px 0; border-bottom: 1px solid var(--border); display: flex; gap: 12px; align-items: flex-start; }
+.fav:last-child { border-bottom: none; }
+.fav .t { flex: 1; font-size: 0.92rem; line-height: 1.5; color: var(--fg); }
+.fav .m { color: var(--muted); font-size: 0.76rem; margin-top: 3px; }
+.empty { color: var(--muted); font-size: 0.85rem; padding: 12px 0; }
+
+/* 保存条 */
+.bar { position: fixed; left: 0; right: 0; bottom: 0; background: var(--bg); border-top: 1px solid var(--border);
+       padding: 10px 16px calc(10px + env(safe-area-inset-bottom)); }
+.bar .in { max-width: 680px; margin: 0 auto; display: flex; align-items: center; gap: 12px; }
+.bar button { padding: 10px 22px; font: inherit; font-size: 0.95rem; font-weight: 600; color: #fff;
+              background: var(--accent); border: none; border-radius: 10px; cursor: pointer; }
+.bar button:disabled { opacity: 0.45; cursor: default; }
+.bar .msg { color: var(--muted); font-size: 0.82rem; flex: 1; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Kindle 复习屏后台</h1>
+  <a href="/">← 返回大屏</a>
+</header>
+
+<section>
+  <h2>现状</h2>
+  <div class="status" id="status"></div>
+  <p class="note" id="applyNote"></p>
+</section>
+
+<section>
+  <h2>换批节奏</h2>
+  <div class="box">
+    <div class="row"><span class="name">每隔多久换一批三张卡</span>
+      <span class="seg" id="batch"></span></div>
+    <div class="row"><span class="name">早间简报<div class="sub">时段内第 1 张换成财报日历和额度</div></span>
+      <select id="bStart"></select><span>到</span><select id="bEnd"></select>
+      <label class="sw"><input type="checkbox" id="bOn"><span></span></label></div>
+  </div>
+</section>
+
+<section>
+  <h2>卡片库</h2>
+  <div class="box" id="sources"></div>
+  <p class="note">比例是相对权重：每张随机卡按比例挑库，再在库里随机挑一张（避开最近 30 张）。日历卡和到期收藏另占位置，不参与这里的比例。</p>
+</section>
+
+<section>
+  <h2>日历卡</h2>
+  <div class="box">
+    <div class="row"><span class="name">每批放一张日历 365 卡<div class="sub" id="calProg"></div></span>
+      <label class="sw"><input type="checkbox" id="calOn"><span></span></label></div>
+    <div class="row"><span class="name">出卡顺序</span>
+      <span class="seg" id="calOrder"></span></div>
+    <div class="row"><span class="name">从某天接着往下补<div class="sub" id="jumpNote">只在「按日期顺序」时有用</div></span>
+      <input type="date" id="jumpDate" min="2026-01-01" max="2026-12-31">
+      <button class="btn soft" id="jumpBtn">跳过去</button></div>
+  </div>
+</section>
+
+<section>
+  <h2>收藏回顾</h2>
+  <div class="box">
+    <div class="row"><span class="name">到期的收藏放进复习卡（每批最多 1 张）</span>
+      <label class="sw"><input type="checkbox" id="favOn"><span></span></label></div>
+    <div class="row"><span class="name">回顾节奏<div class="sub" id="paceNote"></div></span>
+      <span class="seg" id="pace"></span></div>
+  </div>
+</section>
+
+<section>
+  <h2>收藏列表</h2>
+  <div class="box" id="favs"></div>
+  <p class="note">取消收藏只是不再回到复习卡；Obsidian「收藏/Kindle 收藏」里的笔记保留，你写过的想法不会丢。</p>
+</section>
+
+<div class="bar"><div class="in">
+  <span class="msg" id="msg">读取中…</span>
+  <button id="save" disabled>保存设置</button>
+</div></div>
+
+<script>
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const SRC_LABEL = { dbs: "dbs 观点", method: "编导方法", course: "课程卡", lab: "lab 划线" };
+const KIND_LABEL = { dbs: "观点", method: "编导方法", lab: "划线", course: "课程", calendar: "日历模版" };
+const PACES = {
+  dense: ["密", "1·1·2·3·5·8·13·21 天"],
+  standard: ["标准", "1·2·4·7·15·30·60·120 天"],
+  sparse: ["疏", "2·5·10·20·40·90·180 天"],
+};
+let cfg = null, status = {}, dirty = false;
+
+function seg(el, options, value, onPick) {
+  el.innerHTML = options.map(([v, label]) =>
+    `<button data-v="${v}" class="${String(v) === String(value) ? "on" : ""}">${label}</button>`).join("");
+  el.onclick = (e) => { const b = e.target.closest("button"); if (b) onPick(b.dataset.v); };
+}
+function ago(iso) {
+  const min = Math.round((Date.now() - Date.parse(iso)) / 60000);
+  if (min < 1) return "刚刚";
+  if (min < 60) return `${min} 分钟前`;
+  if (min < 1440) return `${Math.floor(min / 60)} 小时前`;
+  return `${Math.floor(min / 1440)} 天前`;
+}
+const md = (key) => `${+key.slice(0, 2)} 月 ${+key.slice(2)} 日`;
+const fmtDay = (iso) => { const d = new Date(iso); return `${d.getMonth() + 1}-${d.getDate()}`; };
+
+function markDirty() { dirty = true; $("save").disabled = false; $("msg").textContent = "有未保存的改动"; render(); }
+
+function renderStatus() {
+  const s = status, cards = [];
+  if (s.seen_at) {
+    const min = (Date.now() - Date.parse(s.seen_at)) / 60000;
+    const cls = min < 10 ? "ok" : min < 60 ? "warn" : "bad";
+    cards.push(["Kindle 最后在线", ago(s.seen_at), cls, s.mode ? `经 ${s.mode}` : ""]);
+  } else {
+    cards.push(["Kindle 最后在线", "还没回传过", "warn", "Mac 侧下一轮推送后出现"]);
+  }
+  const src = s.sources || {};
+  const total = Object.values(src).reduce((n, x) => n + (x.available ? x.count : 0), 0);
+  cards.push(["卡片库总量", `${total} 张`, "", Object.keys(src).length ? `${Object.keys(src).length} 个库` : ""]);
+  if (s.calendar) cards.push(["日历补课进度", `${s.calendar.done}/${s.calendar.total}`, "",
+    s.calendar.next_key ? `下一张 ${md(s.calendar.next_key)}` : "已轮完，随机出"]);
+  const removed = new Set(cfg.removed.map((r) => r.id));
+  const favs = (s.favorites || []).filter((f) => !removed.has(f.id));
+  cards.push(["收藏", `${favs.length} 条`, "", favs.filter((f) => Date.parse(f.due) <= Date.now()).length + " 条已到期"]);
+  $("status").innerHTML = cards.map(([k, v, cls, sub]) =>
+    `<div class="stat"><div class="k">${k}</div><div class="v ${cls}">${esc(v)}</div><div class="s">${esc(sub)}</div></div>`).join("");
+  const applied = s.config_updated_at, saved = cfg && cfg.updated_at;
+  $("applyNote").textContent = !saved ? "还没保存过设置，Kindle 用的是默认值。"
+    : applied === saved ? "Kindle 已在用最新设置。"
+    : "设置已保存，等 Kindle 下一轮推送（约 2 分钟，Kindle 在线时）生效。";
+}
+
+function render() {
+  seg($("batch"), [10, 20, 30, 60].map((m) => [m, `${m} 分钟`]), cfg.batch_minutes,
+    (v) => { cfg.batch_minutes = +v; markDirty(); });
+
+  const hours = (lo, hi) => Array.from({ length: hi - lo + 1 }, (_, i) => lo + i);
+  $("bStart").innerHTML = hours(0, 23).map((h) => `<option value="${h}">${h}:00</option>`).join("");
+  $("bEnd").innerHTML = hours(1, 24).map((h) => `<option value="${h}">${h}:00</option>`).join("");
+  $("bStart").value = cfg.briefing.start; $("bEnd").value = cfg.briefing.end;
+  $("bOn").checked = cfg.briefing.enabled;
+  for (const id of ["bStart", "bEnd"]) $(id).disabled = !cfg.briefing.enabled;
+
+  const src = status.sources || {};
+  const on = Object.entries(cfg.sources).filter(([k, s]) => s.enabled && (!src[k] || src[k].available));
+  const sum = on.reduce((n, [, s]) => n + s.weight, 0);
+  $("sources").innerHTML = Object.entries(cfg.sources).map(([k, s]) => {
+    const info = src[k];
+    const count = !info ? "数量待回传" : info.available ? `${info.count} 张` : `不可用：${info.reason || "来源读不到"}`;
+    const live = s.enabled && (!info || info.available);
+    const pct = live && sum ? Math.round((s.weight / sum) * 100) + "%" : "—";
+    return `<div class="row ${s.enabled ? "" : "off"}" data-k="${k}">
+      <span class="name">${SRC_LABEL[k]}<div class="sub">${esc(count)}</div></span>
+      <input type="range" min="1" max="10" value="${s.weight}" ${s.enabled ? "" : "disabled"}>
+      <span class="pct">${pct}</span>
+      <label class="sw"><input type="checkbox" ${s.enabled ? "checked" : ""}><span></span></label></div>`;
+  }).join("");
+
+  $("calOn").checked = cfg.calendar.enabled;
+  seg($("calOrder"), [["seq", "按日期顺序"], ["random", "随机"]], cfg.calendar.order,
+    (v) => { cfg.calendar.order = v; markDirty(); });
+  const c = status.calendar;
+  $("calProg").textContent = c ? (c.next_key ? `已补到 ${c.done}/${c.total}，下一张是 ${md(c.next_key)}` : "365 天已轮完，之后随机出") : "";
+  $("jumpNote").textContent = cfg.calendar.jump
+    ? `已设：从 ${md(cfg.calendar.jump.key)} 开始${status.calendar_jump_applied === cfg.calendar.jump.at ? "（已生效）" : "（等 Kindle 下一轮）"}`
+    : "只在「按日期顺序」时有用";
+
+  $("favOn").checked = cfg.favorites.enabled;
+  seg($("pace"), Object.entries(PACES).map(([k, [l]]) => [k, l]), cfg.favorites.pace,
+    (v) => { cfg.favorites.pace = v; markDirty(); });
+  $("paceNote").textContent = "收藏后第 " + PACES[cfg.favorites.pace][1] + " 依次回来";
+
+  const removed = new Set(cfg.removed.map((r) => r.id));
+  const favs = (status.favorites || []).filter((f) => !removed.has(f.id));
+  $("favs").innerHTML = favs.length ? favs.map((f) => `<div class="fav">
+      <div class="t">${esc(f.title)}<div class="m">${KIND_LABEL[f.kind] || f.kind} · ${fmtDay(f.added)} 收藏 · 回顾过 ${f.shown} 次 · 下次 ${fmtDay(f.due)}</div></div>
+      <button class="btn soft" data-id="${esc(f.id)}">取消收藏</button></div>`).join("")
+    : `<div class="empty">还没有收藏。在 Kindle 复习卡上点页眉「收藏」，下一轮就会出现在这里。</div>`;
+  renderStatus();
+}
+
+$("sources").addEventListener("input", (e) => {
+  const row = e.target.closest(".row"); if (!row) return;
+  const s = cfg.sources[row.dataset.k];
+  if (e.target.type === "range") s.weight = +e.target.value;
+  if (e.target.type === "checkbox") {
+    const others = Object.entries(cfg.sources).some(([k, x]) => k !== row.dataset.k && x.enabled);
+    if (!e.target.checked && !others) { e.target.checked = true; $("msg").textContent = "至少留一个卡片库"; return; }
+    s.enabled = e.target.checked;
+  }
+  markDirty();
+});
+$("bOn").onchange = (e) => { cfg.briefing.enabled = e.target.checked; markDirty(); };
+for (const id of ["bStart", "bEnd"]) $(id).onchange = () => {
+  const s = +$("bStart").value, en = +$("bEnd").value;
+  if (en <= s) { $("msg").textContent = "结束要晚于开始"; render(); return; }
+  cfg.briefing.start = s; cfg.briefing.end = en; markDirty();
+};
+$("calOn").onchange = (e) => { cfg.calendar.enabled = e.target.checked; markDirty(); };
+$("favOn").onchange = (e) => { cfg.favorites.enabled = e.target.checked; markDirty(); };
+
+// 「跳过去」「取消收藏」是一次性动作：带上时间戳立即保存，Mac 侧按时间戳只执行一次。
+$("jumpBtn").onclick = () => {
+  const v = $("jumpDate").value;
+  if (!v) { $("msg").textContent = "先选一个日期"; return; }
+  cfg.calendar.jump = { key: v.slice(5, 7) + v.slice(8, 10), at: new Date().toISOString() };
+  cfg.calendar.order = "seq";
+  save();
+};
+$("favs").addEventListener("click", (e) => {
+  const b = e.target.closest("button[data-id]"); if (!b) return;
+  cfg.removed.push({ id: b.dataset.id, at: new Date().toISOString() });
+  save();
+});
+
+async function save() {
+  $("save").disabled = true; $("msg").textContent = "保存中…";
+  try {
+    const r = await fetch("/api/kindle-config", {
+      method: "POST", credentials: "same-origin",
+      headers: { "Content-Type": "application/json" }, body: JSON.stringify(cfg),
+    });
+    const d = await r.json();
+    if (!r.ok) throw new Error(d.error || r.status);
+    const { ok, ...saved } = d;
+    cfg = saved; dirty = false;
+    $("msg").textContent = "已保存，Kindle 下一轮推送时生效（约 2 分钟）";
+    render();
+  } catch (e) { $("save").disabled = false; $("msg").textContent = "保存失败：" + e.message; }
+}
+$("save").onclick = save;
+
+(async () => {
+  try {
+    const [c, s] = await Promise.all([
+      fetch("/api/kindle-config", { credentials: "same-origin" }).then((r) => r.json()),
+      fetch("/api/kindle-status", { credentials: "same-origin" }).then((r) => r.json()),
+    ]);
+    cfg = c; status = s;
+    $("msg").textContent = cfg.updated_at ? `设置上次保存于 ${new Date(cfg.updated_at).toLocaleString("zh-CN", { hour12: false })}` : "默认设置";
+    render();
+  } catch (e) { $("msg").textContent = "读取失败：" + e.message; }
+})();
+window.addEventListener("beforeunload", (e) => { if (dirty) e.preventDefault(); });
+</script>
+</body>
+</html>

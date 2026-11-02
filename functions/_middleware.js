@@ -165,6 +165,8 @@ export async function onRequest(context) {
   // /api/dbs-deck              Mac 推 dbs 抽卡牌堆
   // /api/dbs-config-pull       Mac 拉 dbs 推送时间设置
   // /api/kindle-control-request poller 拉 Kindle 控制命令
+  // /api/kindle-config-pull    kindle-dash 拉复习屏设置（/kindle/ 后台页）
+  // /api/kindle-status-push    kindle-dash 回传复习屏现状
   // /api/maps-push             Mac 推项目地图页进 KV
   // /api/agent-heartbeat       Mac poller 报「我在线」（地图页显示设备在线状态）
   if (
@@ -173,6 +175,8 @@ export async function onRequest(context) {
     url.pathname === "/api/dbs-deck" ||
     url.pathname === "/api/dbs-config-pull" ||
     url.pathname === "/api/kindle-control-request" ||
+    url.pathname === "/api/kindle-config-pull" ||
+    url.pathname === "/api/kindle-status-push" ||
     url.pathname === "/api/maps-push" ||
     url.pathname === "/api/agent-heartbeat"
   ) {
