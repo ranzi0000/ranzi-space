@@ -1257,6 +1257,18 @@
       ],
       "show_on_site": true,
       "show_on_dashboard": false
+    },
+    {
+      "slug": "xuehui-daren-retrain",
+      "title": "xuehui-daren-retrain",
+      "tagline": "薛辉达人班复训线下课实录 8 集吸收工程",
+      "status": "active",
+      "tier": 2,
+      "github": "https://github.com/ranzi0000/xuehui-daren-retrain",
+      "live": null,
+      "tags": [],
+      "show_on_site": true,
+      "show_on_dashboard": false
     }
   ],
   "_archived_local": [
