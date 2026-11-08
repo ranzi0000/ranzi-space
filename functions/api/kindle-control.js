@@ -5,7 +5,8 @@
 
 const KV_KEY = "kindle_control";
 // gcp_rotate 借同一通道：poller 收到后跑 dotfiles-mac/bin/gcp-rotate-ip.sh（GCP IP 被墙时换 IP）
-const ACTIONS = ["pause", "resume", "reboot", "gcp_rotate"];
+// wake_3090 同理：poller 跑 dotfiles-mac/bin/wake-3090-notify.sh（局域网魔术包唤醒 3090，2026-11-08）
+const ACTIONS = ["pause", "resume", "reboot", "gcp_rotate", "wake_3090"];
 
 export async function onRequestPost(context) {
   const { request, env } = context;
