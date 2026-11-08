@@ -1,3 +1,8 @@
+# 2026-11-08 /services/ 新增「唤醒 3090」按钮
+
+- 提交 `1cf4198`：`services/index.html` 新增「3090 电脑 → 唤醒 3090」按钮（带 confirm），`functions/api/kindle-control.js` 的 ACTIONS 加 `wake_3090`；claude-rc poller（`17a986c`）收到后执行 dotfiles-mac `bin/wake-3090-notify.sh`（发魔术包、等有线或 Tailscale SSH 上线、推 Bark，日志 `~/Library/Logs/wake-3090.log`）。
+- 验证：线上 = 本地 HEAD；22:04:21 真实点击，3090 22:04:43 开机，26 秒有线 SSH 上线。此前「唤醒失败」实为开机后有线网卡协商失败，已在 3090 侧固定 1G 并升级驱动解决。
+
 # 2026-10-26 /services/ 新增「GCP 换 IP」按钮
 
 - 提交 `4e81663`：`services/index.html` 新增「GCP 节点 → GCP 换 IP」按钮（带 confirm），`functions/api/kindle-control.js` 的 ACTIONS 加 `gcp_rotate`（借 Kindle 控制同一条 KV 通道）；claude-rc poller 收到后执行 dotfiles-mac `bin/gcp-rotate-ip.sh`。
