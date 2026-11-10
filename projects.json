@@ -1269,6 +1269,18 @@
       "tags": [],
       "show_on_site": true,
       "show_on_dashboard": false
+    },
+    {
+      "slug": "chaipian",
+      "title": "chaipian",
+      "tagline": "拆片库：课程拆片方法与案例卡沉淀 + 自己的拆片积累",
+      "status": "active",
+      "tier": 2,
+      "github": "https://github.com/ranzi0000/chaipian",
+      "live": null,
+      "tags": [],
+      "show_on_site": true,
+      "show_on_dashboard": false
     }
   ],
   "_archived_local": [
