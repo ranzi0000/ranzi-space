@@ -96,6 +96,7 @@ export function taskViews(tasks) {
       badge: { ok: '正常', warn: '留意', bad: '异常', done: '已完成', unknown: '未知' }[status] + (t.where ? ' · ' + t.where : ''),
       alert: ['warn', 'bad', 'unknown'].includes(status) ? (t.label || '') : '',
       line: parts.join(' · '), detail: t.detail || '',
+      endedAt: Number.isFinite(t.ended_at) ? t.ended_at : null,
     };
   });
 }

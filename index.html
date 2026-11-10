@@ -148,7 +148,19 @@ body.stale .server-strip { opacity: 0.55; }
 /* ─── 任务：长任务进度（转写、grok 派活等），没有任务时整块隐藏 ─── */
 .task-block { margin-top: 12px; border: 1px solid var(--border); border-radius: 10px; background: var(--card); }
 .task-block[hidden] { display: none; }
-.task-head { display: flex; justify-content: space-between; gap: 10px; margin: 0; padding: 10px 18px 0; font-family: var(--font-mono); font-size: 11px; color: var(--muted); }
+.task-head { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin: 0; padding: 8px 12px 0 18px; font-family: var(--font-mono); font-size: 11px; color: var(--muted); }
+.task-refresh { font: inherit; color: var(--fg-soft); background: none; border: 1px solid var(--border); border-radius: 6px; padding: 3px 10px; cursor: pointer; }
+.task-refresh:hover { background: var(--hover); }
+.task-refresh:disabled { color: var(--muted); cursor: default; background: none; }
+/* 已完成的收成一行，展开才看明细，不占注意力 */
+.task-done { margin: 0; padding: 10px 18px; font-size: 12px; color: var(--muted); }
+.task-list:not(:empty) + .task-done { border-top: 1px solid var(--border); }
+.task-done[hidden] { display: none; }
+.task-done summary { cursor: pointer; }
+.task-done ul { list-style: none; margin: 6px 0 0; padding: 0; line-height: 1.7; }
+.task-done li { display: flex; gap: 10px; }
+.task-done li span:first-child { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+.task-done time { flex-shrink: 0; font-family: var(--font-mono); font-size: 11px; }
 .task-list { list-style: none; margin: 0; padding: 0 18px; }
 .task-list li { padding: 12px 0; }
 .task-list li + li { border-top: 1px solid var(--border); }
@@ -166,7 +178,7 @@ body.stale .server-strip { opacity: 0.55; }
 .task-line { margin: 6px 0 0 16px; font-size: 12px; line-height: 1.5; color: var(--fg-soft); overflow-wrap: anywhere; }
 .task-line.sub { margin-top: 2px; color: var(--muted); }
 .task-line b { font-weight: 600; color: var(--fg); }
-@media (max-width: 640px) { .task-head { padding: 10px 16px 0; } .task-list { padding: 0 16px; } }
+@media (max-width: 640px) { .task-head { padding: 8px 10px 0 16px; } .task-list { padding: 0 16px; } .task-done { padding: 10px 16px; } }
 
 /* ─── 主要入口 ──────────────────────────── */
 .primary-link {
@@ -604,8 +616,10 @@ footer .meta { text-transform: uppercase; }
       </aside>
     </div>
     <div class="task-block" id="task-block" aria-label="任务进度" hidden>
-      <p class="task-head"><span>任务</span><span id="task-count"></span></p>
+      <p class="task-head"><span>任务 <span id="task-count"></span></span>
+        <button type="button" class="task-refresh" id="task-refresh">刷新</button></p>
       <ul class="task-list" id="task-list"></ul>
+      <details class="task-done" id="task-done" hidden><summary></summary><ul></ul></details>
     </div>
   </section>
 

@@ -92,3 +92,39 @@ if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('/sw.js').catch(function() {});
   });
 }
+
+// ── 任务块「刷新」：让 Mac mini 立刻采一轮（平时 5 分钟一轮），然后等新数据到 ──
+// 走 /api/kindle-control 的 refresh_summary：poller 约 3 秒内收到 → 采集器跑完推送约 5–25 秒。
+var refreshBtn = document.getElementById('task-refresh');
+if (refreshBtn) refreshBtn.addEventListener('click', function() {
+  var before = null;
+  try { before = JSON.parse(localStorage.getItem(CACHE_KEY)).generated_at; } catch (e) {}
+  refreshBtn.disabled = true;
+  refreshBtn.textContent = '刷新中…';
+  var finish = function(text) {
+    refreshBtn.textContent = text;
+    setTimeout(function() { refreshBtn.disabled = false; refreshBtn.textContent = '刷新'; }, 4000);
+  };
+  fetch('/api/kindle-control', {
+    method: 'POST', credentials: 'same-origin',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ action: 'refresh_summary' }),
+  }).then(function(r) {
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    var tries = 0;
+    var poll = function() {
+      tries += 1;
+      fetch('/api/summary', { credentials: 'same-origin', cache: 'no-store' })
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+          if (data.generated_at && data.generated_at !== before) {
+            renderSummary(data);
+            try { localStorage.setItem(CACHE_KEY, JSON.stringify(data)); } catch (e) {}
+            finish('已更新');
+          } else if (tries >= 15) { finish('没等到新数据'); } else { setTimeout(poll, 4000); }
+        })
+        .catch(function() { if (tries >= 15) finish('没等到新数据'); else setTimeout(poll, 4000); });
+    };
+    setTimeout(poll, 6000);
+  }).catch(function() { finish('发送失败'); });
+});

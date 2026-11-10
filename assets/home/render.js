@@ -198,11 +198,27 @@ function renderTasks(tasks) {
   if (!block) return;
   var views = taskViews(tasks);
   block.hidden = !views.length;
-  var running = views.filter(function(v) { return v.status !== 'done'; }).length;
-  document.getElementById('task-count').textContent = running ? running + ' 个进行中' : '近 24 小时已完成';
+  var active = views.filter(function(v) { return v.status !== 'done'; });
+  var done = views.filter(function(v) { return v.status === 'done'; });
+  document.getElementById('task-count').textContent = active.length ? '· ' + active.length + ' 个进行中' : '· 没有在跑的';
+  var fold = document.getElementById('task-done');
+  fold.hidden = !done.length;
+  fold.querySelector('summary').textContent = '近 24 小时已完成 ' + done.length + ' 个';
+  var doneList = fold.querySelector('ul');
+  doneList.innerHTML = '';
+  done.forEach(function(v) {
+    var li = document.createElement('li');
+    li.innerHTML = '<span></span><time></time>';
+    li.querySelector('span').textContent = v.name + (v.line ? ' · ' + v.line : '');
+    if (v.endedAt) {
+      var d = new Date(v.endedAt * 1000);
+      li.querySelector('time').textContent = String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
+    }
+    doneList.appendChild(li);
+  });
   var ul = document.getElementById('task-list');
   ul.innerHTML = '';
-  views.forEach(function(v) {
+  active.forEach(function(v) {
     var li = document.createElement('li');
     li.dataset.status = v.status;
     li.innerHTML = '<div class="task-top"><span class="status-dot" aria-hidden="true"></span>' +

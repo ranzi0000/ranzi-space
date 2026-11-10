@@ -6,7 +6,8 @@
 const KV_KEY = "kindle_control";
 // gcp_rotate 借同一通道：poller 收到后跑 dotfiles-mac/bin/gcp-rotate-ip.sh（GCP IP 被墙时换 IP）
 // wake_3090 同理：poller 跑 dotfiles-mac/bin/wake-3090-notify.sh（局域网魔术包唤醒 3090，2026-11-08）
-const ACTIONS = ["pause", "resume", "reboot", "gcp_rotate", "wake_3090"];
+// refresh_summary：首页任务块的「刷新」按钮，poller 立即跑一轮 dash-collector（2026-11-10）。每点一次 = 本次写 + 采集器推送，共 2 次 KV 写
+const ACTIONS = ["pause", "resume", "reboot", "gcp_rotate", "wake_3090", "refresh_summary"];
 
 export async function onRequestPost(context) {
   const { request, env } = context;

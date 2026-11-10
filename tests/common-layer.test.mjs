@@ -51,7 +51,8 @@ test('首页保留缓存先绘、刷新周期、回前台刷新和离线提示',
   ]);
   const calls = [], requests = [], timers = [], listeners = {};
   let failSummary = false;
-  const document = { visibilityState: 'visible', addEventListener: (event, fn) => { listeners[event] = fn; } };
+  const document = { visibilityState: 'visible', addEventListener: (event, fn) => { listeners[event] = fn; },
+    getElementById: () => null };  // 任务块的刷新按钮在这项测试里不存在
   vm.runInNewContext(script, {
     document, navigator: {},
     localStorage: { getItem: key => storage.get(key), setItem: (key, value) => storage.set(key, value) },

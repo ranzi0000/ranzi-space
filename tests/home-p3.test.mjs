@@ -239,6 +239,8 @@ test('任务块：进度、预计剩余与状态文案；空数据不出行', as
   assert.deepEqual([stuck.status, stuck.eta], ['bad', '预计还要 3 小时 10 分']);
   assert.deepEqual([grok.pct, grok.line, grok.detail], [null, '', '已跑 42 分钟 · 上限 120 分钟']);
   assert.deepEqual([done.status, done.pct, done.eta, done.line], ['done', 100, '', '已完成 8/8']);
+  assert.equal(done.endedAt, 1792119600);
+  assert.equal(run.endedAt, null);
   for (const empty of [undefined, null, {}, { list: 'x' }, { error: 'boom', list: [] }]) {
     assert.deepEqual(taskViews(empty), []);
   }
