@@ -145,6 +145,29 @@ body.stale .server-strip { opacity: 0.55; }
   .quota-state { display: inline; }
 }
 
+/* ─── 任务：长任务进度（转写、grok 派活等），没有任务时整块隐藏 ─── */
+.task-block { margin-top: 12px; border: 1px solid var(--border); border-radius: 10px; background: var(--card); }
+.task-block[hidden] { display: none; }
+.task-head { display: flex; justify-content: space-between; gap: 10px; margin: 0; padding: 10px 18px 0; font-family: var(--font-mono); font-size: 11px; color: var(--muted); }
+.task-list { list-style: none; margin: 0; padding: 0 18px; }
+.task-list li { padding: 12px 0; }
+.task-list li + li { border-top: 1px solid var(--border); }
+.task-top { display: flex; align-items: baseline; gap: 9px; font-size: 14px; }
+.task-top .status-dot { align-self: center; }
+.task-name { flex: 1; min-width: 0; font-weight: 600; color: var(--fg); overflow-wrap: anywhere; }
+.task-label { flex-shrink: 0; font-size: 12px; color: var(--muted); white-space: nowrap; }
+.task-list li[data-status="warn"] .task-label, .task-list li[data-status="warn"] .task-line.why { color: var(--status-warn); font-weight: 600; }
+.task-list li[data-status="bad"] .task-label, .task-list li[data-status="bad"] .task-line.why { color: var(--status-bad); font-weight: 600; }
+.task-bar { height: 5px; margin: 8px 0 0 16px; border-radius: 3px; background: var(--hover); overflow: hidden; }
+.task-bar > span { display: block; height: 100%; border-radius: 3px; background: var(--status-ok); }
+.task-list li[data-status="warn"] .task-bar > span { background: var(--status-warn); }
+.task-list li[data-status="bad"] .task-bar > span { background: var(--status-bad); }
+.task-list li[data-status="done"] .task-bar > span, .task-list li[data-status="unknown"] .task-bar > span { background: var(--faint); }
+.task-line { margin: 6px 0 0 16px; font-size: 12px; line-height: 1.5; color: var(--fg-soft); overflow-wrap: anywhere; }
+.task-line.sub { margin-top: 2px; color: var(--muted); }
+.task-line b { font-weight: 600; color: var(--fg); }
+@media (max-width: 640px) { .task-head { padding: 10px 16px 0; } .task-list { padding: 0 16px; } }
+
 /* ─── 主要入口 ──────────────────────────── */
 .primary-link {
   display: block;
@@ -579,6 +602,10 @@ footer .meta { text-transform: uppercase; }
           <p class="quota-reset" id="quota-claude-reset"></p>
         </div>
       </aside>
+    </div>
+    <div class="task-block" id="task-block" aria-label="任务进度" hidden>
+      <p class="task-head"><span>任务</span><span id="task-count"></span></p>
+      <ul class="task-list" id="task-list"></ul>
     </div>
   </section>
 

@@ -12,7 +12,7 @@ from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import parse_qs, urlsplit
 
-FIXTURES = frozenset({"ok", "alerts", "unknown", "error"})
+FIXTURES = frozenset({"ok", "alerts", "unknown", "error", "tasks"})
 COOKIE = "preview_fixture"
 
 

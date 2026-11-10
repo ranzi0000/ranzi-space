@@ -1,4 +1,4 @@
-import { STALE_SECONDS, classifyToday, quotaView } from './today.js';
+import { STALE_SECONDS, classifyToday, quotaView, taskViews } from './today.js';
 
 // DOM rendering and last-summary replay after a project-list rebuild.
 var GROUP_KEYS = ['invest', 'create', 'product', 'tool'];
@@ -189,6 +189,55 @@ export function renderSummary(data, replay = false) {
 
   renderServers(data.servers);
   renderDrift(data.registry_drift);
+  renderTasks(data.tasks);
+}
+
+// 长任务进度：没有任务时整块隐藏
+function renderTasks(tasks) {
+  var block = document.getElementById('task-block');
+  if (!block) return;
+  var views = taskViews(tasks);
+  block.hidden = !views.length;
+  var running = views.filter(function(v) { return v.status !== 'done'; }).length;
+  document.getElementById('task-count').textContent = running ? running + ' 个进行中' : '近 24 小时已完成';
+  var ul = document.getElementById('task-list');
+  ul.innerHTML = '';
+  views.forEach(function(v) {
+    var li = document.createElement('li');
+    li.dataset.status = v.status;
+    li.innerHTML = '<div class="task-top"><span class="status-dot" aria-hidden="true"></span>' +
+      '<span class="task-name"></span><span class="task-label"></span></div>';
+    li.querySelector('.status-dot').className = 'status-dot ' + statusClass(v.status);
+    li.querySelector('.task-name').textContent = v.name;
+    li.querySelector('.task-label').textContent = v.badge;
+    if (v.alert) {
+      var why = document.createElement('p');
+      why.className = 'task-line why';
+      why.textContent = v.alert;
+      li.appendChild(why);
+    }
+    if (v.pct !== null) {
+      var bar = document.createElement('div');
+      bar.className = 'task-bar';
+      bar.innerHTML = '<span></span>';
+      bar.firstChild.style.width = v.pct + '%';
+      li.appendChild(bar);
+    }
+    if (v.line || v.eta) {
+      var line = document.createElement('p');
+      line.className = 'task-line';
+      line.textContent = v.line + (v.line && v.eta ? ' · ' : '');
+      if (v.eta) { var b = document.createElement('b'); b.textContent = v.eta; line.appendChild(b); }
+      li.appendChild(line);
+    }
+    if (v.detail) {
+      var sub = document.createElement('p');
+      sub.className = 'task-line sub';
+      sub.textContent = v.detail;
+      li.appendChild(sub);
+    }
+    ul.appendChild(li);
+  });
 }
 
 // 项目登记漂移提醒：本地 git 仓库 vs projects.json 真源对不上时提示

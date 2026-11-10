@@ -168,6 +168,7 @@ test('今天渲染未知保留异常、只列两条提交；离线状态在卡�
   const get = id => nodes[id] ||= new Element();
   const context = {
     STALE_SECONDS, classifyToday, quotaView: (quota, _now, ...options) => quotaView(quota, now, ...options),
+    taskViews: () => [],  // 任务块另有专门测试，这里只让渲染走通
     document: { getElementById: get, querySelector: selector => get('query:' + selector), createElement: () => new Element(), body: new Element() },
     Date: class extends Date { static now() { return now; } },
   };
@@ -224,4 +225,24 @@ test('今天渲染未知保留异常、只列两条提交；离线状态在卡�
   assert.equal(get('today-activity').textContent, '提交动态未读取到');
   assert.equal(get('today-latest').children.length, 0);
   assert.equal(get('quota-block').hidden, true);
+});
+
+test('任务块：进度、预计剩余与状态文案；空数据不出行', async () => {
+  const { taskViews, fmtMinutes } = await import(
+    'data:text/javascript;base64,' + Buffer.from(await read('assets/home/today.js')).toString('base64'));
+  const tasks = JSON.parse(await read('tests/fixtures/tasks.json')).tasks;
+  const [run, stuck, grok, done] = taskViews(tasks);
+  assert.deepEqual([run.status, run.pct, run.line, run.eta],
+    ['ok', 50, '已完成 2/4 · 当前 A-003 · 第 5/8 段', '粗估还要 25 分钟']);
+  assert.deepEqual([run.badge, run.alert], ['正常 · 3090', '']);
+  assert.deepEqual([stuck.badge, stuck.alert], ['异常 · 3090', '卡住：日志 40 分钟没动']);
+  assert.deepEqual([stuck.status, stuck.eta], ['bad', '预计还要 3 小时 10 分']);
+  assert.deepEqual([grok.pct, grok.line, grok.detail], [null, '', '已跑 42 分钟 · 上限 120 分钟']);
+  assert.deepEqual([done.status, done.pct, done.eta, done.line], ['done', 100, '', '已完成 8/8']);
+  for (const empty of [undefined, null, {}, { list: 'x' }, { error: 'boom', list: [] }]) {
+    assert.deepEqual(taskViews(empty), []);
+  }
+  assert.equal(taskViews({ list: [{ name: 'x', status: 'weird' }] })[0].status, 'unknown');
+  assert.deepEqual([fmtMinutes(0.4), fmtMinutes(59), fmtMinutes(120), fmtMinutes(NaN)],
+    ['不到 1 分钟', '59 分钟', '2 小时', '']);
 });

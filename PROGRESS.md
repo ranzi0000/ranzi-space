@@ -1,3 +1,10 @@
+# 2026-11-10 首页「今天」区新增任务进度块
+
+- `index.html` 在今天面板下方加 `#task-block`；`assets/home/today.js` 加纯函数 `taskViews` / `fmtMinutes`，`render.js` 加 `renderTasks`。数据来自 summary 的 `tasks` 段（dash-collector `tasks_collect.py`，提交 `bc3e95a`），后端 `summary.js` 原样透传，未改后端、未新增 KV 写入。
+- 显示：每个任务一行，含状态点（绿正常、黄留意、红异常、灰已完成或未知）、已完成 x/N 进度条、当前项、预计还要多久；黄和红会单独一行写原因。没有任务时整块隐藏。
+- 预览：`/?fixture=tasks`（`tests/fixtures/tasks.json` 是虚构任务，`scripts/dev_server.py` 的 FIXTURES 已加）。
+- 验证：`node --test tests/*.test.mjs` 32 passed；本地预览手机宽度深浅色截图核过，无横向溢出，`fixture=ok` 时整块隐藏。
+
 # 2026-11-08 /services/ 新增「唤醒 3090」按钮
 
 - 提交 `1cf4198`：`services/index.html` 新增「3090 电脑 → 唤醒 3090」按钮（带 confirm），`functions/api/kindle-control.js` 的 ACTIONS 加 `wake_3090`；claude-rc poller（`17a986c`）收到后执行 dotfiles-mac `bin/wake-3090-notify.sh`（发魔术包、等有线或 Tailscale SSH 上线、推 Bark，日志 `~/Library/Logs/wake-3090.log`）。
