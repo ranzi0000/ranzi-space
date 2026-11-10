@@ -1,3 +1,10 @@
+# 2026-11-10 任务块第二轮：已完成折叠、刷新按钮
+
+- 提交 `0cd51f0`：任务块只逐条显示进行中的任务，已完成的收成「近 24 小时已完成 N 个」一行（`<details>`，展开见名称与完成时刻）；右上角加「刷新」按钮。
+- 刷新链路：按钮 POST `/api/kindle-control` 的 `refresh_summary` → claude-rc poller（`3d28d6e`）约 3 秒内 `launchctl kickstart` dash-collector → 推送后页面轮询 `/api/summary`，见到新 `generated_at` 即重绘，最多等约 60 秒。每点一次多 2 次 KV 写（本次请求 + 采集推送），按 1000 次/天额度可放心用。
+- 没有任何任务时整块隐藏，刷新按钮也随之隐藏。
+- 验证：`node --test` 32 passed；本地预览手机宽度截图；线上 = 本地 HEAD；用户 2026-11-10 手动点刷新确认正常。
+
 # 2026-11-10 首页「今天」区新增任务进度块
 
 - `index.html` 在今天面板下方加 `#task-block`；`assets/home/today.js` 加纯函数 `taskViews` / `fmtMinutes`，`render.js` 加 `renderTasks`。数据来自 summary 的 `tasks` 段（dash-collector `tasks_collect.py`，提交 `bc3e95a`），后端 `summary.js` 原样透传，未改后端、未新增 KV 写入。
