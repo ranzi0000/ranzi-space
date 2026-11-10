@@ -1011,7 +1011,7 @@
         "Agent"
       ],
       "show_on_site": true,
-      "show_on_dashboard": true,
+      "show_on_dashboard": false,
       "dash": {
         "group": "create",
         "title": "ComfyUI 工作台",
