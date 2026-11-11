@@ -11,6 +11,8 @@ test('金句清单：非空，每条有正文和出处', async () => {
   assert.ok(quotes.length >= 10);
   for (const q of quotes) { assert.ok(q.t && q.t.length > 3); assert.ok(q.s); }
   assert.equal(new Set(quotes.map(q => q.t)).size, quotes.length);
+  assert.ok(quotes.filter(q => q.k === 'do').length >= 5);
+  assert.ok(quotes.filter(q => q.k !== 'do').length >= 10);
 });
 
 test('按日期取条：同一天稳定，隔天换下一条，始终在范围内', () => {

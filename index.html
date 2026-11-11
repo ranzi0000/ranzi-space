@@ -112,6 +112,8 @@ body.stale .server-strip { opacity: 0.55; }
 .quote-line[hidden] { display: none; }
 .quote-text { display: block; font-size: 16px; font-weight: 600; line-height: 1.6; }
 .quote-src { display: block; margin-top: 6px; font-size: 12px; color: var(--muted); }
+.quote-do { display: block; margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--border); font-size: 14px; line-height: 1.6; color: var(--fg-soft); }
+.quote-do[hidden] { display: none; }
 
 /* ─── 今天：异常用细边与状态点强调，文字保留语义 ─── */
 .today-panel {
@@ -606,7 +608,7 @@ footer .meta { text-transform: uppercase; }
 
   <section id="today" aria-labelledby="today-heading">
     <h2 class="eyebrow" id="today-heading">今天</h2>
-    <button type="button" class="quote-line" id="quote-line" aria-label="金句，点击换一条" hidden><span class="quote-text"></span><span class="quote-src"></span></button>
+    <button type="button" class="quote-line" id="quote-line" aria-label="金句，点击换一条" hidden><span class="quote-text"></span><span class="quote-src"></span><span class="quote-do" hidden></span></button>
     <div class="today-panel" id="today-panel" data-state="unknown" aria-live="polite">
       <div class="today-copy">
         <p class="today-status" id="today-status">状态未知</p>
