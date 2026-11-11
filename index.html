@@ -632,6 +632,63 @@ footer .meta { text-transform: uppercase; }
 }
 
 ::selection { background: var(--accent-soft); }
+
+/* ═══ 暖色层次（2026-11-11 重设计）═══
+   各分区一个色调（--tone，定义在 base.css），标题、卡片、入口随分区着色；
+   数字与状态的可读性不变，只加层次。放在最后，覆盖上面的基础样式。 */
+#invest { --tone: var(--tone-invest); }
+#create { --tone: var(--tone-create); }
+#product { --tone: var(--tone-product); }
+#tool { --tone: var(--tone-tool); }
+#infra, #directory { --tone: var(--tone-infra); }
+
+header { margin-bottom: 20px; align-items: center; }
+h1 { font-family: var(--font-serif); font-size: 24px; font-weight: 700; letter-spacing: 0.01em; }
+h1::after { content: ""; display: inline-block; width: 7px; height: 7px; margin-left: 5px; border-radius: 50%; background: var(--accent); }
+.refresh-meta { padding: 4px 10px; border: 1px solid var(--border); border-radius: 999px; background: var(--card); color: var(--muted); }
+
+.quick-tags a { padding: 6px 14px; box-shadow: var(--shadow-card); }
+.quick-tags a[aria-current="true"] { color: var(--hero-fg); border-color: transparent; background: linear-gradient(155deg, var(--hero-a), var(--hero-b)); }
+.quick-tags a[aria-current="true"] .tag-count { color: var(--hero-soft); }
+
+.eyebrow { color: var(--tone, var(--accent)); font-family: var(--font-serif); font-size: 19px; font-weight: 700; letter-spacing: 0.04em; border-bottom: 0; padding-bottom: 0; margin-bottom: 16px; }
+.eyebrow::before { background: var(--tone, var(--accent)); height: 17px; }
+.eyebrow::after { content: ""; flex: 1; align-self: center; height: 1px; margin-left: 6px; background: linear-gradient(90deg, color-mix(in oklch, var(--tone, var(--accent)) 35%, transparent), transparent); }
+
+.today-panel { --state: var(--status-ok); background: linear-gradient(160deg, color-mix(in oklch, var(--state) 9%, var(--card)), var(--card) 55%); border-left-width: 4px; }
+.today-panel[data-state="alerts"] { --state: var(--status-bad); }
+.today-panel[data-state="unknown"] { --state: var(--status-warn); }
+.today-status { font-family: var(--font-serif); font-size: 21px; font-weight: 700; }
+.quota-value { color: var(--accent); }
+
+.task-block { border-radius: 14px; box-shadow: var(--shadow-card); overflow: hidden; }
+.task-head { padding-bottom: 8px; border-bottom: 1px solid var(--border); background: color-mix(in oklch, var(--accent) 5%, var(--card)); }
+.task-bar { height: 6px; }
+.task-list li:not([data-status]) .task-bar > span, .task-list li[data-status="ok"] .task-bar > span { background: linear-gradient(90deg, var(--status-ok), color-mix(in oklch, var(--status-ok) 60%, var(--hero-gold))); }
+
+.primary-links { gap: 12px; margin: 20px 0 28px; }
+.primary-link { position: relative; overflow: hidden; padding: 18px 16px; border-radius: 14px; color: var(--hero-fg); font-family: var(--font-serif); font-size: 17px; font-weight: 700; letter-spacing: 0.06em; background: radial-gradient(120% 100% at 100% 0%, var(--hero-glow), transparent 60%), linear-gradient(155deg, var(--hero-a), var(--hero-b)); box-shadow: var(--shadow-hero); }
+.primary-links .primary-link + .primary-link { color: var(--fg); background: linear-gradient(160deg, color-mix(in oklch, var(--hero-gold) 30%, var(--card)), var(--card) 70%); border: 1px solid color-mix(in oklch, var(--hero-gold) 55%, var(--border)); box-shadow: var(--shadow-card); }
+.primary-link .hint { margin-top: 6px; font-family: var(--font-sans); font-size: 11px; letter-spacing: 0.03em; opacity: 0.72; }
+
+.card { padding: 18px 16px 16px; overflow: hidden; background: linear-gradient(165deg, color-mix(in oklch, var(--tone, var(--accent)) 8%, var(--card)), var(--card) 62%); }
+.card::before { content: ""; position: absolute; left: 0; top: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--tone, var(--accent)), transparent 85%); }
+.card:hover, .entry:hover { border-color: color-mix(in oklch, var(--tone, var(--accent)) 45%, var(--border)); transform: translateY(-1px); }
+.card-name { color: var(--tone, var(--accent)); }
+.card-main { font-size: 24px; }
+
+.entry { position: relative; padding: 13px 30px 13px 14px; border-radius: 12px; box-shadow: var(--shadow-card); border-left: 3px solid var(--tone, var(--accent)); }
+.entry::after { content: "\2192"; position: absolute; right: 12px; top: 50%; transform: translateY(-50%); color: var(--tone, var(--accent)); opacity: 0.55; font-size: 14px; }
+.entry-title { font-size: 13px; }
+.entry-sub { margin-top: 3px; }
+
+.server-strip { padding: 16px 8px; border-radius: 14px; box-shadow: var(--shadow-card); background: linear-gradient(165deg, color-mix(in oklch, var(--tone) 7%, var(--card)), var(--card) 62%); }
+
+.links { padding: 4px 16px; border: 1px solid var(--border); border-radius: 14px; background: var(--card); box-shadow: var(--shadow-card); }
+.links li { padding: 13px 0; }
+.links .label { color: var(--tone); }
+
+@media (prefers-reduced-motion: reduce) { .card:hover, .entry:hover { transform: none; } }
 </style>
 </head>
 <body>

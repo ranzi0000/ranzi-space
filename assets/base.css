@@ -15,6 +15,11 @@
   --status-infra: oklch(60% 0.12 240);
   --status-dormant: #a8a29e;
   --status-archived: #71717a;
+  --tone-invest: oklch(58% 0.13 78);
+  --tone-create: oklch(54% 0.13 38);
+  --tone-product: oklch(52% 0.11 160);
+  --tone-tool: oklch(52% 0.11 248);
+  --tone-infra: oklch(50% 0.04 265);
   --hero-a: oklch(36% 0.10 38);
   --hero-b: oklch(21% 0.05 28);
   --hero-glow: oklch(72% 0.16 60 / 0.42);
@@ -44,6 +49,11 @@
   --accent-soft: oklch(72% 0.12 38 / 0.10);
   --status-dormant: #5a5a57;
   --status-archived: #4a4a47;
+  --tone-invest: oklch(80% 0.12 82);
+  --tone-create: oklch(74% 0.12 38);
+  --tone-product: oklch(76% 0.11 160);
+  --tone-tool: oklch(76% 0.10 248);
+  --tone-infra: oklch(74% 0.04 265);
   --hero-a: oklch(30% 0.08 38);
   --hero-b: oklch(15% 0.03 28);
   --hero-glow: oklch(70% 0.15 60 / 0.30);
@@ -66,7 +76,12 @@
     --accent-soft: oklch(72% 0.12 38 / 0.10);
     --status-dormant: #5a5a57;
     --status-archived: #4a4a47;
-    --hero-a: oklch(30% 0.08 38);
+    --tone-invest: oklch(80% 0.12 82);
+    --tone-create: oklch(74% 0.12 38);
+    --tone-product: oklch(76% 0.11 160);
+    --tone-tool: oklch(76% 0.10 248);
+    --tone-infra: oklch(74% 0.04 265);
+  --hero-a: oklch(30% 0.08 38);
     --hero-b: oklch(15% 0.03 28);
     --hero-glow: oklch(70% 0.15 60 / 0.30);
     --page-glow: oklch(72% 0.12 38 / 0.06);
