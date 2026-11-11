@@ -31,6 +31,7 @@
 <link rel="stylesheet" href="/assets/base.css">
 <style>
 
+body { background: radial-gradient(900px 420px at 50% -120px, var(--page-glow), transparent 70%) no-repeat, var(--bg); }
 main {
   max-width: 640px;
   margin: 0 auto;
@@ -102,18 +103,58 @@ body.stale .server-strip { opacity: 0.55; }
   word-break: break-word;
 }
 
-/* ─── 金句：每天一条，点一下换下一条 ─── */
+/* ─── 金句与做法：首页主视觉卡。深色暖底、衬线大字，下方内嵌一格「今日做法」 ─── */
 .quote-line {
-  display: block; width: 100%; text-align: left; font: inherit; cursor: pointer;
-  margin: 0 0 14px; padding: 14px 18px;
-  border: 1px solid var(--border); border-left: 3px solid var(--accent);
-  border-radius: 10px; background: var(--card); color: var(--fg);
+  position: relative; display: block; width: 100%; overflow: hidden;
+  margin: 0 0 16px; padding: 30px 26px 22px;
+  text-align: left; font: inherit; cursor: pointer; color: var(--hero-fg);
+  border: 0; border-radius: 18px;
+  background:
+    radial-gradient(120% 90% at 100% 0%, var(--hero-glow), transparent 58%),
+    linear-gradient(155deg, var(--hero-a), var(--hero-b));
+  box-shadow: var(--shadow-hero);
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.15s ease;
 }
 .quote-line[hidden] { display: none; }
-.quote-text { display: block; font-size: 16px; font-weight: 600; line-height: 1.6; }
-.quote-src { display: block; margin-top: 6px; font-size: 12px; color: var(--muted); }
-.quote-do { display: block; margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--border); font-size: 14px; line-height: 1.6; color: var(--fg-soft); }
+.quote-line:active { transform: scale(0.99); }
+.quote-line:focus-visible { outline: 2px solid var(--hero-gold); outline-offset: 3px; }
+.quote-mark {
+  position: absolute; top: 34px; right: 12px; pointer-events: none;
+  font-family: Georgia, "Times New Roman", serif; font-size: 150px; line-height: 1;
+  color: var(--hero-gold); opacity: 0.14;
+}
+.quote-kicker {
+  position: relative; display: flex; justify-content: space-between; align-items: center;
+  font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.16em; color: var(--hero-gold);
+}
+.quote-next { letter-spacing: 0.04em; color: var(--hero-soft); }
+.quote-text {
+  position: relative; display: block; margin-top: 18px;
+  font-family: var(--font-serif); font-size: 23px; font-weight: 700; line-height: 1.65;
+  letter-spacing: 0.02em; text-wrap: pretty;
+}
+.quote-src {
+  position: relative; display: block; margin-top: 14px;
+  font-size: 12px; letter-spacing: 0.04em; color: var(--hero-soft);
+}
+.quote-src::before { content: "—— "; }
+.quote-src:empty { display: none; }
+.quote-do {
+  position: relative; display: block; margin-top: 22px; padding: 14px 16px;
+  border: 1px solid var(--hero-line); border-radius: 12px; background: var(--hero-panel);
+}
 .quote-do[hidden] { display: none; }
+.do-label {
+  display: inline-block; padding: 2px 9px; border-radius: 999px;
+  font-size: 11px; font-weight: 600; letter-spacing: 0.1em;
+  color: var(--hero-b); background: var(--hero-gold);
+}
+.do-text { display: block; margin-top: 9px; font-size: 15px; line-height: 1.65; color: var(--hero-fg); }
+.quote-line.swap .quote-text, .quote-line.swap .quote-src { animation: quote-in 0.35s ease both; }
+@keyframes quote-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+@media (max-width: 380px) { .quote-line { padding: 26px 20px 18px; } .quote-text { font-size: 21px; } }
+@media (prefers-reduced-motion: reduce) { .quote-line, .quote-line.swap .quote-text, .quote-line.swap .quote-src { animation: none; transition: none; } }
 
 /* ─── 今天：异常用细边与状态点强调，文字保留语义 ─── */
 .today-panel {
@@ -123,7 +164,8 @@ body.stale .server-strip { opacity: 0.55; }
   padding: 18px;
   border: 1px solid var(--border);
   border-left: 3px solid var(--status-ok);
-  border-radius: 10px;
+  border-radius: 14px;
+  box-shadow: var(--shadow-card);
   background: var(--card);
 }
 .today-panel[data-state="alerts"] { border-left-color: var(--status-bad); }
@@ -253,7 +295,8 @@ body.stale .server-strip { opacity: 0.55; }
   padding: 16px;
   background: var(--card);
   border: 1px solid var(--border);
-  border-radius: 10px;
+  border-radius: 14px;
+  box-shadow: var(--shadow-card);
   text-decoration: none;
   color: inherit;
   transition: transform 0.1s ease, border-color 0.15s ease, background-color 0.15s ease;
@@ -412,11 +455,15 @@ section { margin-bottom: 40px; scroll-margin-top: 64px; }
 section:last-of-type { margin-bottom: 0; }
 section[hidden] { display: none; }
 
+.eyebrow::before {
+  content: ""; align-self: center; flex: none;
+  width: 4px; height: 15px; border-radius: 2px; background: var(--accent);
+}
 .eyebrow {
   display: flex;
   align-items: baseline;
   gap: 8px;
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 600;
   letter-spacing: 0.02em;
   color: var(--accent);
@@ -608,7 +655,7 @@ footer .meta { text-transform: uppercase; }
 
   <section id="today" aria-labelledby="today-heading">
     <h2 class="eyebrow" id="today-heading">今天</h2>
-    <button type="button" class="quote-line" id="quote-line" aria-label="金句，点击换一条" hidden><span class="quote-text"></span><span class="quote-src"></span><span class="quote-do" hidden></span></button>
+    <button type="button" class="quote-line" id="quote-line" aria-label="金句，点击换一条" hidden><span class="quote-mark" aria-hidden="true">“</span><span class="quote-kicker"><span>今日一句</span><span class="quote-next" aria-hidden="true">点一下换一条</span></span><span class="quote-text"></span><span class="quote-src"></span><span class="quote-do" hidden><span class="do-label">今日做法</span><span class="do-text"></span></span></button>
     <div class="today-panel" id="today-panel" data-state="unknown" aria-live="polite">
       <div class="today-copy">
         <p class="today-status" id="today-status">状态未知</p>

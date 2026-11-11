@@ -20,13 +20,17 @@ async function init() {
   let i = pickIndex(quotes.length, new Date());
   const today = dos[pickIndex(dos.length, new Date())];
   const doLine = box.querySelector('.quote-do');
-  if (doLine && today) { doLine.textContent = '做法 · ' + today.t; doLine.hidden = false; }
+  if (doLine && today) { doLine.querySelector('.do-text').textContent = today.t; doLine.hidden = false; }
   const show = () => {
     box.querySelector('.quote-text').textContent = quotes[i].t;
     box.querySelector('.quote-src').textContent = quotes[i].s || '';
     box.hidden = false;
   };
-  box.addEventListener('click', () => { i = (i + 1) % quotes.length; show(); });
+  box.addEventListener('click', () => {
+    i = (i + 1) % quotes.length;
+    show();
+    box.classList.remove('swap'); void box.offsetWidth; box.classList.add('swap');
+  });
   show();
 }
 
