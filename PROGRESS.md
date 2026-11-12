@@ -6,9 +6,9 @@
 - 排版：手机两栏，960px 以上四栏、正文宽 920px；带列表的卡（rec）占两栏。手机上额度块仍排在待办下方（验收脚本的既有约束）。
 - `assets/base.css`：删掉暖色版专用变量（`--tone-*`、`--hero-*`、`--page-glow`、`--shadow-*`，只有首页用过），新增 `--rule`（栏线）、`--vermilion`（朱红），深浅两套。
 - `scripts/verify_p3.py`：三条预期在新增「工具」分区后就已过时（改动前同样 16 组全失败），本次更新到现状：入口 4 个、分区含「工具」、快捷标签文字。
-- 验证：`node --test tests/*.test.mjs` 34 passed；`P1_BROWSER_CHANNEL=chrome /usr/bin/python3 -B scripts/verify_p3.py` 16 组 0 错（Playwright 只装在系统自带的 `/usr/bin/python3` 里）；人工看过手机浅色、电脑深色截图。
-- 同日加纸纹：`base.css` 新增 `--grain`（内嵌 SVG 噪点，深浅各一套，改浓淡调 `feColorMatrix` 最后一行的两个数），首页 `body` 和吸顶标签栏都用它铺底；今天面板不再单独铺底色，`verify_p3.py` 的对比度断言改为对照 `body` 底色。这是给 Lab 全站加纹理前的试点，Lab 尚未动。
-- 未做：真机未看；用户看过线上后可能还要微调。
+- 验证：`node --test tests/*.test.mjs` 34 passed；`P1_BROWSER_CHANNEL=chrome /usr/bin/python3 -B scripts/verify_p3.py` 16 组 0 错（README 里写的 Python 3.11 命令同样可用，两个解释器都装了 Playwright）；人工看过手机浅色、电脑深色截图。
+- 同日加纸纹：`base.css` 新增 `--grain`（内嵌 SVG 噪点，深浅各一套，改浓淡调 `feColorMatrix` 最后一行的两个数），首页 `body` 和吸顶标签栏都用它铺底；今天面板不再单独铺底色，`verify_p3.py` 的对比度断言改为对照 `body` 底色。用户看后反馈「底色太深、噪点太多」，同日调淡调稀（`313cd8e`）定稿；随后 Lab 全站注入同款（html-lab `d285267`）。
+- 未做：真机观感由用户自行确认；栏目标题右侧的数量、更新时间改中文两处与样稿有出入（要改脚本，未动）。
 
 # 2026-11-10 任务块第二轮：已完成折叠、刷新按钮
 

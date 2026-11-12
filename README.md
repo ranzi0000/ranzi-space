@@ -4,7 +4,7 @@ ranzi.space 主域名的源代码 — CF Pages 部署的密码保护 PWA。
 
 ## 用途
 
-- 📱 **iPhone 主屏 PWA 大屏**（2026-10-17 重构）— 从上到下四段：**今天**（异常三态：一切正常 / N 项异常 / 状态未知，今日提交动态，Codex 周额度）→「项目地图 / 知识作品集」双入口 → **业务**（活数据大卡 + 云服务器状态条）→ **工具**（纯入口卡按投资 / 创作 / 工具分组）→ **目录**。卡片清单来自 projects.json，活数据与「今天」来自 dash-collector 推送的 `/api/summary`。原 Kindle 四页看板的异常 / 到期 / 动态内容由「今天」区块承接
+- 📱 **iPhone 主屏 PWA 大屏**（2026-10-17 重构，2026-10-25 改分区，2026-11-12 改「纸面」风格）— 从上到下：报头（当天日期、数据更新时间）→ 吸顶快捷标签 → **今天**（今日一句与做法；三态：一切正常 / N 项待你处理 / 状态未知；今日提交动态；Claude 周额度；长任务进度）→「项目地图 / 知识作品集」双入口 → **投资 / 创作 / 产品 / 工具**四个分组（空组连同标签自动隐藏）→ **服务器**状态条 → **目录**。视觉是一份小报：宋体标题、细线分栏、朱红一个强调色、底色带淡纸纹，不用卡片底、圆角、阴影、渐变。卡片清单来自 projects.json，活数据与「今天」来自 dash-collector 推送的 `/api/summary`。原 Kindle 四页看板的异常 / 到期 / 动态内容由「今天」区块承接
 - 📋 **完整项目目录** `/projects/` — 数据驱动列表页（状态构成条 + filter chips + status 分组，清单见 projects.json）
 - 🗺 **项目地图** `/maps` + `/maps/<id>`（2026-08-04 上线）— 内容由 Mac mini projectmap 管线渲染推 KV 现取现服务（**地图 HTML 不进本公开仓库**）；总览与单项目页只读展示地图和「Mac mini 在线」灯（2026-10-17 起按 dash-collector 推送的 `latest.received_at` 判断；`/api/agent-heartbeat` 只校验不写 KV；`/api/maps-push` 只重写内容变化的页面——都是为守住 KV 免费写额度每天 1000 次）
 - 🔒 **密码门** — CF Pages Functions middleware，未登录看不到内容
@@ -25,7 +25,7 @@ ranzi.space 主域名的源代码 — CF Pages 部署的密码保护 PWA。
 .
 ├── index.html             # 主屏 PWA 大屏骨架（今天 / 业务 / 工具 / 目录；只放结构与页面专属样式）
 ├── assets/
-│   ├── base.css           # 四个页面共用：颜色变量（深浅两套）、字体、页脚主题按钮
+│   ├── base.css           # 四个页面共用：颜色变量（深浅两套，含首页用的栏线 --rule、朱红 --vermilion、纸纹 --grain）、字体、页脚主题按钮
 │   ├── theme.js           # 主题切换（首页与 /projects 用；/services、/dbs 只跟随系统）
 │   └── home/              # 首页 ES modules：data.js（缓存/拉取/定时刷新）render.js（画卡片与今天区块）today.js（三态与额度判定纯函数）
 ├── _headers               # /assets/* Cache-Control: no-cache（见「缓存」）
@@ -53,7 +53,7 @@ ranzi.space 主域名的源代码 — CF Pages 部署的密码保护 PWA。
 
 `projects.json` 是所有项目的元数据单一真源（schema v2）：slug / title / tagline / status / tier / github / live / tags / access + 首页卡片元数据 `dash`。站内两处消费，全部客户端 fetch 渲染，改 JSON 而不是 HTML：
 
-- **首页大屏卡片**：`show_on_dashboard: true` + `dash: {key, title, sub, href, order, items, big, group}` 的条目生成卡片。有 `dash.key`（对应 dash-collector summary 的 key）或 `big: true` 的进「业务」区；其余是纯入口卡，进「工具」区并按 `group`（`invest` 投资 / `create` 创作 / `tool` 工具，缺省归工具）分组，组内按 `order` 排；`items: true` 走列表卡结构（rec 用）
+- **首页大屏卡片**：`show_on_dashboard: true` + `dash: {key, title, sub, href, order, items, big, group}` 的条目生成卡片。有 `dash.key`（对应 dash-collector summary 的 key）或 `big: true` 的是带数字的项目格，排在所属分组的上半区；其余是纯入口，排在同一分组的下半区。分组看 `group`（`invest` 投资 / `create` 创作 / `product` 产品 / `tool` 工具，缺省归工具），组内按 `order` 排；`items: true` 走列表卡结构（rec 用）
 - **`/projects/` 完整目录**：`show_on_site !== false` 的条目，按 status 分组 + tier 排序，顶部状态构成条自动汇总
 
 （首页原「all projects」区块 2026-07-21 删除——与卡片重复；首页卡片下方的**云服务器状态条**不吃 projects.json，数据来自 `/api/summary` 的 `servers` 键，由 dash-collector `collect_servers()` 探活生成，服务器 IP/到期只存在 dash-collector 私库）
@@ -72,7 +72,7 @@ ranzi.space 主域名的源代码 — CF Pages 部署的密码保护 PWA。
 python3 scripts/dev_server.py --port 8000          # http://localhost:8000/?fixture=ok|alerts|unknown|error
 node --test tests/*.test.mjs
 python3 -B -m unittest tests/dev_server_test.py
-P1_BROWSER_CHANNEL=chrome /opt/homebrew/opt/python@3.11/bin/python3.11 -B scripts/verify_p3.py   # 16 张截图 + 控制台检查
+P1_BROWSER_CHANNEL=chrome /opt/homebrew/opt/python@3.11/bin/python3.11 -B scripts/verify_p3.py   # 16 张截图 + 控制台检查（系统自带的 /usr/bin/python3 也装了 Playwright，可替换）
 ```
 
 `dev_server.py` 静态服务仓库，`/projects.json` 读真文件，`/api/summary` 按首页 `?fixture=` 写入的本地 cookie 选 `tests/fixtures/` 下的假数据（ok 一切正常 / alerts 有异常 / unknown 状态未知 / error 全部读取失败），其余生产接口不代理。fixture 只放假数据——本仓库公开。Playwright 自带浏览器未装时用 `P1_BROWSER_CHANNEL=chrome` 调本机 Chrome 无头模式。验收记录：[P1](docs/verification/p1/README.md)、[P3](docs/verification/p3/README.md)。
