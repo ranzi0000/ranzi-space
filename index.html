@@ -33,6 +33,8 @@
 /* ═══ 纸面风格（2026-11-12 定稿）═══
    像一份每天印出来的小报：宋体标题、细线分栏、朱红一个强调色；没有卡片底、圆角、阴影和渐变。
    信息量与卡片版相同，只是把卡片边框换成栏线。颜色变量都在 base.css。 */
+/* 纸纹：底色上叠一层很淡的噪点（--grain 在 base.css，深浅各一套），随页面滚动 */
+body { background: var(--grain) 0 0 / 240px 240px var(--bg); }
 main { max-width: 640px; margin: 0 auto; padding: 36px 24px 64px; }
 @media (max-width: 640px) { main { padding: 22px 20px 48px; } }
 @media (min-width: 960px) { main { max-width: 920px; } }
@@ -55,8 +57,7 @@ body.stale .card, body.stale .server-strip { opacity: 0.55; }
   display: flex; justify-content: space-between; gap: 14px;
   padding: calc(8px + env(safe-area-inset-top)) 0 8px;
   overflow-x: auto; scrollbar-width: none;
-  background: color-mix(in srgb, var(--bg) 92%, transparent);
-  -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+  background: var(--grain) 0 0 / 240px 240px var(--bg);
   border-bottom: 1px solid var(--fg);
 }
 .quick-tags::-webkit-scrollbar { display: none; }
@@ -119,7 +120,7 @@ section[hidden] { display: none; }
 /* ─── 今天：左头条（待办、提交动态），右额度 ─── */
 .today-panel {
   display: grid; grid-template-columns: minmax(0, 1fr) 150px;
-  padding: 12px 0; background: var(--bg); border-bottom: 1px solid var(--rule);
+  padding: 12px 0; border-bottom: 1px solid var(--rule);
 }
 .today-panel.no-quota { grid-template-columns: minmax(0, 1fr); }
 .today-copy { min-width: 0; }

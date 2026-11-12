@@ -68,7 +68,7 @@ def main():
                                         return v <= .04045 ? v / 12.92 : ((v + .055) / 1.055) ** 2.4;
                                     }).reduce((sum, v, i) => sum + v * [.2126, .7152, .0722][i], 0);
                                     const fg = luminance(getComputedStyle(el).color);
-                                    const bg = luminance(getComputedStyle(document.querySelector('.today-panel')).backgroundColor);
+                                    const bg = luminance(getComputedStyle(document.body).backgroundColor);
                                     return (Math.max(fg, bg) + .05) / (Math.min(fg, bg) + .05);
                                 }""")
                                 assert contrast >= 4.5, f'{selector}: contrast {contrast:.2f}'
