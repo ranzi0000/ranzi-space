@@ -9,28 +9,14 @@
   --card: #ffffff;
   --accent: oklch(54% 0.13 38);
   --accent-soft: oklch(54% 0.13 38 / 0.08);
+  --rule: #ddd8cc;
+  --vermilion: #c8321e;
   --status-ok: oklch(64% 0.14 145);
   --status-warn: oklch(72% 0.14 75);
   --status-bad: oklch(60% 0.18 25);
   --status-infra: oklch(60% 0.12 240);
   --status-dormant: #a8a29e;
   --status-archived: #71717a;
-  --tone-invest: oklch(58% 0.13 78);
-  --tone-create: oklch(54% 0.13 38);
-  --tone-product: oklch(52% 0.11 160);
-  --tone-tool: oklch(52% 0.11 248);
-  --tone-infra: oklch(50% 0.04 265);
-  --hero-a: oklch(36% 0.10 38);
-  --hero-b: oklch(21% 0.05 28);
-  --hero-glow: oklch(72% 0.16 60 / 0.42);
-  --hero-fg: #fbf3e8;
-  --hero-soft: rgb(251 243 232 / 0.66);
-  --hero-gold: oklch(86% 0.11 82);
-  --hero-panel: rgb(255 255 255 / 0.09);
-  --hero-line: rgb(255 255 255 / 0.16);
-  --page-glow: oklch(54% 0.13 38 / 0.07);
-  --shadow-card: 0 1px 2px rgb(60 40 20 / 0.04), 0 6px 20px rgb(60 40 20 / 0.05);
-  --shadow-hero: 0 2px 4px rgb(60 30 10 / 0.10), 0 18px 40px rgb(90 40 15 / 0.22);
   --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", system-ui, sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
   --font-serif: "Songti SC", "Noto Serif SC", "Source Han Serif SC", "STSong", "SimSun", Georgia, serif;
@@ -47,19 +33,10 @@
   --card: #131311;
   --accent: oklch(72% 0.12 38);
   --accent-soft: oklch(72% 0.12 38 / 0.10);
+  --rule: #2c2c29;
+  --vermilion: #ef6a55;
   --status-dormant: #5a5a57;
   --status-archived: #4a4a47;
-  --tone-invest: oklch(80% 0.12 82);
-  --tone-create: oklch(74% 0.12 38);
-  --tone-product: oklch(76% 0.11 160);
-  --tone-tool: oklch(76% 0.10 248);
-  --tone-infra: oklch(74% 0.04 265);
-  --hero-a: oklch(30% 0.08 38);
-  --hero-b: oklch(15% 0.03 28);
-  --hero-glow: oklch(70% 0.15 60 / 0.30);
-  --page-glow: oklch(72% 0.12 38 / 0.06);
-  --shadow-card: 0 1px 2px rgb(0 0 0 / 0.3);
-  --shadow-hero: 0 0 0 1px rgb(255 255 255 / 0.06), 0 18px 40px rgb(0 0 0 / 0.5);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -74,19 +51,10 @@
     --card: #131311;
     --accent: oklch(72% 0.12 38);
     --accent-soft: oklch(72% 0.12 38 / 0.10);
+    --rule: #2c2c29;
+    --vermilion: #ef6a55;
     --status-dormant: #5a5a57;
     --status-archived: #4a4a47;
-    --tone-invest: oklch(80% 0.12 82);
-    --tone-create: oklch(74% 0.12 38);
-    --tone-product: oklch(76% 0.11 160);
-    --tone-tool: oklch(76% 0.10 248);
-    --tone-infra: oklch(74% 0.04 265);
-  --hero-a: oklch(30% 0.08 38);
-    --hero-b: oklch(15% 0.03 28);
-    --hero-glow: oklch(70% 0.15 60 / 0.30);
-    --page-glow: oklch(72% 0.12 38 / 0.06);
-    --shadow-card: 0 1px 2px rgb(0 0 0 / 0.3);
-    --shadow-hero: 0 0 0 1px rgb(255 255 255 / 0.06), 0 18px 40px rgb(0 0 0 / 0.5);
   }
 }
 
