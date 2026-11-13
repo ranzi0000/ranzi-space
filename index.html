@@ -78,10 +78,13 @@ body.stale .card, body.stale .server-strip { opacity: 0.55; }
 /* ─── 分区与栏目标题 ─── */
 section { margin-top: 26px; scroll-margin-top: 52px; }
 section[hidden] { display: none; }
+/* 分区标题要比卡片里最大的字（.card-main 20–22px）大一档，层级才不倒挂（用户 11-13 反馈） */
 .eyebrow {
-  margin: 0; padding: 6px 0; font-size: 13px; font-weight: 700; letter-spacing: 0.2em; color: var(--fg);
+  margin: 0; padding: 10px 0 8px; font-family: var(--font-serif); font-size: 24px; font-weight: 700;
+  line-height: 1.2; letter-spacing: 0.12em; color: var(--fg);
   border-top: 2px solid var(--fg); border-bottom: 1px solid var(--rule);
 }
+@media (min-width: 960px) { .eyebrow { font-size: 28px; } }
 .section-empty { margin: 10px 0 0; font-size: 12px; color: var(--faint); }
 .section-empty[hidden] { display: none; }
 

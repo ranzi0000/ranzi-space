@@ -129,6 +129,32 @@
       }
     },
     {
+      "slug": "rec-watch",
+      "title": "rec-watch 录像回看",
+      "tagline": "REC 录像单条加密分享观看站：文字稿点句跳转、章节、纪要、逐帧",
+      "status": "active",
+      "tier": 2,
+      "github": null,
+      "live": "https://watch.ranzi.space",
+      "tags": [
+        "内容采集",
+        "视频",
+        "分享"
+      ],
+      "show_on_site": true,
+      "show_on_dashboard": true,
+      "access": "auth",
+      "dash": {
+        "group": "create",
+        "title": "watch",
+        "sub": "文字稿点句跳转 · 章节 · 纪要",
+        "main": "录像回看 · 加密分享",
+        "href": "https://watch.ranzi.space/admin",
+        "big": true,
+        "order": 4.5
+      }
+    },
+    {
       "slug": "html-lab",
       "title": "HTML Lab",
       "tagline": "Claude 生成的所有 HTML 作品集",
