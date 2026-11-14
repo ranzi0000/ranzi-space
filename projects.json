@@ -1331,6 +1331,18 @@
         "href": "https://jiehua.ranzi.space",
         "order": 3
       }
+    },
+    {
+      "slug": "laoming-course",
+      "title": "laoming-course",
+      "tagline": "老明的生成式创作课吸收工程",
+      "status": "active",
+      "tier": 2,
+      "github": "https://github.com/ranzi0000/laoming-course",
+      "live": null,
+      "tags": [],
+      "show_on_site": true,
+      "show_on_dashboard": false
     }
   ],
   "_archived_local": [
