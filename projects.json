@@ -1307,6 +1307,30 @@
       "tags": [],
       "show_on_site": true,
       "show_on_dashboard": false
+    },
+    {
+      "slug": "jiehua-dojo",
+      "title": "接话道场",
+      "tagline": "游戏化的接话训练：和角色对话，问出对方没说出口的需求",
+      "status": "active",
+      "tier": 2,
+      "github": null,
+      "live": "https://jiehua.ranzi.space",
+      "tags": [
+        "沟通",
+        "训练",
+        "游戏化"
+      ],
+      "show_on_site": true,
+      "show_on_dashboard": true,
+      "access": "auth",
+      "dash": {
+        "group": "tool",
+        "title": "接话道场",
+        "sub": "每天几局 · 四步灯 · 动作图鉴",
+        "href": "https://jiehua.ranzi.space",
+        "order": 3
+      }
     }
   ],
   "_archived_local": [
