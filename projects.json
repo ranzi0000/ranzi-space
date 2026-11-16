@@ -1343,6 +1343,23 @@
       "tags": [],
       "show_on_site": true,
       "show_on_dashboard": false
+    },
+    {
+      "slug": "xingtu",
+      "title": "语义星图",
+      "tagline": "输入老选题关键词，实时生成概念星系，多次生成合并成更大的星图",
+      "status": "active",
+      "tier": 2,
+      "github": "https://github.com/ranzi0000/xingtu",
+      "live": null,
+      "tags": [
+        "Python",
+        "Flask",
+        "SQLite",
+        "Claude"
+      ],
+      "show_on_site": true,
+      "show_on_dashboard": false
     }
   ],
   "_archived_local": [
