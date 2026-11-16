@@ -1351,7 +1351,7 @@
       "status": "active",
       "tier": 2,
       "github": "https://github.com/ranzi0000/xingtu",
-      "live": null,
+      "live": "https://xingtu.ranzi.space",
       "tags": [
         "Python",
         "Flask",
@@ -1359,7 +1359,15 @@
         "Claude"
       ],
       "show_on_site": true,
-      "show_on_dashboard": false
+      "show_on_dashboard": true,
+      "access": "auth",
+      "dash": {
+        "group": "tool",
+        "title": "语义星图",
+        "sub": "老选题 · 概念星系 · 两星碰撞",
+        "href": "https://xingtu.ranzi.space",
+        "order": 4
+      }
     }
   ],
   "_archived_local": [
