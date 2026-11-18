@@ -1368,6 +1368,30 @@
         "href": "https://xingtu.ranzi.space",
         "order": 4
       }
+    },
+    {
+      "slug": "shebao-live",
+      "title": "社保直播",
+      "tagline": "社保直播与咨询：核验台账、工作台、复刻包，直播提词器支持声控滚动和改稿",
+      "status": "active",
+      "tier": 2,
+      "github": null,
+      "live": "https://prompter.ranzi.space",
+      "tags": [
+        "社保",
+        "直播",
+        "提词器"
+      ],
+      "show_on_site": true,
+      "show_on_dashboard": true,
+      "access": "auth",
+      "dash": {
+        "group": "tool",
+        "title": "社保提词器",
+        "sub": "声控滚动 · 改稿 · 母本可切换",
+        "href": "https://prompter.ranzi.space",
+        "order": 5
+      }
     }
   ],
   "_archived_local": [
